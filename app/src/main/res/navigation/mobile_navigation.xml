@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_comptes">
+
+    <fragment
+        android:id="@+id/navigation_comptes"
+        android:name="mc.apps.demo0.ui.comptes.ComptesFragment"
+        android:label="@string/title_comptes"
+        tools:layout="@layout/fragment_comptes" />
+
+    <fragment
+        android:id="@+id/navigation_interventions"
+        android:name="mc.apps.demo0.ui.interventions.InterventionsFragment"
+        android:label="@string/title_interventions"
+        tools:layout="@layout/fragment_interventions" />
+
+    <fragment
+        android:id="@+id/navigation_rapports"
+        android:name="mc.apps.demo0.ui.rapports.RapportsFragment"
+        android:label="@string/title_rapports"
+        tools:layout="@layout/fragment_rapports" />
+</navigation>
