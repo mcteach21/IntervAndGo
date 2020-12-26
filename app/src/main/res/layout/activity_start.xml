@@ -86,6 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
+                android:text="ryan@gmail.com"
                 android:textColor="@android:color/white"
                 android:textColorHighlight="@color/design_default_color_primary" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -110,6 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
+                android:text="admin"
                 android:inputType="textPassword"
                 android:textColor="@android:color/white"
                 android:textColorHighlight="@color/design_default_color_primary" />

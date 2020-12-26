@@ -31,6 +31,6 @@
         android:layout_gravity="top|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary80"
-        app:srcCompat="@drawable/ic_action_rooms" />
+        app:srcCompat="@drawable/ic_action_interv" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
