@@ -5,12 +5,10 @@
         android:id="@+id/navigation_comptes"
         android:icon="@drawable/ic_action_account"
         android:title="@string/title_comptes" />
-
     <item
         android:id="@+id/navigation_interventions"
         android:icon="@drawable/ic_action_interv"
         android:title="@string/title_interventions" />
-
     <item
         android:id="@+id/navigation_rapports"
         android:icon="@drawable/ic_action_rapport"
