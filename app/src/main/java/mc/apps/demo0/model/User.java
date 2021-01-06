@@ -8,11 +8,11 @@ public class User implements Serializable {
     private String nom;
     private String email; // = login
     private String password;
-    private Profil profil;
+    private Profils profil;
 
 
 
-    public User(int id, String prenom, String nom, String email, String password, Profil profil) {
+    public User(int id, String prenom, String nom, String email, String password, Profils profil) {
         this.id = id;
         this.prenom = prenom;
         this.nom = nom;
@@ -61,11 +61,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Profil getProfil() {
+    public Profils getProfil() {
         return profil;
     }
 
-    public void setProfil(Profil profil) {
+    public void setProfil(Profils profil) {
         this.profil = profil;
     }
 }

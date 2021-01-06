@@ -10,11 +10,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +23,7 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 
-import mc.apps.demo0.model.Profil;
+import mc.apps.demo0.model.Profils;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.model.UserRepository;
 
@@ -140,7 +138,7 @@ public class StartActivity extends AppCompatActivity {
 
     private void openActivity(User user) {
 
-        Profil profil = user.getProfil();
+        Profils profil = user.getProfil();
 
         Class<?> class_activity;
         switch (profil){
