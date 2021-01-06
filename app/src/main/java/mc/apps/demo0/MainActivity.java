@@ -10,7 +10,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
-import mc.apps.demo0.libs.Tools;
+import mc.apps.demo0.libs.MyTools;
+
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 else
                     Toast.makeText(this, "Permission not granted : feature is unavailable!", Toast.LENGTH_SHORT).show();
             });
-        Tools.CheckThenAskPermissions(MainActivity.this, requestPermissionLauncher);
+        MyTools.CheckThenAskPermissions(MainActivity.this, requestPermissionLauncher);
     }
 
 }

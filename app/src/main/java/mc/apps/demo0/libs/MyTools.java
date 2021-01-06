@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import mc.apps.demo0.R;
 
-public class Tools {
+public class MyTools {
     private static final String TAG = "demo";
 
     /**
