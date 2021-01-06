@@ -40,5 +40,8 @@
 
     <string name="title_activity_technician">Technicien</string>
     <string name="title_options">Options</string>
+    <string name="fp_title">Authentification par Empreinte Digitale</string>
+    <string name="fp_text">Toucher le capteur</string>
+    <string name="fp_cancel">Annuler</string>
 
 </resources>

@@ -3,6 +3,7 @@
     package="mc.apps.demo0" >
     <!-- Permissions (tests Tools lib.) -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <application

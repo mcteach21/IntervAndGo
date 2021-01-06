@@ -10,10 +10,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +81,7 @@ public class StartActivity extends AppCompatActivity {
                     Toast.makeText(StartActivity.this, "TODO : création compte..", Toast.LENGTH_SHORT).show();
                    /* Intent intent = new Intent(StartActivity.this, SignupActivity.class);
                     startActivity(intent);*/
+                   fingerPrintDialog();
                 }else {
                     Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
                    /* Intent intent = new Intent(StartActivity.this, ForgottenActivity.class);
@@ -91,6 +94,22 @@ public class StartActivity extends AppCompatActivity {
         btnsignin.setOnClickListener(ecouteur);
         linksignup.setOnClickListener(ecouteur);
         linkforgotten.setOnClickListener(ecouteur);
+    }
+
+    private void fingerPrintDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_signin, null);
+        builder.setView(view);
+        /*.setPositiveButton(R.string.fp_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });*/
+        AlertDialog dialog = builder.create();
+        view.findViewById(R.id.fp_dialog_cancel).setOnClickListener((v)->dialog.dismiss());
+        dialog.show();
     }
 
     private void handleLogin() {
