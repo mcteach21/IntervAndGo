@@ -38,7 +38,7 @@ public class MyFingerPrintManager {
 
     private FingerprintManager.CryptoObject cryptoObject;
 
-    interface IAuthentify{
+    public interface IAuthentify{
         enum AUTH_RESULT{
             OK,
             FAILED
