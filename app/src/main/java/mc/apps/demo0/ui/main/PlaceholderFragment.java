@@ -1,6 +1,7 @@
 package mc.apps.demo0.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,38 +23,38 @@ import mc.apps.demo0.R;
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String TAG = "tests" ;
 
     private PageViewModel pageViewModel;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
+
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
+
         return fragment;
     }
 
+    int index = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
+        if (getArguments() != null)
             index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
         pageViewModel.setIndex(index);
     }
 
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
+
+        int layout = (index==1)?R.layout.fragment_superv_intervs:R.layout.fragment_superv_planif;
+        View root = inflater.inflate(layout, container, false);
         final TextView textView = root.findViewById(R.id.fragment_title);
-        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        pageViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
         return root;
     }
 

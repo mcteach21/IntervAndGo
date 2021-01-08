@@ -32,7 +32,8 @@ public class SupervisorActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setVisibility(View.GONE);
+        /*fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Action..", Snackbar.LENGTH_LONG)
@@ -40,6 +41,6 @@ public class SupervisorActivity extends AppCompatActivity {
                                 (v)-> Toast.makeText(SupervisorActivity.this, "Not Implemented yet!", Toast.LENGTH_SHORT).show()
                         ).show();
             }
-        });
+        });*/
     }
 }
