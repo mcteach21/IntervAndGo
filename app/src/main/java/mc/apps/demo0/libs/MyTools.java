@@ -1,6 +1,8 @@
 package mc.apps.demo0.libs;
 
 import android.Manifest;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -21,7 +23,16 @@ public class MyTools {
     /**
      * UI
      */
+    public static void confirmExit(Activity activity) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder.setMessage("Vous êtes sûr de vouloir quitter?");
 
+        alertDialogBuilder.setPositiveButton("OUI", (dialog, which) -> activity.finish());
+        alertDialogBuilder.setNegativeButton("NON", null);
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
 
     /**
      * Permissions :

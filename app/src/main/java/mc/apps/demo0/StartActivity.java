@@ -12,7 +12,9 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import mc.apps.demo0.model.User;
 import mc.apps.demo0.model.UserRepository;
 
 public class StartActivity extends AppCompatActivity {
+    private static final String TAG = "tests";
     ImageView logo;
     ConstraintLayout root, login_root;
 
@@ -155,7 +158,8 @@ public class StartActivity extends AppCompatActivity {
         Intent intent = new Intent(StartActivity.this, class_activity);
         intent.putExtra("user", (Serializable) user);
         startActivity(intent);
-
+                
+        finish();
     }
 
     private void startAnimation() {
