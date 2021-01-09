@@ -29,7 +29,7 @@
     <string name="title_interventions">Interventions</string>
     <string name="title_rapports">Rapports</string>
 
-<!--    <string name="title_home">Home</string>
+    <!--    <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_bottom">MainActivity</string>-->
@@ -43,5 +43,6 @@
     <string name="fp_title">Authentification par Empreinte Digitale</string>
     <string name="fp_text">Toucher le capteur</string>
     <string name="fp_cancel">Annuler</string>
+    <string name="feedbacktype">Enter feedback type...</string>
 
 </resources>

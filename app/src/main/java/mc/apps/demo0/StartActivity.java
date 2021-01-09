@@ -11,6 +11,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.transition.TransitionManager;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 
+import mc.apps.demo0.libs.MyFingerPrintManager;
 import mc.apps.demo0.model.Profils;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.model.UserRepository;
@@ -79,14 +81,16 @@ public class StartActivity extends AppCompatActivity {
                 if(view.getId()==R.id.btnsignin) {
                     handleLogin();          // gestion login
                 }else if(view.getId()==R.id.txtlinksignup) {
-                    Toast.makeText(StartActivity.this, "TODO : création compte..", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(StartActivity.this, "TODO : création compte..", Toast.LENGTH_SHORT).show();
                    /* Intent intent = new Intent(StartActivity.this, SignupActivity.class);
                     startActivity(intent);*/
                    fingerPrintDialog();
                 }else {
-                    Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
                    /* Intent intent = new Intent(StartActivity.this, ForgottenActivity.class);
                     startActivity(intent);*/
+
+                   sendEmail();
                 }
             }
         };
@@ -95,6 +99,28 @@ public class StartActivity extends AppCompatActivity {
         btnsignin.setOnClickListener(ecouteur);
         linksignup.setOnClickListener(ecouteur);
         linkforgotten.setOnClickListener(ecouteur);
+    }
+
+    private void sendEmail() {
+        String[] TO = {"mc69.dashboard@gmail.com"};
+        String[] CC = {};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "test");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email sent from android demo app.");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            finish();
+            Toast.makeText(this, "Finished sending email...", Toast.LENGTH_SHORT).show();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this,"There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void fingerPrintDialog() {
@@ -111,6 +137,25 @@ public class StartActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         view.findViewById(R.id.fp_dialog_cancel).setOnClickListener((v)->dialog.dismiss());
         dialog.show();
+
+        fingerprint(dialog);
+    }
+
+    private void fingerprint(AlertDialog dialog) {
+        MyFingerPrintManager fpm = new MyFingerPrintManager();
+        fpm.Init(this);
+
+        fpm.Start(result -> {
+            if(result== MyFingerPrintManager.IAuthentify.AUTH_RESULT.OK) {
+                openActivity(MainActivity.class);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void openActivity(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        startActivity(intent);
     }
 
     private void handleLogin() {
