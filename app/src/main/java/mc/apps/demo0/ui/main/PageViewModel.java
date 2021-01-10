@@ -12,8 +12,8 @@ public class PageViewModel extends ViewModel {
     private LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {
         @Override
         public String apply(Integer input) {
-            String txt = (input==1)?"Gestion Interventions":"Planifier Intervention";
-            return "Section Superviseur : "+txt;
+            String txt = (input==1)?"Interventions":"Planifier Intervention";
+            return txt;
         }
     });
 

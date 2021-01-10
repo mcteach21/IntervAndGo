@@ -1,71 +1,130 @@
 package mc.apps.demo0.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+import java.util.List;
+
 
 public class User implements Serializable {
-    private int id;
-    private String prenom;
-    private String nom;
-    private String email; // = login
-    private String password;
-    private Profils profil;
+	private int id;
+	private String email;
+	private String firstname;
+	private String lastname;
+	private String password;
 
+	@SerializedName("profil_id")
+	private byte profilId;
 
+	private List<Affectation> affectations;
+	private List<Intervention> interventions;
 
-    public User(int id, String prenom, String nom, String email, String password, Profils profil) {
-        this.id = id;
-        this.prenom = prenom;
-        this.nom = nom;
-        this.email = email;
-        this.password = password;
-        this.profil = profil;
-    }
+	public User() {
+	}
 
-    public int getId() {
-        return id;
-    }
+	public User(int id, String email, String firstname, String lastname, String password, byte profilId) {
+		this.id = id;
+		this.email = email;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.password = password;
+		this.profilId = profilId;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return this.id;
+	}
 
-    public String getPrenom() {
-        return prenom;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
+	public String getEmail() {
+		return this.email;
+	}
 
-    public String getNom() {
-        return nom;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+	public String getFirstname() {
+		return this.firstname;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getLastname() {
+		return this.lastname;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getPassword() {
+		return this.password;
+	}
 
-    public Profils getProfil() {
-        return profil;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setProfil(Profils profil) {
-        this.profil = profil;
-    }
+	public byte getProfilId() {
+		return this.profilId;
+	}
+
+	public void setProfilId(byte profilId) {
+		this.profilId = profilId;
+	}
+
+	public List<Affectation> getAffectations() {
+		return this.affectations;
+	}
+
+	public void setAffectations(List<Affectation> affectations) {
+		this.affectations = affectations;
+	}
+
+	public Affectation addAffectation(Affectation affectation) {
+		getAffectations().add(affectation);
+		affectation.setUser(this);
+
+		return affectation;
+	}
+
+	public Affectation removeAffectation(Affectation affectation) {
+		getAffectations().remove(affectation);
+		affectation.setUser(null);
+
+		return affectation;
+	}
+
+	public List<Intervention> getInterventions() {
+		return this.interventions;
+	}
+
+	public void setInterventions(List<Intervention> interventions) {
+		this.interventions = interventions;
+	}
+
+	public Intervention addIntervention(Intervention intervention) {
+		getInterventions().add(intervention);
+		//intervention.setUser(this);
+
+		return intervention;
+	}
+
+	public Intervention removeIntervention(Intervention intervention) {
+		getInterventions().remove(intervention);
+		//intervention.setUser(null);
+
+		return intervention;
+	}
+
+	@Override
+	public String toString() {
+		return firstname + ' ' +  lastname;
+	}
 }

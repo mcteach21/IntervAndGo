@@ -43,5 +43,12 @@
     <string name="fp_title">Authentification par Empreinte Digitale</string>
     <string name="fp_text">Toucher le capteur</string>
     <string name="fp_cancel">Annuler</string>
+    <string name="hint_title_client">Code Client</string>
+    <string name="hint_title_desc">Description (intervention)</string>
+    <string name="hint_title_service_cible">Service (Equipement) Cible</string>
+    <string name="hint_title_date_debut_prev">Date Début</string>
+    <string name="hint_title_date_fin_prev">Date Fin</string>
+    <string name="hint_title_comment">Commentaires</string>
+    <string name="btn_planif_txt">PLanifier Intervention</string>
 
 </resources>

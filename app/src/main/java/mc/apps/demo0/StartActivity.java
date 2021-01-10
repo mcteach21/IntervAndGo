@@ -12,7 +12,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,10 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.List;
 
-import mc.apps.demo0.model.Profils;
+import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.UserDao;
+import mc.apps.demo0.model.Profil;
 import mc.apps.demo0.model.User;
-import mc.apps.demo0.model.UserRepository;
 
 public class StartActivity extends AppCompatActivity {
     private static final String TAG = "tests";
@@ -120,38 +121,28 @@ public class StartActivity extends AppCompatActivity {
         String login_txt = login.getText().toString();
         String password_txt = password.getText().toString();
 
-        UserRepository  repository = new UserRepository();
-        User user = repository.find(login_txt, password_txt);
-
-        if(user!=null){
-
-            Toast.makeText(StartActivity.this, "Bienvenue "+user.getPrenom(), Toast.LENGTH_SHORT).show();
-
-            openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
-
-            /*
-            Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-            intent.putExtra("user", user.getPrenom()+" "+user.getNom());
-            startActivity(intent);*/
-        }else{
-            Toast.makeText(StartActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
-        }
-
+        UserDao dao = new UserDao();
+        dao.login(login_txt, password_txt, (data, message) -> {
+            if( data.isEmpty()){
+                Toast.makeText(StartActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
+            }else{
+                User user = dao.Deserialize(data, User.class).get(0);
+                Toast.makeText(StartActivity.this, "Bienvenue "+user.getFirstname(), Toast.LENGTH_SHORT).show();
+                openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
+            }
+        });
     }
 
     private void openActivity(User user) {
-
-        Profils profil = user.getProfil();
-
         Class<?> class_activity;
-        switch (profil){
-            case Administrateur:
+        switch (user.getProfilId()){
+            case 1:
                 class_activity = AdminActivity.class;
                 break;
-            case Superviseur:
+            case 2:
                 class_activity = SupervisorActivity.class;
                 break;
-            default:
+            default: //3 TODO : autre (4)
                 class_activity = TechnicianActivity.class;
         }
 
