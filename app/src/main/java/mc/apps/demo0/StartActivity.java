@@ -24,10 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.List;
 
-import mc.apps.demo0.model.Profils;
+import mc.apps.demo0.dao.UserDao;
+import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
-import mc.apps.demo0.model.UserRepository;
 
 public class StartActivity extends AppCompatActivity {
     private static final String TAG = "tests";
@@ -119,36 +120,28 @@ public class StartActivity extends AppCompatActivity {
 
         String login_txt = login.getText().toString();
         String password_txt = password.getText().toString();
+        UserDao dao = new UserDao();
 
-        UserRepository  repository = new UserRepository();
-        User user = repository.find(login_txt, password_txt);
-
-        if(user!=null){
-
-            Toast.makeText(StartActivity.this, "Bienvenue "+user.getPrenom(), Toast.LENGTH_SHORT).show();
-
-            openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
-
-            /*
-            Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-            intent.putExtra("user", user.getPrenom()+" "+user.getNom());
-            startActivity(intent);*/
-        }else{
-            Toast.makeText(StartActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
-        }
+        dao.login(login_txt, password_txt, (data, message) -> {
+            List<User> users = dao.Deserialize(data, User.class);
+            if(!users.isEmpty()){
+                User user = users.get(0);
+                Toast.makeText(StartActivity.this, "Bienvenue "+user.getFirstname(), Toast.LENGTH_SHORT).show();
+                openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
+            }else {
+                Toast.makeText(StartActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
     private void openActivity(User user) {
-
-        Profils profil = user.getProfil();
-
         Class<?> class_activity;
-        switch (profil){
-            case Administrateur:
+        switch (user.getProfilId()){
+            case 1:
                 class_activity = AdminActivity.class;
                 break;
-            case Superviseur:
+            case 2:
                 class_activity = SupervisorActivity.class;
                 break;
             default:
