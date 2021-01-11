@@ -1,10 +1,15 @@
 package mc.apps.demo0.ui.main;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,8 +26,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mc.apps.demo0.R;
+import mc.apps.demo0.SearchActivity;
+import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 
 /**
@@ -66,15 +77,25 @@ public class PlaceholderFragment extends Fragment {
         return root;
     }
 
-    EditText codeClient, desc, dateDebut, dateFin, serviceCible, comment;
+    AutoCompleteTextView codeClient;
+    EditText desc, dateDebut, dateFin, serviceCible, comment;
     @Override
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
         if (index==2){
+
+            /*root.findViewById(R.id.edtCodeClient).setOnFocusChangeListener((view, hasFocus) -> {
+                if (hasFocus)
+                    startActivity(new Intent(root.getContext(), SearchActivity.class));
+            });*/
+            initAutocomplete(root);
+
             Button btnadd = root.findViewById(R.id.btn_add_planif);
             btnadd.setOnClickListener(view -> {
 
-                codeClient = root.findViewById(R.id.edtCodeClient);
+                //codeClient = root.findViewById(R.id.edtCodeClient);
+                Toast.makeText(root.getContext(), codeClient.getText().toString(), Toast.LENGTH_SHORT).show();
+
                 desc = root.findViewById(R.id.edtDesc);
                 dateDebut = root.findViewById(R.id.edtDateDebutPrev);
                 dateFin = root.findViewById(R.id.edtDateFinPrev);
@@ -99,6 +120,35 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
+    private void initAutocomplete(View root) {
+        ClientDao dao = new ClientDao();
+
+
+        dao.list((data, message) -> {
+            List<Client> items = dao.Deserialize(data, Client.class);
+
+            /*List<String> noms = new ArrayList();
+            for (Object c : items)
+                noms.add(((Client)c).getNom());
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    root.getContext(),
+                    android.R.layout.select_dialog_item,
+                    noms);*/
+
+            ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
+                    root.getContext(),
+                    android.R.layout.select_dialog_item,
+                    items);
+
+            codeClient = root.findViewById(R.id.edtCodeClient);
+            codeClient.setThreshold(1);       //will start working from first character
+            codeClient.setAdapter(adapter);
+            codeClient.setTextColor(Color.WHITE);
+        });
+
+
+    }
     private void resetFields(View root) {
         codeClient.getText().clear();
         desc.getText().clear();

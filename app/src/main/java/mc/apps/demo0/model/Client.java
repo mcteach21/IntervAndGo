@@ -116,4 +116,8 @@ public class Client implements Serializable {
 		return intervention;
 	}
 
+	@Override
+	public String toString() {
+		return nom.toUpperCase();
+	}
 }

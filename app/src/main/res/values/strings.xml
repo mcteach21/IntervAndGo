@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Demo.[v 0.1]</string>
+    <string name="app_name">App Demo.[v 0.2]</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Mot de Passe</string>
@@ -29,7 +29,7 @@
     <string name="title_interventions">Interventions</string>
     <string name="title_rapports">Rapports</string>
 
-<!--    <string name="title_home">Home</string>
+    <!--    <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_bottom">MainActivity</string>-->

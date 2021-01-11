@@ -63,7 +63,7 @@ public class ComptesFragment extends Fragment {
     }
 
     /**
-     * Gestion liste Interventions
+     * Gestion liste Comptes
      */
     List<User> items = new ArrayList<User>();
     SwipeRefreshLayout swipeContainer;
