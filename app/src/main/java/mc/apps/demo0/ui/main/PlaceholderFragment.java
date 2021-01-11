@@ -5,17 +5,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import mc.apps.demo0.R;
+import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.model.Intervention;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -58,4 +66,45 @@ public class PlaceholderFragment extends Fragment {
         return root;
     }
 
+    EditText codeClient, desc, dateDebut, dateFin, serviceCible, comment;
+    @Override
+    public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(root, savedInstanceState);
+        if (index==2){
+            Button btnadd = root.findViewById(R.id.btn_add_planif);
+            btnadd.setOnClickListener(view -> {
+
+                codeClient = root.findViewById(R.id.edtCodeClient);
+                desc = root.findViewById(R.id.edtDesc);
+                dateDebut = root.findViewById(R.id.edtDateDebutPrev);
+                dateFin = root.findViewById(R.id.edtDateFinPrev);
+
+                serviceCible = root.findViewById(R.id.edtServiceCible);
+                comment = root.findViewById(R.id.edtComment);
+
+                Intervention interv = new Intervention(0, 1 , //codeClient,
+                        desc.getText().toString(),
+                        dateDebut.getText().toString(),
+                        dateFin.getText().toString(),
+                        serviceCible.getText().toString(),
+                        comment.getText().toString());
+
+                InterventionDao dao = new InterventionDao();
+                dao.add(interv, (items, message) -> {
+                    Log.i(TAG, "onCreate: "+message);
+                    Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
+                });
+                resetFields(root); //reinitialiser form planfication!
+            });
+        }
+    }
+
+    private void resetFields(View root) {
+        codeClient.getText().clear();
+        desc.getText().clear();
+        dateDebut.getText().clear();
+        dateFin.getText().clear();
+        serviceCible.getText().clear();
+        comment.getText().clear();
+    }
 }

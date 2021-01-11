@@ -7,6 +7,7 @@ public class UserDao extends Dao<User> {
     public UserDao(){
         super("users");
     }
+
     public void login(String login, String password, OnSuccess onSuccess){
         find("login=" + login + "&password=" + password, onSuccess);
     }

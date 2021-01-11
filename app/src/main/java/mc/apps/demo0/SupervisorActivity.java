@@ -2,15 +2,11 @@ package mc.apps.demo0;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +15,8 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,9 +26,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import mc.apps.demo0.adapters.ItemsAdapter;
-import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Intervention;
@@ -78,6 +71,8 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
 
         //list interventions
         refreshListAsync();
+
+
     }
 
     private User getCurrentUser() {
@@ -107,14 +102,16 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-        ItemsAdapter adapter = new ItemsAdapter (
+        InterventionsAdapter adapter = new InterventionsAdapter(
                 items,
-                null
+                (position, item) -> {
+                    Toast.makeText(this, "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
+                }
         );
         recyclerView.setAdapter(adapter);
-       /* recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
+        recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
                 SupervisorActivity.this, R.anim.layout_fall_down_animation
-        ));*/
+        ));
 
         // Lookup the swipe container view
         swipeContainer = findViewById(R.id.swipeContainer);
@@ -134,7 +131,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
                 android.R.color.holo_blue_bright
         );
     }
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
+  /*  private void runLayoutAnimation(final RecyclerView recyclerView) {
         final Context context = recyclerView.getContext();
         final LayoutAnimationController controller =
                 AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down_animation);
@@ -142,7 +139,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         recyclerView.setLayoutAnimation(controller);
         recyclerView.getAdapter().notifyDataSetChanged();
         recyclerView.scheduleLayoutAnimation();
-    }
+    }*/
 
     private void refreshListAsync() {
 
@@ -151,10 +148,17 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
             items = dao.Deserialize(data, Intervention.class);
             Log.i(TAG, "items : "+items);
 
-            //refresh
+            //order by date début
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                items = items.stream().sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
+                        .collect(Collectors.toList());
+
+                Log.i(TAG, "refreshListAsync: ordered?");
+            }
+
             loadList();
             swipeContainer.setRefreshing(false);
-            runLayoutAnimation(recyclerView);
+            //runLayoutAnimation(recyclerView);
         });
     }
 

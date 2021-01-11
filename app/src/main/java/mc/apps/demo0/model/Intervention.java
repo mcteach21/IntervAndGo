@@ -1,5 +1,7 @@
 package mc.apps.demo0.model;
 
+import android.widget.EditText;
+
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
@@ -45,7 +47,17 @@ public class Intervention implements Serializable {
 		this.statutId = statutId;
 	}
 
-	public int getId() {
+    public Intervention(int id, int codeClient, String description, String dateDebutPrevue, String dateFinPrevue, String serviceEquipCible, String commentaire) {
+		this.id = id;
+		this.clientId = codeClient;
+		this.description = description;
+		this.dateDebutPrevue = dateDebutPrevue;
+		this.dateFinPrevue = dateFinPrevue;
+		this.serviceEquipCible = serviceEquipCible;
+		this.commentaire = commentaire;
+	}
+
+    public int getId() {
 		return id;
 	}
 
@@ -143,9 +155,6 @@ public class Intervention implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Intervention{" +
-				"id=" + id +
-				", description='" + description + '\'' +
-				'}';
+		return "Intervention [" + id +"] " + description;
 	}
 }

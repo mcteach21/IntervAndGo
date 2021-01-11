@@ -24,8 +24,6 @@ public class Dao<T> {
         this.table = table;
     }
 
-
-
     public interface OnSuccess{
         void result(List<?> items, String message);
     }
@@ -34,10 +32,16 @@ public class Dao<T> {
         new Http2AsyncTask(onSuccess).execute(url);
     }
 
-    public List<T> find(String whereClause, OnSuccess onSuccess){
+    public void find(String whereClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+whereClause;
         new Http2AsyncTask(onSuccess).execute(url);
-        return null;
+    }
+
+    public void add(String addClause, OnSuccess onSuccess){
+        String url = DB_API_URL+"list="+table+"&"+addClause;
+
+        Log.i(TAG, url);
+        new Http2AsyncTask(onSuccess).execute(url);
     }
 
     /**
@@ -55,7 +59,16 @@ public class Dao<T> {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
             String json = response.body().string();
-            List<T> list = new Gson().fromJson(json, new TypeToken<List<?>>() {}.getType());
+
+/*            Log.i(TAG, "==========================================");
+            Log.i(TAG, "dbRequest: "+json);
+            Log.i(TAG, "==========================================");*/
+
+            List<T> list = new ArrayList<T>();
+            try {
+                list = new Gson().fromJson(json, new TypeToken<List<?>>() {}.getType());
+            }catch (Exception e){}
+
             return list;
         }
         @Override
