@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,13 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.model.Intervention;
 
-public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdapter.ViewHolder> {
+public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG ="tests" ;
     private List<Intervention> items;
@@ -63,6 +67,48 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    /**
+     * Filtrer (après Recherche dans Liste)
+     * @return
+     */
+    @Override
+    public Filter getFilter()
+    {
+        return new Filter()
+        {
+            @Override
+            protected FilterResults performFiltering(CharSequence searchText)
+            {
+                FilterResults results = new FilterResults();
+                //If there's nothing to filter on, return the original data for your list
+                if(searchText == null || searchText.length() == 0)
+                {
+                    results.values = items;
+                    results.count = items.size();
+                }
+                else
+                {
+                    List<Intervention> filterResultsData = new ArrayList<Intervention>();
+                    for(Intervention item : items)
+                    {
+                        if(item.getDescription().contains(searchText))
+                            filterResultsData.add(item);
+                    }
+                    results.values = filterResultsData;
+                    results.count = filterResultsData.size();
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults)
+            {
+                items = (List<Intervention>)filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,8 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
@@ -50,29 +54,16 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Action..", Snackbar.LENGTH_LONG)
-                        .setAction("Action",
-                                (v)-> Toast.makeText(SupervisorActivity.this, "Not Implemented yet!", Toast.LENGTH_SHORT).show()
-                        ).show();
-            }
-        });*/
+        Toolbar toolbar = (Toolbar)findViewById(R.id.supervToolbar);
+        setSupportActionBar(toolbar);
+        setTitle("");
 
         //current user
         User user = getCurrentUser();
-
-        String profil = getString(R.string.title_activity_supervisor);
-        ((TextView)findViewById(R.id.title)).setText(profil+" : "+user);
-
+        ((TextView)findViewById(R.id.title)).setText(""+user);
 
         //list interventions
         refreshListAsync();
-
-
     }
 
     private User getCurrentUser() {
@@ -87,22 +78,51 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     }
 
     /**
+     * Menu
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Toast.makeText(this, "create menu!!!", Toast.LENGTH_SHORT).show();
+        getMenuInflater().inflate(R.menu.menu_superv, menu);
+        MenuItem mSearch = menu.findItem(R.id.appSearchBar);
+
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setQueryHint("Search");
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if(newText == null || newText.length() == 0)
+                    refreshListAsync();
+                else
+                    adapter.getFilter().filter(newText);
+
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
      * Gestion liste Interventions
      */
     List<Intervention> items = new ArrayList<Intervention>();
     SwipeRefreshLayout swipeContainer;
     RecyclerView recyclerView;
+    InterventionsAdapter adapter;
     private void loadList(){
         recyclerView = findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        //val layoutManager = GridLayoutManager(this, 3)
-
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-        InterventionsAdapter adapter = new InterventionsAdapter(
+        adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {
                     Toast.makeText(this, "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
@@ -131,16 +151,6 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
                 android.R.color.holo_blue_bright
         );
     }
-  /*  private void runLayoutAnimation(final RecyclerView recyclerView) {
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down_animation);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }*/
-
     private void refreshListAsync() {
 
         InterventionDao dao = new InterventionDao();

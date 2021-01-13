@@ -41,5 +41,14 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" />
 
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_results_interv"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

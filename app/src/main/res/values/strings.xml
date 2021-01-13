@@ -38,6 +38,10 @@
     <string name="tab_text_1">Interventions</string>
     <string name="tab_text_2">Planification</string>
 
+    <string name="user_profil_1">Admin.</string>
+    <string name="user_profil_2">Supervieur</string>
+    <string name="user_profil_3">Technicien</string>
+
     <string name="title_activity_technician">Technicien</string>
     <string name="title_options">Options</string>
     <string name="fp_title">Authentification par Empreinte Digitale</string>
@@ -50,5 +54,7 @@
     <string name="hint_title_date_fin_prev">Date Fin</string>
     <string name="hint_title_comment">Commentaires</string>
     <string name="btn_planif_txt">Planifier Intervention</string>
+    <string name="search_txt">Search..</string>
+    <string name="no_results_interv">Aucune Intervention</string>
 
 </resources>
