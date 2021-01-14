@@ -85,7 +85,7 @@ public class InterventionsFragment extends Fragment {
         //val layoutManager = GridLayoutManager(this, 3)
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(root.getContext(), LinearLayoutManager.VERTICAL));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(root.getContext(), LinearLayoutManager.VERTICAL));
 
         adapter = new InterventionsAdapter(
                 items,

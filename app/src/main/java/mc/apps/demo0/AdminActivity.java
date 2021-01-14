@@ -49,9 +49,13 @@ public class AdminActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.admin_toolbar_layout);
-
         setTitle("");
         ((TextView)findViewById(R.id.title)).setText(""+user);
+
+       /* getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        getSupportActionBar().setIcon(R.drawable.ic_profil_admin);
+        getSupportActionBar().setTitle(""+user);
+        getSupportActionBar().setSubtitle("Admin.");*/
     }
     private User getCurrentUser() {
         User user = (User) getIntent().getSerializableExtra("user");

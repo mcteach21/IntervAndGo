@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import mc.apps.demo0.R;
-import mc.apps.demo0.ui.rapports.RapportsViewModel;
 
 public class OptionFirstFragment extends Fragment {
     private OptionsViewModel optionsViewModel;

@@ -43,15 +43,23 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         return new ViewHolder(itemView);
     }
 
+    int[] logos = {
+            R.drawable.ic_profil_admin,
+            R.drawable.ic_profil_superv,
+            R.drawable.ic_profil_tech,
+            R.drawable.ic_account_icon_red
+    };
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-       User user = items.get(position);
-       holder.title.setText(user.getFirstname()+" "+user.getLastname());
-       holder.img.setImageResource(R.drawable.ic_account_icon_red);
+        User user = items.get(position);
+        holder.title.setText(user.getFirstname()+" "+user.getLastname());
 
-        String profil = user.getProfilId()==1?"Administrateur":(user.getProfilId()==2?"Superviseur":"Technicien");
-        holder.details.setText(user.getEmail()+" | "+profil);
+        int profilid = user.getProfilId();
+        holder.img.setImageResource(logos[profilid-1]);
+
+        //String profil = user.getProfilId()==1?"Administrateur":(user.getProfilId()==2?"Superviseur":"Technicien");
+        holder.details.setText(user.getEmail());
         if(listener!=null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))

@@ -39,7 +39,7 @@
             android:background="@android:color/transparent"
             android:breakStrategy="high_quality"
             android:fontFamily="casual"
-            android:text="xxxxxxxxxxx"
+            android:text="title.."
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,13 +54,35 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="casual"
-            android:text=".."
+            android:text="subtitle.."
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_btn_edit"
             app:layout_constraintStart_toEndOf="@+id/item_img"
             app:layout_constraintTop_toBottomOf="@+id/item_title" />
+
+        <ImageButton
+            android:id="@+id/item_btn_delete"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/icon_button_selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_title"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <ImageButton
+            android:id="@+id/item_btn_edit"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/icon_button_selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_btn_delete"
+            app:layout_constraintTop_toBottomOf="@+id/item_title"
+            app:srcCompat="@android:drawable/ic_menu_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
