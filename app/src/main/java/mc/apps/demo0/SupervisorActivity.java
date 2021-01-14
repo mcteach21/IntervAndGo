@@ -4,12 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -54,7 +52,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.supervToolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.adminToolbar);
         setSupportActionBar(toolbar);
         setTitle("");
 
@@ -82,7 +80,6 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Toast.makeText(this, "create menu!!!", Toast.LENGTH_SHORT).show();
         getMenuInflater().inflate(R.menu.menu_superv, menu);
         MenuItem mSearch = menu.findItem(R.id.appSearchBar);
 
@@ -120,8 +117,6 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-
         adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {
@@ -133,9 +128,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
                 SupervisorActivity.this, R.anim.layout_fall_down_animation
         ));
 
-        // Lookup the swipe container view
         swipeContainer = findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
@@ -143,7 +136,6 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
             }
         });
 
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(
                 android.R.color.holo_red_light,
                 android.R.color.holo_green_light,

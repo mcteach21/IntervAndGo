@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,33 +30,42 @@ import mc.apps.demo0.SupervisorActivity;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class InterventionsFragment extends Fragment {
-
-    private InterventionsViewModel homeViewModel;
+    private TextView title;
+    MainViewModel mainViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = ViewModelProviders.of(this).get(InterventionsViewModel.class);
-
         View root = inflater.inflate(R.layout.fragment_interventions, container, false);
 
-        final TextView textView = root.findViewById(R.id.fragment_title);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText("[Admin] "+s);
-            }
-        });
+        title = root.findViewById(R.id.fragment_title);
+        title.setText("Interventions");
+
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         return root;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Interventions");
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Interventions");
 
         root = view;
         refreshListAsync();
-
         super.onViewCreated(view, savedInstanceState);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mainViewModel.getSearch().observe(
+                getViewLifecycleOwner(),
+                search -> {
+                    if (search == null || search.length() == 0)
+                        refreshListAsync();
+                    else
+                        if(adapter!=null)
+                            adapter.getFilter().filter(search);
+                }
+        );
     }
 
     /**
@@ -64,7 +74,9 @@ public class InterventionsFragment extends Fragment {
     List<Intervention> items = new ArrayList<Intervention>();
     SwipeRefreshLayout swipeContainer;
     RecyclerView recyclerView;
+    InterventionsAdapter adapter;
     View root;
+    
     private void loadList(){
         recyclerView = root.findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
@@ -75,7 +87,7 @@ public class InterventionsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(root.getContext(), LinearLayoutManager.VERTICAL));
 
-        InterventionsAdapter adapter = new InterventionsAdapter(
+        adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {
                     Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();

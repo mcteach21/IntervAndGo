@@ -1,7 +1,6 @@
 package mc.apps.demo0.ui.comptes;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,44 +20,48 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import mc.apps.demo0.R;
-import mc.apps.demo0.SupervisorActivity;
-import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.adapters.UsersAdapter;
-import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.dao.UserDao;
-import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.viewmodels.MainViewModel;
 import mc.apps.demo0.model.User;
 
 public class ComptesFragment extends Fragment {
+    private TextView title;
+    MainViewModel mainViewModel;
 
-    private ComptesViewModel dashboardViewModel;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel = ViewModelProviders.of(this).get(ComptesViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_comptes, container, false);
 
-        final TextView textView = root.findViewById(R.id.fragment_title);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText("[Admin] "+s);
-            }
-        });
+        title = root.findViewById(R.id.fragment_title);
+        title.setText("Comptes");
+
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         return root;
     }
     View root;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Comptes");
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Comptes");
 
         root = view;
-        refreshListAsync(); //charger liste comptes!
-
+        refreshListAsync();  //charger liste comptes!
         super.onViewCreated(view, savedInstanceState);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mainViewModel.getSearch().observe(
+                getViewLifecycleOwner(),
+                search -> {
+                    if (search == null || search.length() == 0)
+                        refreshListAsync();
+                    else
+                        if(adapter!=null)
+                            adapter.getFilter().filter(search);
+                }
+        );
     }
 
     /**
@@ -68,6 +70,7 @@ public class ComptesFragment extends Fragment {
     List<User> items = new ArrayList<User>();
     SwipeRefreshLayout swipeContainer;
     RecyclerView recyclerView;
+    UsersAdapter adapter;
 
     private void loadList(){
         recyclerView = root.findViewById(R.id.list);
@@ -77,7 +80,7 @@ public class ComptesFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(root.getContext(), LinearLayoutManager.VERTICAL));
 
-        UsersAdapter adapter = new UsersAdapter(
+        adapter = new UsersAdapter(
                 items,
                 (position, item) -> {
                     Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
@@ -107,7 +110,6 @@ public class ComptesFragment extends Fragment {
         );
     }
     private void refreshListAsync() {
-
         UserDao dao = new UserDao();
         dao.list((data, message) -> {
             items = dao.Deserialize(data, User.class);

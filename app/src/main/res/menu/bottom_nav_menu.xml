@@ -7,7 +7,7 @@
         android:title="@string/title_comptes" />
     <item
         android:id="@+id/navigation_interventions"
-        android:icon="@drawable/ic_action_interv"
+        android:icon="@drawable/ic_intervention"
         android:title="@string/title_interventions" />
     <item
         android:id="@+id/navigation_rapports"

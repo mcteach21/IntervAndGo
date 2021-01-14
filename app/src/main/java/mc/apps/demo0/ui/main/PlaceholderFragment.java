@@ -84,10 +84,6 @@ public class PlaceholderFragment extends Fragment {
         super.onViewCreated(root, savedInstanceState);
         if (index==2){
 
-            /*root.findViewById(R.id.edtCodeClient).setOnFocusChangeListener((view, hasFocus) -> {
-                if (hasFocus)
-                    startActivity(new Intent(root.getContext(), SearchActivity.class));
-            });*/
             initAutocomplete(root);
 
             Button btnadd = root.findViewById(R.id.btn_add_planif);
@@ -123,19 +119,8 @@ public class PlaceholderFragment extends Fragment {
     private void initAutocomplete(View root) {
         ClientDao dao = new ClientDao();
 
-
         dao.list((data, message) -> {
             List<Client> items = dao.Deserialize(data, Client.class);
-
-            /*List<String> noms = new ArrayList();
-            for (Object c : items)
-                noms.add(((Client)c).getNom());
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                    root.getContext(),
-                    android.R.layout.select_dialog_item,
-                    noms);*/
-
             ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
                     root.getContext(),
                     android.R.layout.select_dialog_item,

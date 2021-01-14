@@ -37,7 +37,7 @@ public class RapportsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Rapports");
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Rapports");
         super.onViewCreated(view, savedInstanceState);
     }
 }

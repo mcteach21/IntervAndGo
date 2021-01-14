@@ -3,15 +3,20 @@ package mc.apps.demo0.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 import mc.apps.demo0.R;
 import mc.apps.demo0.model.Client;
+import mc.apps.demo0.model.User;
 
 
-public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHolder> {
+public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG ="tests" ;
     private List<Client> items;
@@ -53,5 +58,47 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+
+    /**
+     * Filtrer (après Recherche dans Liste)
+     * @return
+     */
+    @Override
+    public Filter getFilter()
+    {
+        return new Filter()
+        {
+            @Override
+            protected FilterResults performFiltering(CharSequence searchText)
+            {
+                FilterResults results = new FilterResults();
+                //If there's nothing to filter on, return the original data for your list
+                if(searchText == null || searchText.length() == 0)
+                {
+                    results.values = items;
+                    results.count = items.size();
+                }
+                else
+                {
+                    List<Client> filterResultsData = new ArrayList<Client>();
+                    for(Client item : items)
+                    {
+                        if(item.getNom().contains(searchText))
+                            filterResultsData.add(item);
+                    }
+                    results.values = filterResultsData;
+                    results.count = filterResultsData.size();
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults)
+            {
+                items = (List<Client>)filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

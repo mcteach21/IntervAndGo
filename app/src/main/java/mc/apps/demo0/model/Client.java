@@ -118,6 +118,6 @@ public class Client implements Serializable {
 
 	@Override
 	public String toString() {
-		return nom.toUpperCase();
+		return nom.substring(0,1).toUpperCase()+nom.substring(1).toLowerCase();
 	}
 }
