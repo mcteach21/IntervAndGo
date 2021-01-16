@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -22,24 +24,33 @@ import java.util.List;
 import mc.apps.demo0.R;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
+import mc.apps.demo0.viewmodels.MainViewModel;
 
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> implements Filterable {
-
     private static final String TAG ="tests" ;
     private List<User> items;
     private OnItemClickListener listener;
 
+    private boolean select = false;
     public UsersAdapter(List<User> items, OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    private MainViewModel mainViewModel;
+    public UsersAdapter(List<User> items, OnItemClickListener listener, boolean select, MainViewModel mainViewModel) {
+        this(items, listener);
+        this.select = select;
+        this.mainViewModel = mainViewModel;
     }
 
     //Drawable item_logo;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        int layout = this.select?R.layout.item_layout_select:R.layout.item_layout;
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -51,19 +62,23 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     };
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         User user = items.get(position);
         holder.title.setText(user.getFirstname()+" "+user.getLastname());
 
-        int profilid = user.getProfilId();
-        holder.img.setImageResource(logos[profilid-1]);
+        if(this.select) {
+            //mainViewModel.updateSelected();
+        }
+        else{
+            int profilid = user.getProfilId();
+            holder.img.setImageResource(logos[profilid - 1]);
+            holder.details.setText(user.getEmail());
+        }
 
-        //String profil = user.getProfilId()==1?"Administrateur":(user.getProfilId()==2?"Superviseur":"Technicien");
-        holder.details.setText(user.getEmail());
-        if(listener!=null)
+        if (listener != null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))
             );
+
     }
 
     @Override
@@ -78,6 +93,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            if(select) {
+                itemView.findViewById(R.id.item_select).setOnClickListener(
+                        v-> {
+                            User user = items.get(getAdapterPosition());
+                            mainViewModel.updateSelected(user, ((Switch)v).isChecked());
+                            listener.onItemClick(getAdapterPosition(), user);
+                        }
+                );
+            }
         }
     }
 

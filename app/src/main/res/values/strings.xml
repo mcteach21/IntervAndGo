@@ -56,5 +56,14 @@
     <string name="btn_planif_txt">Planifier Intervention</string>
     <string name="search_txt">Search..</string>
     <string name="no_results_interv">Aucune Intervention</string>
+    <string name="select_item_txt">Selectionner dans liste..</string>
+
+    <string-array name="statuts">
+        <item>en attente</item>
+        <item>en cours</item>
+        <item>abandon</item>
+        <item>à poursuivre</item>
+        <item>terminée</item>
+    </string-array>
 
 </resources>

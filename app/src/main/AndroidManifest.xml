@@ -11,11 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_blue_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SelectActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SearchActivity" />
         <activity
             android:name=".TechnicianActivity"
             android:label="@string/title_activity_technician"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SupervisorActivity"
             android:label="@string/title_activity_supervisor"

@@ -1,5 +1,6 @@
 package mc.apps.demo0.adapters;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     private static final String TAG ="tests" ;
     private List<Intervention> items;
     private OnItemClickListener listener;
+    private Context context;
 
     public InterventionsAdapter(List<Intervention> items, OnItemClickListener listener) {
         this.items = items;
@@ -36,14 +38,19 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @Override
     public InterventionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        context = parent.getContext();
         return new ViewHolder(itemView);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull InterventionsAdapter.ViewHolder holder, int position) {
 
+        String[] status =  context.getResources().getStringArray( R.array.statuts);
+
         Intervention interv = items.get(position);
         holder.title.setText(interv.getDescription());
+        holder.state.setText(status[interv.getStatutId()-1]);
 
         SimpleDateFormat enDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat frDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
@@ -113,6 +120,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView title = itemView.findViewById(R.id.item_title);
+        TextView state = itemView.findViewById(R.id.item_state);
         TextView details = itemView.findViewById(R.id.item_details);
 
         public ViewHolder(@NonNull View itemView) {

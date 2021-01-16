@@ -10,9 +10,6 @@
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/button_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,11 +18,13 @@
 
         <ImageView
             android:id="@+id/item_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="7dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/item_select"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_intervention" />
 
@@ -47,44 +46,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/item_details"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="casual"
-            android:text="subtitle.."
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_btn_edit"
-            app:layout_constraintStart_toEndOf="@+id/item_img"
-            app:layout_constraintTop_toBottomOf="@+id/item_title" />
-
-        <ImageButton
-            android:id="@+id/item_btn_delete"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/icon_button_selector"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_title"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
-
-        <ImageButton
-            android:id="@+id/item_btn_edit"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/icon_button_selector"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_btn_delete"
-            app:layout_constraintTop_toBottomOf="@+id/item_title"
-            app:srcCompat="@android:drawable/ic_menu_view" />
-
-        <TextView
             android:id="@+id/item_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -95,6 +56,17 @@
             android:textColor="@color/colorAccent"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/item_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
