@@ -66,7 +66,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         holder.title.setText(user.getFirstname()+" "+user.getLastname());
 
         if(this.select) {
-            //mainViewModel.updateSelected();
+            List<User> selected = mainViewModel.getSelected().getValue();
+            if(selected != null)
+                if(selected.contains(user))
+                    holder.select_switch.setChecked(true);
         }
         else{
             int profilid = user.getProfilId();
@@ -90,6 +93,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         ImageView img = itemView.findViewById(R.id.item_img);
         TextView title = itemView.findViewById(R.id.item_title);
         TextView details = itemView.findViewById(R.id.item_details);
+
+        Switch select_switch = itemView.findViewById(R.id.item_select);
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

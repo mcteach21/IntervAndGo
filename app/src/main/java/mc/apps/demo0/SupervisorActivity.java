@@ -2,12 +2,16 @@ package mc.apps.demo0;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -36,9 +40,11 @@ import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.main.SectionsPagerAdapter;
+import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class SupervisorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "tests";
+    private static final int SELECT_REQUEST_CODE = 2608;
 
 
     @Override
@@ -62,7 +68,10 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
 
         //list interventions
         refreshListAsync();
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
+    MainViewModel mainViewModel;
 
     private User getCurrentUser() {
         User user = (User) getIntent().getSerializableExtra("user");
@@ -102,6 +111,14 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.appSignOut){
+            MyTools.confirmExit(this);
+        }
+        return true;
     }
 
     /**
@@ -199,5 +216,22 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         mHour = hourOfDay;
         mMinute = minute;
         edtDateTime.setText(mDay + "-" + (mMonth + 1) + "-" + mYear+" "+mHour+":"+mMinute);
+    }
+
+
+    public void list_techs_click(View view){
+        mainViewModel.clearSelected();
+        startActivityForResult(new Intent(this, SelectActivity.class), SELECT_REQUEST_CODE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
+        if(requestCode==SELECT_REQUEST_CODE){
+
+            List<User> selected = (List<User>) data.getSerializableExtra("data");
+            for(User u : selected)
+                mainViewModel.updateSelected(u, true);
+        }
     }
 }

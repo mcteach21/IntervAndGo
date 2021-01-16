@@ -100,7 +100,8 @@ public class SelectFragment extends Fragment {
                 selected,
                 (position, item) -> {
                     Toast.makeText(root.getContext(), "Selected : "+item.toString(), Toast.LENGTH_SHORT).show();
-                }
+                },
+                false
         );
         recyclerView_selected.setAdapter(adapter2);
         mainViewModel.getSelected().observe(getActivity(), selected -> {

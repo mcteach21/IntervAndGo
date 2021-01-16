@@ -12,5 +12,9 @@
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_action_rapport"
             android:title="@string/title_options" />
+        <item
+            android:id="@+id/appSignOut"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:title="@string/action_sign_out" />
     </group>
 </menu>

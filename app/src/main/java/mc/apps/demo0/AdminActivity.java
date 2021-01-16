@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -19,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
@@ -85,6 +87,13 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.appSignOut){
+            MyTools.confirmExit(this);
+        }
+        return true;
     }
 
 }

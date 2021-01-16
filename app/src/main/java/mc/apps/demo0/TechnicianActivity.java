@@ -15,6 +15,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 
+import mc.apps.demo0.libs.MyTools;
+
 public class TechnicianActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "demo";
     private DrawerLayout drawerLayout;
@@ -47,6 +49,7 @@ public class TechnicianActivity extends AppCompatActivity implements NavigationV
             case R.id.nav_gallery:
                 break;
             default:
+                MyTools.confirmExit(this);
                 break;
         }
 

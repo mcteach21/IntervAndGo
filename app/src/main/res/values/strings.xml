@@ -57,6 +57,9 @@
     <string name="search_txt">Search..</string>
     <string name="no_results_interv">Aucune Intervention</string>
     <string name="select_item_txt">Selectionner dans liste..</string>
+    <string name="techn" />
+    <string name="tech_assoc_txt">Technicien(s) (cliquer pour ajouter)</string>
+    <string name="action_sign_out">Se Déconnecter</string>
 
     <string-array name="statuts">
         <item>en attente</item>

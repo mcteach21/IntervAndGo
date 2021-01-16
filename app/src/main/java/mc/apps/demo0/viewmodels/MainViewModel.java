@@ -38,4 +38,8 @@ public class MainViewModel  extends ViewModel {
     public MutableLiveData<List<User>> getSelected() {
         return selected;
     }
+
+    public void clearSelected() {
+        selected.setValue(new ArrayList<>());
+    }
 }

@@ -8,4 +8,7 @@
         android:title="@string/search_txt"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/appSignOut"
+        android:title="@string/action_sign_out" />
 </menu>

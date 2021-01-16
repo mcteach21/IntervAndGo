@@ -23,6 +23,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,10 +34,14 @@ import java.util.List;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.SearchActivity;
+import mc.apps.demo0.SelectActivity;
+import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.User;
+import mc.apps.demo0.viewmodels.MainViewModel;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -79,12 +86,21 @@ public class PlaceholderFragment extends Fragment {
 
     AutoCompleteTextView codeClient;
     EditText desc, dateDebut, dateFin, serviceCible, comment;
+    RecyclerView technicians;
+
+    MainViewModel mainViewModel;
+    List<User> selected = new ArrayList();
+
     @Override
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
+
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         if (index==2){
 
             initAutocomplete(root);
+            initListTech(root);
+
 
             Button btnadd = root.findViewById(R.id.btn_add_planif);
             btnadd.setOnClickListener(view -> {
@@ -131,9 +147,28 @@ public class PlaceholderFragment extends Fragment {
             codeClient.setAdapter(adapter);
             codeClient.setTextColor(Color.WHITE);
         });
-
-
     }
+    private void initListTech(View root){
+
+        technicians = root.findViewById(R.id.tech_list);
+        technicians.setHasFixedSize(true);
+
+        GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 2);
+        technicians.setLayoutManager(layoutManager2);
+
+        //selected.add(new User(0, "", "", "Aucun technicien!", "", (byte) 3));
+        SelectedUsersAdapter adapter = new SelectedUsersAdapter(
+                selected,
+                null,
+                true
+        );
+        technicians.setAdapter(adapter);
+        mainViewModel.getSelected().observe(getActivity(), selected -> {
+                    Log.i("tests", "loadList: "+selected);
+                    adapter.refresh(selected);
+                });
+    }
+
     private void resetFields(View root) {
         codeClient.getText().clear();
         desc.getText().clear();

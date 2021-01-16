@@ -1,24 +1,19 @@
 package mc.apps.demo0.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.Switch;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.model.User;
-import mc.apps.demo0.viewmodels.MainViewModel;
 
 
 public class SelectedUsersAdapter extends RecyclerView.Adapter<SelectedUsersAdapter.ViewHolder> {
@@ -26,16 +21,17 @@ public class SelectedUsersAdapter extends RecyclerView.Adapter<SelectedUsersAdap
     private List<User> items;
     private OnItemClickListener listener;
 
-    public SelectedUsersAdapter(List<User> items, OnItemClickListener listener) {
+    private boolean withDelete;
+    public SelectedUsersAdapter(List<User> items, OnItemClickListener listener, boolean withDelete) {
         this.items = items;
         this.listener = listener;
+        this.withDelete = withDelete;
     }
 
-    //Drawable item_logo;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layout = R.layout.item_layout_simple;
+        int layout = R.layout.item_layout_simple ;
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new ViewHolder(itemView);
     }
@@ -49,18 +45,8 @@ public class SelectedUsersAdapter extends RecyclerView.Adapter<SelectedUsersAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = items.get(position);
+        Log.i(TAG, "onBindViewHolder: "+user);
         holder.title.setText(user.getFirstname()+" "+user.getLastname());
-
-       /* int profilid = user.getProfilId();
-        holder.img.setImageResource(logos[profilid - 1]);
-        holder.details.setText(user.getEmail());
-
-
-        if (listener != null)
-            holder.itemView.setOnClickListener(
-                    view -> listener.onItemClick(position, items.get(position))
-            );
-*/
     }
 
     @Override
@@ -74,12 +60,22 @@ public class SelectedUsersAdapter extends RecyclerView.Adapter<SelectedUsersAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        //ImageView img = itemView.findViewById(R.id.item_img);
         TextView title = itemView.findViewById(R.id.item_title);
-        //TextView details = itemView.findViewById(R.id.item_details);
+        ImageButton deleteButton = itemView.findViewById(R.id.item_selected_delete);
 
         public ViewHolder(@NonNull View itemView) {
+
             super(itemView);
+            if(withDelete) {
+                deleteButton.setOnClickListener(v -> {
+                    int position = getAdapterPosition();
+                    User u = items.get(position);
+                    items.remove(u);
+                    notifyDataSetChanged();
+                });
+            }else{
+                deleteButton.setVisibility(View.GONE);
+            }
         }
     }
 }
