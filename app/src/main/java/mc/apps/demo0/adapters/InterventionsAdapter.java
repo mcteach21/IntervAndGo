@@ -23,21 +23,28 @@ import mc.apps.demo0.R;
 import mc.apps.demo0.model.Intervention;
 
 public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdapter.ViewHolder> implements Filterable {
-
     private static final String TAG ="tests" ;
     private List<Intervention> items;
     private OnItemClickListener listener;
     private Context context;
+    private boolean details=false;
 
     public InterventionsAdapter(List<Intervention> items, OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }
+    public InterventionsAdapter(List<Intervention> items, OnItemClickListener listener, boolean details) {
+       this(items, listener);
+       this.details = details;
+    }
 
     @NonNull
     @Override
     public InterventionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+
+        int layout = this.details?R.layout.item_layout_details:R.layout.item_layout;
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+
         context = parent.getContext();
         return new ViewHolder(itemView);
     }
@@ -45,24 +52,20 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
     @Override
     public void onBindViewHolder(@NonNull InterventionsAdapter.ViewHolder holder, int position) {
-
         String[] status =  context.getResources().getStringArray( R.array.statuts);
 
         Intervention interv = items.get(position);
         holder.title.setText(interv.getDescription());
-        holder.state.setText(status[interv.getStatutId()-1]);
 
+
+        holder.state.setText(status[interv.getStatutId()-1]);
         SimpleDateFormat enDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat frDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-        Date date = null;
-
-        Date datejour = new Date();
 
         try {
-            date = enDateFormat.parse(interv.getDateDebutPrevue());
-
+            Date date = enDateFormat.parse(interv.getDateDebutPrevue());
             holder.details.setText(frDateFormat.format(date));
-            holder.details.setTextColor(date.before(datejour)? Color.RED:Color.parseColor("#FFA000"));
+            holder.details.setTextColor(date.before( new Date())? Color.RED:Color.parseColor("#FFA000"));
         } catch (ParseException e) {}
 
         if(listener!=null)
@@ -74,6 +77,16 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView title = itemView.findViewById(R.id.item_title);
+        TextView state = itemView.findViewById(R.id.item_state);
+        TextView details = itemView.findViewById(R.id.item_details);
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
     }
 
     /**
@@ -100,7 +113,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
                     List<Intervention> filterResultsData = new ArrayList<Intervention>();
                     for(Intervention item : items)
                     {
-                        if(item.getDescription().contains(searchText))
+                        if(item.getDescription().toLowerCase().contains(searchText.toString().toLowerCase()))
                             filterResultsData.add(item);
                     }
                     results.values = filterResultsData;
@@ -118,13 +131,5 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
         };
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title = itemView.findViewById(R.id.item_title);
-        TextView state = itemView.findViewById(R.id.item_state);
-        TextView details = itemView.findViewById(R.id.item_details);
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
 }

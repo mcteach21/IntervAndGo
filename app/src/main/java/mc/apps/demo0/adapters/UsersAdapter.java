@@ -135,7 +135,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                     List<User> filterResultsData = new ArrayList<User>();
                     for(User item : items)
                     {
-                        if(item.getFirstname().contains(searchText) || item.getLastname().contains(searchText))
+                        if(item.getFirstname().toLowerCase().contains(searchText.toString().toLowerCase())
+                                || item.getLastname().toLowerCase().contains(searchText.toString().toLowerCase()))
                             filterResultsData.add(item);
                     }
                     results.values = filterResultsData;

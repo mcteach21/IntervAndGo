@@ -84,7 +84,7 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
                     List<Client> filterResultsData = new ArrayList<Client>();
                     for(Client item : items)
                     {
-                        if(item.getNom().contains(searchText))
+                        if(item.getNom().toLowerCase().contains(searchText.toString().toLowerCase()))
                             filterResultsData.add(item);
                     }
                     results.values = filterResultsData;

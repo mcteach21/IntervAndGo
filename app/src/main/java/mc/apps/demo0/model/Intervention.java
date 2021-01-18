@@ -11,6 +11,7 @@ public class Intervention implements Serializable {
 
 	@SerializedName("date_debut_prevue")
 	private String dateDebutPrevue;
+
 	@SerializedName("date_fin_prevue")
 	private String dateFinPrevue;
 

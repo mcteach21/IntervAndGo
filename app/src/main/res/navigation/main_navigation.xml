@@ -8,13 +8,13 @@
 
     <fragment
         android:id="@+id/navigation_option_1"
-        android:name="mc.apps.demo0.ui.options.OptionFirstFragment"
+        android:name="mc.apps.demo0.ui.options.TechInterventionsFragment"
         android:label="@string/title_rapports"
         tools:layout="@layout/fragment_technicien" />
 
     <fragment
         android:id="@+id/navigation_option_2"
-        android:name="mc.apps.demo0.ui.options.OptionSecondFragment"
+        android:name="mc.apps.demo0.ui.options.TechRapportsFragment"
         android:label="@string/title_options"
         tools:layout="@layout/fragment_technicien" />
 </navigation>
