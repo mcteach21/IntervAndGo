@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public class User implements Serializable {
-	private int id;
+	private String code;
 	private String email;
 	private String firstname;
 	private String lastname;
@@ -22,8 +22,8 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(int id, String email, String firstname, String lastname, String password, byte profilId) {
-		this.id = id;
+	public User(String code, String email, String firstname, String lastname, String password, byte profilId) {
+		this.code = code;
 		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -31,15 +31,12 @@ public class User implements Serializable {
 		this.profilId = profilId;
 	}
 
-
-	public int getId() {
-		return this.id;
+	public String getCode() {
+		return code;
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setCode(String code) {
+		this.code = code;
 	}
-
 	public String getEmail() {
 		return this.email;
 	}

@@ -3,13 +3,10 @@ package mc.apps.demo0.libs;
 import android.Manifest;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,9 +16,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
-
-import mc.apps.demo0.R;
 
 public class MyTools {
     private static final String TAG = "demo";
@@ -45,8 +39,12 @@ public class MyTools {
 
     public static final String DATE_FORMAT_12 = "hh:mm";
     public static final String DATE_FORMAT_24 = "HH:mm";
-    public static final String DATE_FORMAT_FR = "dd-MM-yyyy";
+
+    public static final String DATE_FORMAT_EN_SHORT = "yyyy-MM-dd";
     public static final String DATE_FORMAT_EN = "yyyy-MM-dd hh:mm:ss";
+
+    public static final String DATE_FORMAT_FR_SHORT = "dd-MM-yyyy";
+    public static final String DATE_FORMAT_FR = "dd-MM-yyyy HH:mm";
 
     public static String getCurrentTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24);
@@ -68,6 +66,26 @@ public class MyTools {
             return null;
         }
     }
+    public static String formatDateFr(String dateString) {
+        Date date = getDateOfString(dateString);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR);
+        return dateFormat.format(date);
+    }
+    public static String formatTimeFr(String dateString) {
+        Date date = getDateOfString(dateString);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24);
+        return dateFormat.format(date);
+    }
+
+
+/*    public static Date getTimeOfString(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24);
+        try {
+            return dateFormat.parse(dateString);
+        }catch(ParseException e){
+            return null;
+        }
+    }*/
 
     /**
      * Permissions :

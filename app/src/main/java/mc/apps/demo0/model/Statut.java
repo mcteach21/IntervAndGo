@@ -10,9 +10,6 @@ public class Statut implements Serializable {
 
 	private List<Intervention> interventions;
 
-	public Statut() {
-	}
-
 	public Statut(byte id, String statut) {
 		this.id = id;
 		this.statut = statut;

@@ -48,7 +48,7 @@
     <string name="fp_text">Toucher le capteur</string>
     <string name="fp_cancel">Annuler</string>
     <string name="hint_title_client">Code Client</string>
-    <string name="hint_title_desc">Description</string>
+    <string name="hint_title_desc">Description Intervention</string>
     <string name="hint_title_service_cible">Service (Equipement) Cible</string>
     <string name="hint_title_date_debut_prev">Date Début</string>
     <string name="hint_title_date_fin_prev">Date Fin</string>
@@ -70,6 +70,7 @@
     <string name="hint_title_interv">Code Intervention</string>
 
     <string name="rapport_assoc_photos">Photos (cliquer pour ajouter)</string>
+    <string name="hint_title_mat_necess">Matériel Nécessaire</string>
 
     <string-array name="statuts">
         <item>en attente</item>

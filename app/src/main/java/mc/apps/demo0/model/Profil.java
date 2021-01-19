@@ -7,9 +7,6 @@ public class Profil implements Serializable {
 	private byte id;
 	private String profil;
 
-	public Profil() {
-	}
-
 	public Profil(byte id, String profil) {
 		this.id = id;
 		this.profil = profil;

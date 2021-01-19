@@ -32,14 +32,12 @@
         <AutoCompleteTextView
             android:id="@+id/edtCodeClient"
             style="@style/input_style_default"
-            android:hint="@string/hint_title_client"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:hint="@string/hint_title_client"
+            app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
@@ -76,7 +74,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout2"
+            android:id="@+id/textInputLayout6"
             style="@style/inputstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,6 +92,27 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_title_service_cible" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout2"
+            style="@style/inputstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtMaterielNecess"
+                style="@style/input_style_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_title_mat_necess" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout3"
@@ -152,7 +171,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btn_add_rapport"
+            android:id="@+id/btn_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -188,15 +207,27 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
             android:clickable="true"
             android:onClick="list_techs_click"
             android:text="@string/tech_assoc_txt"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/photos_list"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/tech_list"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
+        <ImageView
+            android:id="@+id/btn_clients_list"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/edtCodeClient"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title"
+            app:srcCompat="@drawable/ic_clients_list" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

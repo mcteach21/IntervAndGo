@@ -137,7 +137,9 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {
-                    Toast.makeText(this, "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SupervisorActivity.this, InterventionActivity.class);
+                    intent.putExtra("intervention", (Intervention)item);
+                    startActivity(intent);
                 }
         );
         recyclerView.setAdapter(adapter);

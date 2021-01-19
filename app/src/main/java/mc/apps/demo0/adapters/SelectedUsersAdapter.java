@@ -59,6 +59,10 @@ public class SelectedUsersAdapter extends RecyclerView.Adapter<SelectedUsersAdap
         notifyDataSetChanged();
     }
 
+    public List<User> getItems() {
+        return items;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView title = itemView.findViewById(R.id.item_title);
         ImageButton deleteButton = itemView.findViewById(R.id.item_selected_delete);

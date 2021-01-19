@@ -33,12 +33,10 @@ import java.util.stream.Collectors;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ImagesAdapter;
 import mc.apps.demo0.adapters.InterventionsAdapter;
-import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
-import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class TechnicianFragments extends Fragment {
@@ -95,38 +93,42 @@ public class TechnicianFragments extends Fragment {
             initAutocomplete(root); //AutoCompletion sur Champ CodeClient!
             initListPhotos(root);   //liste photos / Rapport
 
-            Button btnadd = root.findViewById(R.id.btn_add_rapport);
+            Button btnadd = root.findViewById(R.id.btn_add);
             btnadd.setOnClickListener(view -> {
-
-                //TODO : adapter..
-                desc = root.findViewById(R.id.edtDesc);
-                dateDebut = root.findViewById(R.id.edtDateDebutPrev);
-                dateFin = root.findViewById(R.id.edtDateFinPrev);
-                serviceCible = root.findViewById(R.id.edtServiceCible);
-                comment = root.findViewById(R.id.edtComment);
-
-                Intervention interv = new Intervention(0, 1 , //codeClient,
-                        desc.getText().toString(),
-                        dateDebut.getText().toString(),
-                        dateFin.getText().toString(),
-                        serviceCible.getText().toString(),
-                        comment.getText().toString());
-
-                InterventionDao dao = new InterventionDao();
-                dao.add(interv, (items, message) -> {
-                    Log.i(TAG , "onCreate: "+message);
-                    Toast.makeText(root.getContext(), "Rapport Intervention sauvegardé!", Toast.LENGTH_LONG).show();
-                });
-                resetFields(root); //reinitialiser form rapport!
+                addIntervention(root);
             });
         }
+    }
+
+    private void addIntervention(View root) {
+        codeClient = root.findViewById(R.id.edtCodeClient);
+        desc = root.findViewById(R.id.edtDesc);
+        dateDebut = root.findViewById(R.id.edtDateDebutPrev);
+        dateFin = root.findViewById(R.id.edtDateFinPrev);
+        serviceCible = root.findViewById(R.id.edtMaterielNecess);
+        materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
+        comment = root.findViewById(R.id.edtComment);
+
+        Intervention interv = new Intervention(
+                "code", codeClient.getText().toString(),
+                desc.getText().toString(), dateDebut.getText().toString(), dateFin.getText().toString(),
+                comment.getText().toString(),
+                "mat nécess..",serviceCible.getText().toString(),
+                "code superv"
+        );
+        InterventionDao dao = new InterventionDao();
+        dao.add(interv, (items, message) -> {
+            Log.i(TAG, "onCreate: "+message);
+            Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
+        });
+        resetFields(root); //reinitialiser form planfication!
     }
 
     /**
      * Saisie Rapport / Technicien
      */
     AutoCompleteTextView codeClient;
-    EditText desc, dateDebut, dateFin, serviceCible, comment;
+    EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
     private void initAutocomplete(View root) {
         ClientDao dao = new ClientDao();
 

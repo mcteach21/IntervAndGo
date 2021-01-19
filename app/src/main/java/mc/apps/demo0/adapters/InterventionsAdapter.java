@@ -46,7 +46,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @Override
     public InterventionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        int layout = this.details?R.layout.item_layout_details:R.layout.item_layout;
+        int layout = R.layout.item_layout_details; //this.details?R.layout.item_layout_details:R.layout.item_layout;
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
 
         context = parent.getContext();
@@ -57,49 +57,23 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @Override
     public void onBindViewHolder(@NonNull InterventionsAdapter.ViewHolder holder, int position) {
         String[] status =  context.getResources().getStringArray( R.array.statuts);
-
         Intervention interv = items.get(position);
+
+
+        Date date = MyTools.getDateOfString(interv.getDateDebutPrevue()); //MySQL Date yyyy-MM-dd...
+        String datefr = MyTools.formatDateFr(interv.getDateDebutPrevue()); // dd-MM-yyyy HH:mm
+        String timefr = MyTools.formatTimeFr(interv.getDateDebutPrevue()); // HH:mm
+
+        /*Log.i(TAG, "currentDate - currentTime : "+MyTools.getCurrentDate()+" - "+MyTools.getCurrentTime());
+        Log.i(TAG, "Date Debut Prevue : "+date+" => "+datefr+" - "+timefr);*/
+
         holder.title.setText(interv.getDescription());
+        holder.details.setText(this.details?timefr:datefr);
         holder.state.setText(status[interv.getStatutId()-1]);
 
-        SimpleDateFormat enDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        SimpleDateFormat frDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        holder.details_more.setText(interv.getClientId()+"..");
 
-
-        try {
-            String currentTime = MyTools.getCurrentTime();
-            String currentDate = MyTools.getCurrentDate();
-            Log.i(TAG, "currentDate : "+currentDate);
-            Log.i(TAG, "currentTime : "+currentTime);
-        } catch (Exception e) {
-            Log.i(TAG, "****************************************");
-            Log.i(TAG, ""+e);
-            Log.i(TAG, "****************************************");
-        }
-
-
-        try {
-            Date date = enDateFormat.parse(interv.getDateDebutPrevue());
-            //Date time = frTimeFormat.parse(interv.getDateDebutPrevue());
-            //String currentTime = new SimpleDateFormat("hh:mm", Locale.getDefault()).format(new Date());
-            //Date CurrentTime = frTimeFormat.parse(currentTime);
-
-            if(this.details){
-                //holder.details.setText(frTimeFormat.format(date));
-                //holder.details.setTextColor(time.before(CurrentTime) ? Color.RED : Color.parseColor("#FFA000"));
-
-                holder.details_more.setText("code client..");
-            }else {
-                holder.details.setText(frDateFormat.format(date));
-                holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.parseColor("#FFA000"));
-            }
-
-        } catch (ParseException e) {
-            Log.i(TAG, "****************************************");
-            Log.i(TAG, "onBindViewHolder: "+e);
-            Log.i(TAG, "****************************************");
-        }
-
+        holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.parseColor("#FFA000"));
         if(listener!=null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))

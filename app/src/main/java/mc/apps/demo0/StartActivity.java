@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.model.User;
+import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class StartActivity extends AppCompatActivity {
     private static final String TAG = "tests";
@@ -118,7 +120,6 @@ public class StartActivity extends AppCompatActivity {
         String login_txt = login.getText().toString();
         String password_txt = password.getText().toString();
         UserDao dao = new UserDao();
-
         dao.login(login_txt, password_txt, (data, message) -> {
             List<User> users = dao.Deserialize(data, User.class);
             if(!users.isEmpty()){

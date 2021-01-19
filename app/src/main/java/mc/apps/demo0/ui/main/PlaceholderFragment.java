@@ -74,8 +74,8 @@ public class PlaceholderFragment extends Fragment {
     }
 
     AutoCompleteTextView codeClient;
-    EditText desc, dateDebut, dateFin, serviceCible, comment;
-    RecyclerView technicians;
+    EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
+    RecyclerView tech_list;
 
     MainViewModel mainViewModel;
     List<User> selected = new ArrayList();
@@ -85,43 +85,49 @@ public class PlaceholderFragment extends Fragment {
         super.onViewCreated(root, savedInstanceState);
 
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-        if (index==2){
 
-            initAutocomplete(root);
+        if (index==2){ //Planifier Intervention
+
+            initClientAutocomplete(root);
             initListTech(root);
 
-
-            Button btnadd = root.findViewById(R.id.btn_add_rapport);
+            Button btnadd = root.findViewById(R.id.btn_add);
             btnadd.setOnClickListener(view -> {
-
-                //codeClient = root.findViewById(R.id.edtCodeClient);
-                Toast.makeText(root.getContext(), codeClient.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                desc = root.findViewById(R.id.edtDesc);
-                dateDebut = root.findViewById(R.id.edtDateDebutPrev);
-                dateFin = root.findViewById(R.id.edtDateFinPrev);
-
-                serviceCible = root.findViewById(R.id.edtServiceCible);
-                comment = root.findViewById(R.id.edtComment);
-
-                Intervention interv = new Intervention(0, 1 , //codeClient,
-                        desc.getText().toString(),
-                        dateDebut.getText().toString(),
-                        dateFin.getText().toString(),
-                        serviceCible.getText().toString(),
-                        comment.getText().toString());
-
-                InterventionDao dao = new InterventionDao();
-                dao.add(interv, (items, message) -> {
-                    Log.i(TAG, "onCreate: "+message);
-                    Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
-                });
-                resetFields(root); //reinitialiser form planfication!
+               addIntervention(root);
             });
         }
     }
 
-    private void initAutocomplete(View root) {
+    private void addIntervention(View root) {
+        codeClient = root.findViewById(R.id.edtCodeClient);
+        desc = root.findViewById(R.id.edtDesc);
+        dateDebut = root.findViewById(R.id.edtDateDebutPrev);
+        dateFin = root.findViewById(R.id.edtDateFinPrev);
+        serviceCible = root.findViewById(R.id.edtMaterielNecess);
+        materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
+        comment = root.findViewById(R.id.edtComment);
+
+        //technicien(s) affecté(s)
+        SelectedUsersAdapter adapter = (SelectedUsersAdapter) tech_list.getAdapter();
+        List<User> technicians = adapter.getItems();
+
+        Intervention interv = new Intervention(
+                "code", codeClient.getText().toString(),
+                desc.getText().toString(), dateDebut.getText().toString(), dateFin.getText().toString(),
+                comment.getText().toString(),
+                "mat nécess..",serviceCible.getText().toString(),
+                "code superv",
+                technicians
+        );
+
+        InterventionDao dao = new InterventionDao();
+        dao.add(interv, (items, message) -> {
+            Log.i(TAG, "onCreate: "+message);
+            Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
+        });
+        resetFields(root); //reinitialiser form planfication!
+    }
+    private void initClientAutocomplete(View root) {
         ClientDao dao = new ClientDao();
 
         dao.list((data, message) -> {
@@ -136,24 +142,26 @@ public class PlaceholderFragment extends Fragment {
             codeClient.setAdapter(adapter);
             codeClient.setTextColor(Color.WHITE);
         });
+
+        root.findViewById(R.id.btn_clients_list).setOnClickListener(
+                v->{
+                    Toast.makeText(root.getContext(), "open clients list..", Toast.LENGTH_SHORT).show();
+                }
+        );
     }
     private void initListTech(View root){
-
-        technicians = root.findViewById(R.id.tech_list);
-        technicians.setHasFixedSize(true);
-
+        tech_list = root.findViewById(R.id.tech_list);
+        tech_list.setHasFixedSize(true);
         GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 2);
-        technicians.setLayoutManager(layoutManager2);
+        tech_list.setLayoutManager(layoutManager2);
 
-        //selected.add(new User(0, "", "", "Aucun technicien!", "", (byte) 3));
         SelectedUsersAdapter adapter = new SelectedUsersAdapter(
                 selected,
                 null,
                 true
         );
-        technicians.setAdapter(adapter);
+        tech_list.setAdapter(adapter);
         mainViewModel.getSelected().observe(getActivity(), selected -> {
-                    Log.i("tests", "loadList: "+selected);
                     adapter.refresh(selected);
                 });
     }
@@ -165,5 +173,9 @@ public class PlaceholderFragment extends Fragment {
         dateFin.getText().clear();
         serviceCible.getText().clear();
         comment.getText().clear();
+        materielNecessaire.getText().clear();
+
+        ((SelectedUsersAdapter)tech_list.getAdapter()).getItems().clear();
+        ((SelectedUsersAdapter)tech_list.getAdapter()).notifyDataSetChanged();
     }
 }

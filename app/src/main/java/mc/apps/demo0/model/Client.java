@@ -5,45 +5,32 @@ import java.util.List;
 
 public class Client implements Serializable {
 
-	private int id;
-	private String adresse;
+	private String code;
 	private String contact;
-	private String cp;
 	private String email;
 	private String nom;
 	private String telephone;
-	private String ville;
 
 	private List<Intervention> interventions;
+	private List<Adress> adresses;
 
 	public Client() {
 	}
 
-	public Client(int id, String adresse, String contact, String cp, String email, String nom, String telephone, String ville) {
-		this.id = id;
-		this.adresse = adresse;
+	public Client(String code, String adresse, String contact, String cp, String email, String nom, String telephone, String ville) {
+		this.code = code;
 		this.contact = contact;
-		this.cp = cp;
 		this.email = email;
 		this.nom = nom;
 		this.telephone = telephone;
-		this.ville = ville;
 	}
 
-	public int getId() {
-		return this.id;
+	public String getCode() {
+		return code;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getAdresse() {
-		return this.adresse;
-	}
-
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getContact() {
@@ -54,13 +41,6 @@ public class Client implements Serializable {
 		this.contact = contact;
 	}
 
-	public String getCp() {
-		return this.cp;
-	}
-
-	public void setCp(String cp) {
-		this.cp = cp;
-	}
 
 	public String getEmail() {
 		return this.email;
@@ -86,13 +66,6 @@ public class Client implements Serializable {
 		this.telephone = telephone;
 	}
 
-	public String getVille() {
-		return this.ville;
-	}
-
-	public void setVille(String ville) {
-		this.ville = ville;
-	}
 
 	public List<Intervention> getInterventions() {
 		return this.interventions;
@@ -105,14 +78,12 @@ public class Client implements Serializable {
 	public Intervention addIntervention(Intervention intervention) {
 		getInterventions().add(intervention);
 		//intervention.setClient(this);
-
 		return intervention;
 	}
 
 	public Intervention removeIntervention(Intervention intervention) {
 		getInterventions().remove(intervention);
 		//intervention.setClient(null);
-
 		return intervention;
 	}
 

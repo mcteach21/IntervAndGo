@@ -1,69 +1,98 @@
 package mc.apps.demo0.model;
 
-import android.widget.EditText;
-
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Intervention implements Serializable {
-	private int id;
+	private String code;
+	@SerializedName("client_id")
+	private String clientId;
 	private String commentaire;
-
 	@SerializedName("date_debut_prevue")
 	private String dateDebutPrevue;
-
-	@SerializedName("date_fin_prevue")
-	private String dateFinPrevue;
-
 	@SerializedName("date_debut_reelle")
 	private String dateDebutReelle;
+	@SerializedName("date_fin_prevue")
+	private String dateFinPrevue;
 	@SerializedName("date_fin_reelle")
 	private String dateFinReelle;
-
 	private String description;
 	@SerializedName("materiel_necessaire")
 	private String materielNecessaire;
 	@SerializedName("service_equip_cible")
 	private String serviceEquipCible;
 
-	@SerializedName("client_id")
-	private int clientId;
-	@SerializedName("superviseur_id")
-	private int superviseurId;
+
 	@SerializedName("statut_id")
 	private int statutId;
+	@SerializedName("superviseur_id")
+	private String superviseurId;
 
-	public Intervention(int id, String commentaire, String dateDebutPrevue, String dateFinPrevue, String dateDebutReelle, String dateFinReelle, String description, String materielNecessaire, String serviceEquipCible, int clientId, int superviseurId, int statutId) {
-		this.id = id;
-		this.commentaire = commentaire;
+	private List<User> technicians;
+	private List<Affectation> affectations;
+	private Statut statut;
+	private User user;
+
+	public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue,
+						String commentaire, String materielNecessaire, String serviceEquipCible,
+						String superviseurId) {
+		this.code = code;
+		this.clientId = clientId;
+		this.superviseurId = superviseurId;
+
+		this.description = description;
 		this.dateDebutPrevue = dateDebutPrevue;
 		this.dateFinPrevue = dateFinPrevue;
+
+		this.materielNecessaire = materielNecessaire;
+		this.serviceEquipCible = serviceEquipCible;
+		this.commentaire = commentaire;
+	}
+	public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue,
+						String commentaire, String materielNecessaire, String serviceEquipCible,
+						String superviseurId, List<User> technicians) {
+
+		this(code, clientId, description, dateDebutPrevue, dateFinPrevue,
+				commentaire, materielNecessaire, serviceEquipCible,
+				superviseurId);
+
+		this.technicians = technicians;
+		this.affectations = new ArrayList<>();
+		for (User tech : this.technicians)
+			affectations.add(new Affectation(0, this.code,tech.getCode()));
+	}
+
+	public Intervention(String code, String clientId, String commentaire, String dateDebutPrevue, String dateDebutReelle, String dateFinPrevue, String dateFinReelle, String description, String materielNecessaire, String serviceEquipCible, int statutId, String superviseurId) {
+		this.code = code;
+		this.clientId = clientId;
+		this.commentaire = commentaire;
+		this.dateDebutPrevue = dateDebutPrevue;
 		this.dateDebutReelle = dateDebutReelle;
+		this.dateFinPrevue = dateFinPrevue;
 		this.dateFinReelle = dateFinReelle;
 		this.description = description;
 		this.materielNecessaire = materielNecessaire;
 		this.serviceEquipCible = serviceEquipCible;
-		this.clientId = clientId;
-		this.superviseurId = superviseurId;
 		this.statutId = statutId;
+		this.superviseurId = superviseurId;
 	}
 
-    public Intervention(int id, int codeClient, String description, String dateDebutPrevue, String dateFinPrevue, String serviceEquipCible, String commentaire) {
-		this.id = id;
-		this.clientId = codeClient;
-		this.description = description;
-		this.dateDebutPrevue = dateDebutPrevue;
-		this.dateFinPrevue = dateFinPrevue;
-		this.serviceEquipCible = serviceEquipCible;
-		this.commentaire = commentaire;
+	public String getCode() {
+		return code;
 	}
 
-    public int getId() {
-		return id;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
 
 	public String getCommentaire() {
@@ -82,20 +111,20 @@ public class Intervention implements Serializable {
 		this.dateDebutPrevue = dateDebutPrevue;
 	}
 
-	public String getDateFinPrevue() {
-		return dateFinPrevue;
-	}
-
-	public void setDateFinPrevue(String dateFinPrevue) {
-		this.dateFinPrevue = dateFinPrevue;
-	}
-
 	public String getDateDebutReelle() {
 		return dateDebutReelle;
 	}
 
 	public void setDateDebutReelle(String dateDebutReelle) {
 		this.dateDebutReelle = dateDebutReelle;
+	}
+
+	public String getDateFinPrevue() {
+		return dateFinPrevue;
+	}
+
+	public void setDateFinPrevue(String dateFinPrevue) {
+		this.dateFinPrevue = dateFinPrevue;
 	}
 
 	public String getDateFinReelle() {
@@ -130,22 +159,6 @@ public class Intervention implements Serializable {
 		this.serviceEquipCible = serviceEquipCible;
 	}
 
-	public int getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(int clientId) {
-		this.clientId = clientId;
-	}
-
-	public int getSuperviseurId() {
-		return superviseurId;
-	}
-
-	public void setSuperviseurId(int superviseurId) {
-		this.superviseurId = superviseurId;
-	}
-
 	public int getStatutId() {
 		return statutId;
 	}
@@ -154,8 +167,43 @@ public class Intervention implements Serializable {
 		this.statutId = statutId;
 	}
 
+	public String getSuperviseurId() {
+		return superviseurId;
+	}
+
+	public void setSuperviseurId(String superviseurId) {
+		this.superviseurId = superviseurId;
+	}
+
+	public List<Affectation> getAffectations() {
+		return affectations;
+	}
+
+	public void setAffectations(List<Affectation> affectations) {
+		this.affectations = affectations;
+	}
+
+	public Statut getStatut() {
+		return statut;
+	}
+
+	public void setStatut(Statut statut) {
+		this.statut = statut;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public String toString() {
-		return "Intervention [" + id +"] " + description;
+		return "Intervention [" + code +"] " + description;
 	}
+
+
+
 }
