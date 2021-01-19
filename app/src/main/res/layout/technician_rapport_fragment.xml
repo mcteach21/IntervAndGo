@@ -73,7 +73,7 @@
             app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
         <AutoCompleteTextView
-            android:id="@+id/edtCodeClient"
+            android:id="@+id/txtCodeClient"
             style="@style/input_style_default"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtCodeClient">
+            app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDateDebutPrev"
@@ -132,7 +132,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
-            app:layout_constraintTop_toBottomOf="@+id/edtCodeClient">
+            app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDateFinPrev"

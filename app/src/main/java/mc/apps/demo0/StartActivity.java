@@ -73,21 +73,18 @@ public class StartActivity extends AppCompatActivity {
         TextView linksignup = findViewById(R.id.txtlinksignup);
         TextView linkforgotten = findViewById(R.id.txtlinkfortgotten);
 
-        View.OnClickListener ecouteur = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(view.getId()==R.id.btnsignin) {
-                    handleLogin();          // gestion login
-                }else if(view.getId()==R.id.txtlinksignup) {
-                    Toast.makeText(StartActivity.this, "TODO : création compte..", Toast.LENGTH_SHORT).show();
-                   /* Intent intent = new Intent(StartActivity.this, SignupActivity.class);
-                    startActivity(intent);*/
-                   fingerPrintDialog();
-                }else {
-                    Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
-                   /* Intent intent = new Intent(StartActivity.this, ForgottenActivity.class);
-                    startActivity(intent);*/
-                }
+        View.OnClickListener ecouteur = view -> {
+            if(view.getId()==R.id.btnsignin) {
+                handleLogin();          // gestion login
+            }else if(view.getId()==R.id.txtlinksignup) {
+                Toast.makeText(StartActivity.this, "TODO : création compte..", Toast.LENGTH_SHORT).show();
+               /* Intent intent = new Intent(StartActivity.this, SignupActivity.class);
+                startActivity(intent);*/
+               fingerPrintDialog();
+            }else {
+                Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
+               /* Intent intent = new Intent(StartActivity.this, ForgottenActivity.class);
+                startActivity(intent);*/
             }
         };
 

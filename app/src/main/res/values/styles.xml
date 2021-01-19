@@ -63,4 +63,13 @@
         <item name="fontFamily">casual</item>
     </style>
 
+    <style name="textview_style_default" parent="input_style_default">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

@@ -99,7 +99,7 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void addIntervention(View root) {
-        codeClient = root.findViewById(R.id.edtCodeClient);
+        codeClient = root.findViewById(R.id.txtCodeClient);
         desc = root.findViewById(R.id.edtDesc);
         dateDebut = root.findViewById(R.id.edtDateDebutPrev);
         dateFin = root.findViewById(R.id.edtDateFinPrev);
@@ -137,7 +137,7 @@ public class PlaceholderFragment extends Fragment {
                     android.R.layout.select_dialog_item,
                     items);
 
-            codeClient = root.findViewById(R.id.edtCodeClient);
+            codeClient = root.findViewById(R.id.txtCodeClient);
             codeClient.setThreshold(1);       //will start working from first character
             codeClient.setAdapter(adapter);
             codeClient.setTextColor(Color.WHITE);

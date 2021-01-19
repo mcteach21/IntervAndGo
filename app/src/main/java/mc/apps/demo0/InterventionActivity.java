@@ -1,32 +1,30 @@
 package mc.apps.demo0;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.AppCompatImageView;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
+
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mc.apps.demo0.adapters.SelectedUsersAdapter;
-import mc.apps.demo0.model.Affectation;
+import android.widget.Toast;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Intervention;
-import mc.apps.demo0.model.User;
-import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class InterventionActivity extends AppCompatActivity {
 
     Intervention intervention;
-    AutoCompleteTextView codeClient;
-    EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
-    RecyclerView tech_list;
-    List<User> selected = new ArrayList();
+    TextView codeClient, desc, dateDebut, dateFin, dateDebutR, dateFinR, serviceCible, materielNecessaire, comment;
+    private boolean isOpen;
+    private LinearLayout clientDetails;
+    private AppCompatImageView btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,29 +43,42 @@ public class InterventionActivity extends AppCompatActivity {
         Init();
     }
     private void Init() {
-        codeClient = findViewById(R.id.edtCodeClient);
-        desc = findViewById(R.id.edtDesc);
-        dateDebut = findViewById(R.id.edtDateDebutPrev);
-        dateFin = findViewById(R.id.edtDateFinPrev);
-        serviceCible = findViewById(R.id.edtMaterielNecess);
-        materielNecessaire = findViewById(R.id.edtMaterielNecess);
-        comment = findViewById(R.id.edtComment);
+        codeClient = findViewById(R.id.txtCodeClient);
+        desc = findViewById(R.id.txtDescription);
+        dateDebut = findViewById(R.id.txtDateDebutPrevue);
+        dateDebutR = findViewById(R.id.txtDateDebutReel);
+
+        serviceCible = findViewById(R.id.txtServiceCible);
+        materielNecessaire = findViewById(R.id.txtMaterielNecessaire);
+        comment = findViewById(R.id.txtCommentaire);
 
         codeClient.setText(intervention.getClientId());
         desc.setText(intervention.getDescription());
-        dateDebut.setText(intervention.getDateDebutPrevue());
-        dateFin.setText(intervention.getDateFinPrevue());
+
+        String prevue = "Prévue : "+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
+        String reelle = "Réelle : "+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
+        dateDebut.setText(prevue);
+        dateDebutR.setText(reelle);
 
         serviceCible.setText(intervention.getServiceEquipCible());
         comment.setText(intervention.getCommentaire());
         materielNecessaire.setText(intervention.getMaterielNecessaire());
 
-        InitAffectations();
+        //TODO..
+        //InitAffectations();
+
+        isOpen=false;
+        clientDetails = findViewById(R.id.clientDetails);
+        //clientDetails.setVisibility(View.GONE);
+
+        btn = (AppCompatImageView)findViewById(R.id.btn_client_detail);
+        btn.setOnClickListener(
+                v-> onSlideDetails(clientDetails)
+        );
     }
 
     private void InitAffectations(){
-
-        tech_list = findViewById(R.id.tech_list);
+       /* tech_list = findViewById(R.id.tech_list);
         tech_list.setHasFixedSize(true);
         GridLayoutManager layoutManager2 = new GridLayoutManager(this, 2);
         tech_list.setLayoutManager(layoutManager2);
@@ -76,11 +87,35 @@ public class InterventionActivity extends AppCompatActivity {
                 null,
                 true
         );
-        tech_list.setAdapter(adapter);
+        tech_list.setAdapter(adapter);*/
+
         /*mainViewModel.getSelected().observe(getActivity(), selected -> {
             adapter.refresh(selected);
         });*/
     }
 
+    private void onSlideDetails(View view){
+        int currentHeight = isOpen? 0 : 800;
+        int newHeight = isOpen? 800 : 0;
+
+        Toast.makeText(this, isOpen+" => "+currentHeight+" : "+newHeight, Toast.LENGTH_SHORT).show();
+        ValueAnimator slideAnimator = new ValueAnimator()
+                .ofInt(currentHeight, newHeight)
+                .setDuration(500);
+
+        slideAnimator.addUpdateListener( v-> {
+            int value = (int) v.getAnimatedValue();
+            Log.i("tests", "onSlideDetails: "+value);
+            view.getLayoutParams().height = value;
+            view.requestLayout();
+        });
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(slideAnimator);
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.start();
+
+        isOpen = !isOpen;
+    }
 
 }
