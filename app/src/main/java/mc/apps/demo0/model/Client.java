@@ -14,9 +14,6 @@ public class Client implements Serializable {
 	private List<Intervention> interventions;
 	private List<Adress> adresses;
 
-	public Client() {
-	}
-
 	public Client(String code, String adresse, String contact, String cp, String email, String nom, String telephone, String ville) {
 		this.code = code;
 		this.contact = contact;

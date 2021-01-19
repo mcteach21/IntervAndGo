@@ -1,5 +1,6 @@
 package mc.apps.demo0.ui.technician;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ImagesAdapter;
 import mc.apps.demo0.adapters.InterventionsAdapter;
@@ -198,7 +200,9 @@ public class TechnicianFragments extends Fragment {
         adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {
-                    Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(root.getContext(), InterventionActivity.class);
+                    intent.putExtra("intervention", (Intervention)item);
+                    startActivity(intent);
                 },
                 true
         );

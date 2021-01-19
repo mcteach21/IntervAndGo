@@ -1,5 +1,6 @@
 package mc.apps.demo0.ui.main;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.ClientDao;
@@ -145,7 +147,8 @@ public class PlaceholderFragment extends Fragment {
 
         root.findViewById(R.id.btn_clients_list).setOnClickListener(
                 v->{
-                    Toast.makeText(root.getContext(), "open clients list..", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(root.getContext(), "open clients list..", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent( root.getContext(), ClientsActivity.class));
                 }
         );
     }

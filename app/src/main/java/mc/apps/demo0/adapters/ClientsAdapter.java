@@ -30,7 +30,7 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_client, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -38,8 +38,11 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Client client = items.get(position);
-        holder.title.setText(client.getNom());
-        holder.details.setText("client adress...");
+
+        holder.title.setText(client.getCode()+'\n'+client.getNom());
+        holder.details.setText(client.getEmail()+"|"+client.getTelephone());
+        holder.details_more.setText(client.getContact());
+
         if(listener!=null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))
@@ -54,6 +57,7 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView title = itemView.findViewById(R.id.item_title);
         TextView details = itemView.findViewById(R.id.item_details);
+        TextView details_more = itemView.findViewById(R.id.item_details_more);
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -230,10 +230,11 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         super.onActivityResult(requestCode, resultCode, data);
         //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
         if(requestCode==SELECT_REQUEST_CODE){
-
-            List<User> selected = (List<User>) data.getSerializableExtra("data");
-            for(User u : selected)
-                mainViewModel.updateSelected(u, true);
+            if(data.getSerializableExtra("data")!=null) {
+                List<User> selected = (List<User>) data.getSerializableExtra("data");
+                for (User u : selected)
+                    mainViewModel.updateSelected(u, true);
+            }
         }
     }
 }

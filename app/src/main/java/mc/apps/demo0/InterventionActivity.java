@@ -1,5 +1,6 @@
 package mc.apps.demo0;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -9,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
@@ -16,11 +18,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+
+import mc.apps.demo0.dao.ClientDao;
+import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 
 public class InterventionActivity extends AppCompatActivity {
 
+    private static final String TAG = "tests";
     Intervention intervention;
     TextView codeClient, desc, dateDebut, dateFin, dateDebutR, dateFinR, serviceCible, materielNecessaire, comment;
     private boolean isOpen;
@@ -32,6 +44,7 @@ public class InterventionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intervention);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Intervention (Détails)");
 
         Intent intent = getIntent();
@@ -43,6 +56,20 @@ public class InterventionActivity extends AppCompatActivity {
         //TextView title = findViewById(R.id.layout_title);
         Init();
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id==android.R.id.home)
+            finish();
+
+        return false;
+    }
+
     @SuppressLint("WrongViewCast")
     private void Init() {
         codeClient = findViewById(R.id.txtCodeClient);
@@ -57,8 +84,13 @@ public class InterventionActivity extends AppCompatActivity {
         codeClient.setText( "Client : "+intervention.getClientId());
         desc.setText(intervention.getDescription());
 
-        String prevue = "Prévue : "+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
-        String reelle = "Réelle : "+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
+        String prevue = "Date Intervention Prévue \n"+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
+        String reelle = "Date Intervention Réelle \n";
+        if(intervention.getDateDebutReelle()!=null)
+            reelle += MyTools.formatDateFr(intervention.getDateDebutReelle());
+        if(intervention.getDateFinReelle()!=null)
+            reelle += " - "+MyTools.formatDateFr(intervention.getDateFinReelle());
+
         dateDebut.setText(prevue);
         dateDebutR.setText(reelle);
 
@@ -68,6 +100,30 @@ public class InterventionActivity extends AppCompatActivity {
 
         //TODO..
         //InitAffectations();
+
+        /**
+         * Infos Client
+         */
+        TextView nomClient =  findViewById(R.id.txtNomClient);
+        TextView infosClient =  findViewById(R.id.txtInfosClient);
+        TextView adressClient =  findViewById(R.id.txtAdressClient);
+
+        ClientDao dao = new ClientDao();
+
+        String code_client = null;
+        try {
+            code_client = URLEncoder.encode(intervention.getClientId(), "utf-8");
+            dao.find(code_client, (data, message) -> {
+                List<Client> items = dao.Deserialize(data, Client.class);
+
+                if(items.size() >0){
+                    Client client = items.get(0);
+                    nomClient.setText(client.getNom());
+                    infosClient.setText("Contact : "+client.getContact()+"\n Tél. : "+client.getTelephone()+"\n Email : "+client.getEmail());
+                    adressClient.setText("adress client..");
+                }
+            });
+        } catch (UnsupportedEncodingException e) {}
 
         isOpen=false;
         clientDetails = findViewById(R.id.clientDetails);
@@ -99,7 +155,6 @@ public class InterventionActivity extends AppCompatActivity {
 
         isOpen = !isOpen;
     }
-
 
     private void InitAffectations(){
        /* tech_list = findViewById(R.id.tech_list);
