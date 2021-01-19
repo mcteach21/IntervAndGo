@@ -31,7 +31,6 @@
         <TextView
             android:id="@+id/txtCodeClient"
             style="@style/textview_style_default"
-            android:text="MICROSOFT"
             app:layout_constraintEnd_toStartOf="@+id/btn_client_detail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
@@ -149,11 +148,12 @@
             android:id="@+id/clientDetails"
             style="@style/input_style_default"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="200dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:orientation="vertical"
+            android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
@@ -173,7 +173,7 @@
                 style="@style/textview_style_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MICROSOFT"
+                android:text="17 Rue Saint Antoine 69003 Lyon"
                 app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_title" />

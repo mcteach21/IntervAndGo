@@ -5,6 +5,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class InterventionActivity extends AppCompatActivity {
         //TextView title = findViewById(R.id.layout_title);
         Init();
     }
+    @SuppressLint("WrongViewCast")
     private void Init() {
         codeClient = findViewById(R.id.txtCodeClient);
         desc = findViewById(R.id.txtDescription);
@@ -52,7 +54,7 @@ public class InterventionActivity extends AppCompatActivity {
         materielNecessaire = findViewById(R.id.txtMaterielNecessaire);
         comment = findViewById(R.id.txtCommentaire);
 
-        codeClient.setText(intervention.getClientId());
+        codeClient.setText( "Client : "+intervention.getClientId());
         desc.setText(intervention.getDescription());
 
         String prevue = "Prévue : "+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
@@ -69,13 +71,35 @@ public class InterventionActivity extends AppCompatActivity {
 
         isOpen=false;
         clientDetails = findViewById(R.id.clientDetails);
-        //clientDetails.setVisibility(View.GONE);
+        clientDetails.getLayoutParams().height = 0;
 
-        btn = (AppCompatImageView)findViewById(R.id.btn_client_detail);
+        btn = (AppCompatImageView) findViewById(R.id.btn_client_detail);
         btn.setOnClickListener(
                 v-> onSlideDetails(clientDetails)
         );
     }
+
+    private void onSlideDetails(View view){
+        int currentHeight = isOpen?800:0;
+        int newHeight = isOpen?0:800;
+        ValueAnimator slideAnimator = new ValueAnimator()
+                .ofInt(currentHeight, newHeight)
+                .setDuration(500);
+
+        slideAnimator.addUpdateListener( v-> {
+            int value = (int) v.getAnimatedValue();
+            view.getLayoutParams().height = value;
+            view.requestLayout();
+        });
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(slideAnimator);
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.start();
+
+        isOpen = !isOpen;
+    }
+
 
     private void InitAffectations(){
        /* tech_list = findViewById(R.id.tech_list);
@@ -92,30 +116,6 @@ public class InterventionActivity extends AppCompatActivity {
         /*mainViewModel.getSelected().observe(getActivity(), selected -> {
             adapter.refresh(selected);
         });*/
-    }
-
-    private void onSlideDetails(View view){
-        int currentHeight = isOpen? 0 : 800;
-        int newHeight = isOpen? 800 : 0;
-
-        Toast.makeText(this, isOpen+" => "+currentHeight+" : "+newHeight, Toast.LENGTH_SHORT).show();
-        ValueAnimator slideAnimator = new ValueAnimator()
-                .ofInt(currentHeight, newHeight)
-                .setDuration(500);
-
-        slideAnimator.addUpdateListener( v-> {
-            int value = (int) v.getAnimatedValue();
-            Log.i("tests", "onSlideDetails: "+value);
-            view.getLayoutParams().height = value;
-            view.requestLayout();
-        });
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(slideAnimator);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.start();
-
-        isOpen = !isOpen;
     }
 
 }
