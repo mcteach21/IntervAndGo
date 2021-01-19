@@ -15,6 +15,12 @@ import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.content.ContextCompat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import mc.apps.demo0.R;
 
 public class MyTools {
@@ -33,14 +39,43 @@ public class MyTools {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+    /**
+     * Date + Time
+     */
+
+    public static final String DATE_FORMAT_12 = "hh:mm";
+    public static final String DATE_FORMAT_24 = "HH:mm";
+    public static final String DATE_FORMAT_FR = "dd-MM-yyyy";
+    public static final String DATE_FORMAT_EN = "yyyy-MM-dd hh:mm:ss";
+
+    public static String getCurrentTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24);
+        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date today = Calendar.getInstance().getTime();
+        return dateFormat.format(today);
+    }
+    public static String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR);
+        Date today = Calendar.getInstance().getTime();
+        return dateFormat.format(today);
+    }
+    public static Date getDateOfString(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_EN);
+        try {
+            return dateFormat.parse(dateString);
+        }catch(ParseException e){
+            return null;
+        }
+    }
 
     /**
      * Permissions :
      * check permissions + ask
      */
     private static String[] REQUIRED_PERMISSIONS = {
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.WRITE_CONTACTS
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET
     };
 
     public static void CheckThenAskPermissions(Context context, ActivityResultLauncher<String> requestPermissionLauncher){

@@ -14,6 +14,35 @@
         android:background="@color/colorPrimary"
         android:id="@+id/form_planif">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photos_list"
+            style="@style/input_style_default"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:onClick="list_techs_click"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:onClick="list_photos_click"
+            android:text="@string/rapport_assoc_photos"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/photos_list"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
+
         <TextView
             android:id="@+id/fragment_title"
             android:layout_width="0dp"
@@ -30,117 +59,117 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <AutoCompleteTextView
-            android:id="@+id/edtCodeClient"
+            android:id="@+id/edtCodeInterv"
             style="@style/input_style_default"
-            android:hint="@string/hint_title_client"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
+            android:hint="@string/hint_title_interv"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
-<!--        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout0"
-            style="@style/inputstyle"
+        <AutoCompleteTextView
+            android:id="@+id/edtCodeClient"
+            style="@style/input_style_default"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/client">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtCodeClient"
-                style="@style/input_style_default"
-                android:hint="@string/hint_title_client" />
-
-        </com.google.android.material.textfield.TextInputLayout>-->
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
-            style="@style/inputstyle"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtCodeClient">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtDesc"
-                style="@style/input_style_default"
-                android:hint="@string/hint_title_desc" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout2"
-            style="@style/inputstyle"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:hint="@string/hint_title_client"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/edtCodeInterv" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtServiceCible"
-                style="@style/input_style_default"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_title_service_cible" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <!--        <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout0"
+                    style="@style/inputstyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/client">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtCodeClient"
+                        style="@style/input_style_default"
+                        android:hint="@string/hint_title_client" />
+
+                </com.google.android.material.textfield.TextInputLayout>-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout3"
             style="@style/inputstyle"
-            android:layout_width="160dp"
+            android:layout_width="0dp"
             android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/edtCodeClient">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDateDebutPrev"
                 style="@style/input_style_default"
                 android:clickable="true"
                 android:focusable="false"
+                android:gravity="center_horizontal"
                 android:hint="@string/hint_title_date_debut_prev"
                 android:inputType="datetime"
-                android:onClick="selectCalendarDateTime" />
+                android:onClick="selectCalendarDateTime"
+                android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout5"
             style="@style/inputstyle"
-            android:layout_width="160dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/edtCodeClient">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDateFinPrev"
                 style="@style/input_style_default"
                 android:clickable="true"
                 android:focusable="false"
+                android:gravity="center_horizontal"
                 android:hint="@string/hint_title_date_fin_prev"
                 android:inputType="datetime"
-                android:onClick="selectCalendarDateTime" />
+                android:onClick="selectCalendarDateTime"
+                android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/input_style_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@array/statuts"
+            android:spinnerMode="dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout4"
             style="@style/inputstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tech_list">
+            app:layout_constraintTop_toBottomOf="@+id/spinner">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtComment"
@@ -156,47 +185,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="170dp"
             android:background="@drawable/styled_button_selector"
             android:fontFamily="casual"
-            android:text="@string/btn_planif_txt"
+            android:text="@string/btn_rapport_save"
             android:textColor="@android:color/holo_orange_dark"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tech_list"
-            style="@style/input_style_default"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:clickable="true"
-            android:onClick="list_techs_click"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:onClick="list_techs_click"
-            android:text="@string/tech_assoc_txt"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/photos_list"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+            app:layout_constraintTop_toBottomOf="@+id/photos_list" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

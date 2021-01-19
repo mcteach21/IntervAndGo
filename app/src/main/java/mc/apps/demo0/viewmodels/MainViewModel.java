@@ -1,5 +1,6 @@
 package mc.apps.demo0.viewmodels;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +15,8 @@ public class MainViewModel  extends ViewModel {
     //private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<String> search = new MutableLiveData<>();
     private MutableLiveData<List<User>> selected = new MutableLiveData<>();
+
+    private MutableLiveData<List<Uri>> images = new MutableLiveData<>();
 
     public MutableLiveData<String> getSearch() {
         return search;
@@ -41,5 +44,17 @@ public class MainViewModel  extends ViewModel {
 
     public void clearSelected() {
         selected.setValue(new ArrayList<>());
+    }
+
+    public MutableLiveData<List<Uri>> getImages() {
+        return images;
+    }
+
+    public void addImage(Uri image) {
+        List<Uri> values = images.getValue();
+        if(values==null)
+            values = new ArrayList();
+        values.add(image);
+        images.setValue(values);
     }
 }

@@ -60,6 +60,16 @@
     <string name="techn" />
     <string name="tech_assoc_txt">Technicien(s) (cliquer pour ajouter)</string>
     <string name="action_sign_out">Se Déconnecter</string>
+    <string name="no_result_txt">Aucun Résultat</string>
+    <string name="title_histo">Historique</string>
+    <string name="tech_rapport_txt">Rapport Intervention</string>
+    <string name="tech_interv_txt">Interventions</string>
+    <string name="tech_histo_txt">Historique</string>
+    <string name="no_interv_today">Aucune Intervention Aujourd\'hui</string>
+    <string name="btn_rapport_save">Sauvegarder Rapport Intervention</string>
+    <string name="hint_title_interv">Code Intervention</string>
+
+    <string name="rapport_assoc_photos">Photos (cliquer pour ajouter)</string>
 
     <string-array name="statuts">
         <item>en attente</item>

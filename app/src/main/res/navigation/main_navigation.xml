@@ -3,18 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_option_1">
+    app:startDestination="@+id/navigation_rapports">
 
 
     <fragment
-        android:id="@+id/navigation_option_1"
+        android:id="@+id/navigation_interventions"
         android:name="mc.apps.demo0.ui.options.TechInterventionsFragment"
-        android:label="@string/title_rapports"
-        tools:layout="@layout/fragment_technicien" />
+        android:label="@string/title_interventions"
+        tools:layout="@layout/fragment_tech_main00" />
 
     <fragment
-        android:id="@+id/navigation_option_2"
+        android:id="@+id/navigation_rapports"
         android:name="mc.apps.demo0.ui.options.TechRapportsFragment"
-        android:label="@string/title_options"
-        tools:layout="@layout/fragment_technicien" />
+        android:label="@string/title_rapports"
+        tools:layout="@layout/fragment_tech_main00" />
+
+    <fragment
+        android:id="@+id/navigation_historique"
+        android:name="mc.apps.demo0.ui.options.TechHistoriqueFragment"
+        android:label="@string/title_histo"
+        tools:layout="@layout/fragment_tech_main00" />
+
 </navigation>

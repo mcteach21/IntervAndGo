@@ -12,9 +12,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +25,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import mc.apps.demo0.dao.UserDao;
-import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 
 public class StartActivity extends AppCompatActivity {

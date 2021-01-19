@@ -2,6 +2,7 @@ package mc.apps.demo0.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import mc.apps.demo0.R;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Intervention;
 
 public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdapter.ViewHolder> implements Filterable {
@@ -56,17 +60,45 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
         Intervention interv = items.get(position);
         holder.title.setText(interv.getDescription());
-
-
         holder.state.setText(status[interv.getStatutId()-1]);
+
         SimpleDateFormat enDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat frDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
+
+        try {
+            String currentTime = MyTools.getCurrentTime();
+            String currentDate = MyTools.getCurrentDate();
+            Log.i(TAG, "currentDate : "+currentDate);
+            Log.i(TAG, "currentTime : "+currentTime);
+        } catch (Exception e) {
+            Log.i(TAG, "****************************************");
+            Log.i(TAG, ""+e);
+            Log.i(TAG, "****************************************");
+        }
+
+
         try {
             Date date = enDateFormat.parse(interv.getDateDebutPrevue());
-            holder.details.setText(frDateFormat.format(date));
-            holder.details.setTextColor(date.before( new Date())? Color.RED:Color.parseColor("#FFA000"));
-        } catch (ParseException e) {}
+            //Date time = frTimeFormat.parse(interv.getDateDebutPrevue());
+            //String currentTime = new SimpleDateFormat("hh:mm", Locale.getDefault()).format(new Date());
+            //Date CurrentTime = frTimeFormat.parse(currentTime);
+
+            if(this.details){
+                //holder.details.setText(frTimeFormat.format(date));
+                //holder.details.setTextColor(time.before(CurrentTime) ? Color.RED : Color.parseColor("#FFA000"));
+
+                holder.details_more.setText("code client..");
+            }else {
+                holder.details.setText(frDateFormat.format(date));
+                holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.parseColor("#FFA000"));
+            }
+
+        } catch (ParseException e) {
+            Log.i(TAG, "****************************************");
+            Log.i(TAG, "onBindViewHolder: "+e);
+            Log.i(TAG, "****************************************");
+        }
 
         if(listener!=null)
             holder.itemView.setOnClickListener(
@@ -83,7 +115,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
         TextView title = itemView.findViewById(R.id.item_title);
         TextView state = itemView.findViewById(R.id.item_state);
         TextView details = itemView.findViewById(R.id.item_details);
-
+        TextView details_more = itemView.findViewById(R.id.item_details_more);
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }

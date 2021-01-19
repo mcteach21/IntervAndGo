@@ -1,7 +1,5 @@
 package mc.apps.demo0.ui.main;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,24 +15,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mc.apps.demo0.R;
-import mc.apps.demo0.SearchActivity;
-import mc.apps.demo0.SelectActivity;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
@@ -102,7 +91,7 @@ public class PlaceholderFragment extends Fragment {
             initListTech(root);
 
 
-            Button btnadd = root.findViewById(R.id.btn_add_planif);
+            Button btnadd = root.findViewById(R.id.btn_add_rapport);
             btnadd.setOnClickListener(view -> {
 
                 //codeClient = root.findViewById(R.id.edtCodeClient);

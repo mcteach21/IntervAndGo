@@ -1,0 +1,252 @@
+package mc.apps.demo0.ui.technician;
+
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import mc.apps.demo0.R;
+import mc.apps.demo0.adapters.ImagesAdapter;
+import mc.apps.demo0.adapters.InterventionsAdapter;
+import mc.apps.demo0.adapters.SelectedUsersAdapter;
+import mc.apps.demo0.dao.ClientDao;
+import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.model.Client;
+import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.User;
+import mc.apps.demo0.viewmodels.MainViewModel;
+
+public class TechnicianFragments extends Fragment {
+    private static final String TAG = "tests";
+    private MainViewModel mainViewModel;
+    private View root ;
+    private int[] fragments_layouts = {
+            R.layout.technician_intervs_fragment,
+            R.layout.technician_rapport_fragment,
+            R.layout.technician_histo_fragment
+    };
+    private String[] fragments_titles = {
+           "Interventions du Jour",
+           "Saisir Rapport Intervention",
+           "Historique Interventions/Rapports"
+    };
+
+    private static int num=0;
+    public static TechnicianFragments newInstance(int num) {
+        TechnicianFragments.num = num;
+        return new TechnicianFragments();
+    }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        root = inflater.inflate(fragments_layouts[num], container, false);
+        TextView title = root.findViewById(R.id.fragment_title);
+        title.setText(fragments_titles[num]);
+
+        return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+
+        if(num==0) {
+            //Recherche / Liste Interventions..
+            mainViewModel.getSearch().observe(
+                    getViewLifecycleOwner(),
+                    search -> {
+                        if (search == null || search.length() == 0)
+                            refreshListAsync();
+                        else if (adapter != null)
+                            adapter.getFilter().filter(search);
+                    }
+            );
+            refreshListAsync();
+        }else if(num==1){
+            //Ajouter Rapport
+
+            initAutocomplete(root); //AutoCompletion sur Champ CodeClient!
+            initListPhotos(root);   //liste photos / Rapport
+
+            Button btnadd = root.findViewById(R.id.btn_add_rapport);
+            btnadd.setOnClickListener(view -> {
+
+                //TODO : adapter..
+                desc = root.findViewById(R.id.edtDesc);
+                dateDebut = root.findViewById(R.id.edtDateDebutPrev);
+                dateFin = root.findViewById(R.id.edtDateFinPrev);
+                serviceCible = root.findViewById(R.id.edtServiceCible);
+                comment = root.findViewById(R.id.edtComment);
+
+                Intervention interv = new Intervention(0, 1 , //codeClient,
+                        desc.getText().toString(),
+                        dateDebut.getText().toString(),
+                        dateFin.getText().toString(),
+                        serviceCible.getText().toString(),
+                        comment.getText().toString());
+
+                InterventionDao dao = new InterventionDao();
+                dao.add(interv, (items, message) -> {
+                    Log.i(TAG , "onCreate: "+message);
+                    Toast.makeText(root.getContext(), "Rapport Intervention sauvegardé!", Toast.LENGTH_LONG).show();
+                });
+                resetFields(root); //reinitialiser form rapport!
+            });
+        }
+    }
+
+    /**
+     * Saisie Rapport / Technicien
+     */
+    AutoCompleteTextView codeClient;
+    EditText desc, dateDebut, dateFin, serviceCible, comment;
+    private void initAutocomplete(View root) {
+        ClientDao dao = new ClientDao();
+
+        dao.list((data, message) -> {
+            List<Client> items = dao.Deserialize(data, Client.class);
+            ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
+                    root.getContext(),
+                    android.R.layout.select_dialog_item,
+                    items);
+
+            codeClient = root.findViewById(R.id.edtCodeClient);
+            codeClient.setThreshold(1);
+            codeClient.setAdapter(adapter);
+            codeClient.setTextColor(Color.WHITE);
+        });
+    }
+
+    RecyclerView photos_list;
+    List<Uri> images = new ArrayList();
+    private void initListPhotos(View root){
+
+        photos_list = root.findViewById(R.id.photos_list);
+        photos_list.setHasFixedSize(true);
+
+        GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 4);
+        photos_list.setLayoutManager(layoutManager2);
+
+        ImagesAdapter adapter = new ImagesAdapter(
+                images,
+                null
+        );
+        photos_list.setAdapter(adapter);
+
+        mainViewModel.getImages().observe(getActivity(), images -> {
+            Log.i("tests", "loadList: "+images);
+            adapter.refresh(images);
+        });
+    }
+
+    private void resetFields(View root) {
+        codeClient.getText().clear();
+        desc.getText().clear();
+        dateDebut.getText().clear();
+        dateFin.getText().clear();
+        serviceCible.getText().clear();
+        comment.getText().clear();
+    }
+
+
+
+    /**
+     * Gestion liste Interventions jour / Technicien
+     */
+    List<Intervention> items = new ArrayList<Intervention>();
+    SwipeRefreshLayout swipeContainer;
+    RecyclerView recyclerView;
+    InterventionsAdapter adapter;
+
+    TextView noResult;
+    private void loadList(){
+        recyclerView = root.findViewById(R.id.list);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(root.getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new InterventionsAdapter(
+                items,
+                (position, item) -> {
+                    Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
+                },
+                true
+        );
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
+                root.getContext(), R.anim.layout_fall_down_animation
+        ));
+
+        swipeContainer = root.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                refreshListAsync();
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(
+                android.R.color.holo_red_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_blue_bright
+        );
+    }
+
+    String pattern = "yyyy-MM-dd";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+    private String getDate(String dateString){
+        return dateString.split(" ")[0];
+    }
+    private String getCurrentDate(){
+        return simpleDateFormat.format(new Date());
+    }
+    private void refreshListAsync() {
+        noResult = root.findViewById(R.id.noResult);
+        InterventionDao dao = new InterventionDao();
+        dao.list((data, message) -> {
+            items = dao.Deserialize(data, Intervention.class);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                items = items.stream()
+                        .sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
+                        .filter(i->getDate(i.getDateDebutPrevue()).equals(getCurrentDate()))
+                        .collect(Collectors.toList());
+            }
+
+            noResult.setVisibility(items.size()>0?View.GONE:View.VISIBLE);
+
+            loadList();
+            swipeContainer.setRefreshing(false);
+        });
+    }
+
+}
