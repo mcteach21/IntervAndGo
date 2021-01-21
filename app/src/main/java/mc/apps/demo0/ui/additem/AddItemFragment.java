@@ -21,6 +21,7 @@ import android.widget.Toast;
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.service.InterventionManager;
+import mc.apps.demo0.service.UserManager;
 import mc.apps.demo0.ui.technician.TechnicianFragments;
 
 public class AddItemFragment extends Fragment {
@@ -62,7 +63,12 @@ public class AddItemFragment extends Fragment {
         if(num==1) //interventions (add)
             prepareAddingIntervention();
         else if(num==2)
-            Toast.makeText(getActivity(), "prepare add User..", Toast.LENGTH_SHORT).show();
+            prepareAddingUser();
+    }
+
+    private void prepareAddingUser() {
+        UserManager manager = new UserManager(getActivity());
+        manager.prepareAddUser(root);
     }
 
     private void prepareAddingIntervention() {

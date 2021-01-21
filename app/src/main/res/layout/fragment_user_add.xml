@@ -30,14 +30,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <AutoCompleteTextView
-            android:id="@+id/txtCodeClient"
+            android:id="@+id/txtCodeUser"
             style="@style/input_style_default"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:hint="@string/hint_title_client"
-            app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+            android:hint="@string/hint_code_user"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
@@ -61,15 +60,14 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
             style="@style/inputstyle"
-            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
+            app:layout_constraintTop_toBottomOf="@+id/txtCodeUser">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtDesc"
+                android:id="@+id/edtFirstname"
                 style="@style/input_style_default"
-                android:hint="@string/hint_title_desc" />
+                android:hint="@string/hint_firstname" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,21 +77,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtServiceCible"
+                android:id="@+id/edtLastname"
                 style="@style/input_style_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_title_service_cible" />
+                android:hint="@string/hint_lastname" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLogin"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtlogin"
+                style="@style/input_style_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputPassword"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:boxBackgroundColor="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLogin"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtpassword"
+                style="@style/input_style_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout2"
             style="@style/inputstyle"
             android:layout_width="match_parent"
@@ -106,12 +145,34 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtMaterielNecess"
+                android:id="@+id/edtEmail"
                 style="@style/input_style_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_title_mat_necess" />
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout5"
+            style="@style/inputstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtpassword"
+                style="@style/input_style_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_password"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>-->
 
 
         <Button
@@ -119,7 +180,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/styled_button_selector"
             android:fontFamily="casual"
@@ -128,19 +189,29 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputPassword" />
 
-        <ImageView
-            android:id="@+id/btn_clients_list"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
+
+        <Spinner
+            android:id="@+id/spinnerProfil"
+            style="@style/input_style_default"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:background="@color/colorPrimary80"
+
+            android:dropDownWidth="wrap_content"
+            android:entries="@array/profils"
+            android:spinnerMode="dialog"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtCodeClient"
-            app:srcCompat="@drawable/ic_clients_list"
-            tools:layout_editor_absoluteY="55dp" />
+            app:layout_constraintStart_toEndOf="@+id/txtCodeUser"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title"
+            android:padding="0dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

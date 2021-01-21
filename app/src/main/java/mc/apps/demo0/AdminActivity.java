@@ -103,4 +103,10 @@ public class AdminActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
     }
+
+    public void SearchDetailInterv(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_down, R.anim.slide_down);
+    }
 }

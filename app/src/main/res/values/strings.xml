@@ -72,6 +72,18 @@
     <string name="rapport_assoc_photos">Photos (cliquer pour ajouter)</string>
     <string name="hint_title_mat_necess">Matériel Nécessaire</string>
     <string name="btn_add_user">Ajouter Utilisateur</string>
+    <string name="hint_code_user">Code Utilisateur</string>
+    <string name="hint_firstname">Prénom</string>
+    <string name="hint_lastname">Nom</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Mot de Passe</string>
+    <string name="search_detail_txt">Interventions : Filtrer</string>
+    <string name="hint_supervisor_txt">Code Superviseur</string>
+    <string name="tech_assoc_2_txt">Technicien(s) Affecté(s)</string>
+    <string name="hint_search_debut_prev">Date Début Prévue</string>
+    <string name="hint_search_debut_reel">Date Début Réelle</string>
+    <string name="btn_filter_txt">Filtrer Interventions</string>
+
 
     <string-array name="statuts">
         <item>en attente</item>
@@ -79,6 +91,11 @@
         <item>abandon</item>
         <item>à poursuivre</item>
         <item>terminée</item>
+    </string-array>
+    <string-array name="profils">
+        <item>Administrateur</item>
+        <item>Superviseur</item>
+        <item>Technicien</item>
     </string-array>
 
 </resources>

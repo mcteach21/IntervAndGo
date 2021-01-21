@@ -43,8 +43,6 @@ public class InterventionManager {
 
     MainViewModel mainViewModel;
     List<User> selected = new ArrayList();
-
-
     Activity activity;
     public InterventionManager(Activity activity){
         this.activity = activity;

@@ -11,6 +11,15 @@
 
 
         <item name="actionBarSize">72dip</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+    </style>
+
+   <!-- <style name="SpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>-->
+    <style name="SpinnerItem">
+        <item name="android:textColor">@color/material_lime_a700</item>
+        <item name="android:background">@drawable/spinner_radius</item>
     </style>
 
     <style name="myActionButtonStyle" parent="Widget.AppCompat.ActionButton">
@@ -25,6 +34,8 @@
 
     </style>
 
+
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -34,6 +45,11 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginBottom">84dp</item>
+    </style>
+
+    <style name="bloc_bordered_style">
+        <item name="android:background">@drawable/input_bordered</item>
+        <item name="android:padding">5dp</item>
     </style>
 
     <style name="input_style_default">
@@ -71,5 +87,11 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textSize">18sp</item>
     </style>
+
+<!--    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>-->
 
 </resources>

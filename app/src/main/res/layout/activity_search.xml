@@ -5,7 +5,119 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context=".MainActivity">
+    tools:context=".SearchActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout3"
+        style="@style/inputstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/textInputLayout8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtDateDebutPrev"
+            style="@style/input_style_default"
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="@string/hint_search_debut_prev"
+            android:inputType="datetime"
+            android:onClick="selectCalendarDateTime" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout8"
+        style="@style/inputstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtDateFinPrev"
+            style="@style/input_style_default"
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="@string/hint_search_debut_reel"
+            android:inputType="datetime"
+            android:onClick="selectCalendarDateTime" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_tech_list"
+        style="@style/input_style_default"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:text="@string/tech_assoc_2_txt"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/search_tech_list"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
+
+    <ImageView
+        android:id="@+id/btn_search_clients_list"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:onClick="btnSearchFromList"
+        app:layout_constraintStart_toEndOf="@+id/txtSearchCodeClient"
+        app:layout_constraintTop_toBottomOf="@+id/search_title"
+        app:srcCompat="@drawable/ic_clients_list" />
+
+    <ImageView
+        android:id="@+id/btn_search_supervisor"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
+        android:onClick="btnSearchFromList"
+        app:layout_constraintStart_toEndOf="@+id/textInputLayout7"
+        app:layout_constraintTop_toBottomOf="@+id/btn_search_clients_list"
+        app:srcCompat="@drawable/ic_clients_list" />
+
+    <ImageView
+        android:id="@+id/btn_search_techs_list"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:onClick="btnSearchFromList"
+        app:layout_constraintStart_toEndOf="@+id/search_tech_list"
+        app:layout_constraintTop_toBottomOf="@+id/btn_search_supervisor"
+        app:srcCompat="@drawable/ic_clients_list" />
+
+    <AutoCompleteTextView
+        android:id="@+id/txtSearchCodeClient"
+        style="@style/input_style_default"
+        android:layout_width="200dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:hint="@string/hint_title_client"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_title" />
 
     <TextView
         android:id="@+id/search_title"
@@ -15,48 +127,101 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="casual"
-        android:text="@string/app_name"
+        android:text="@string/search_detail_txt"
         android:textColor="@color/colorPrimaryText"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/button_radius_transp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout7"
+        style="@style/inputstyle"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView">
+        app:layout_constraintTop_toBottomOf="@+id/txtSearchCodeClient">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtSearchSupervisor"
+            style="@style/input_style_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" />
+            android:hint="@string/hint_supervisor_txt" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <SearchView
-        android:id="@+id/searchView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        style="@style/bloc_bordered_style"
         android:layout_width="0dp"
-        android:layout_height="86dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_title"
+        app:layout_constraintTop_toBottomOf="@+id/search_tech_list">
 
-        />
+        <CheckBox
+            android:id="@+id/checkBox6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorAccent"
+            android:text="Terminée"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/checkBox4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorAccent"
+            android:text="En Cours"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/checkBox3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorAccent"
+            android:text="En Attente"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/btn_filter_txt"
+        android:background="@drawable/styled_button_selector"
+        android:fontFamily="casual"
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
