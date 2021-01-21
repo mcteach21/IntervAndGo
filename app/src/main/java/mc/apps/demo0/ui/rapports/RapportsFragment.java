@@ -1,5 +1,6 @@
 package mc.apps.demo0.ui.rapports;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.dao.InterventionDao;
@@ -87,7 +89,9 @@ public class RapportsFragment extends Fragment {
         adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {
-                    Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(root.getContext(), InterventionActivity.class);
+                    intent.putExtra("intervention", (Intervention)item);
+                    startActivity(intent);
                 }
         );
         recyclerView.setAdapter(adapter);

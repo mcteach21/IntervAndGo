@@ -148,7 +148,7 @@
             android:id="@+id/clientDetails"
             style="@style/input_style_default"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -168,6 +168,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
             <TextView
+                android:id="@+id/txtAdressClient"
+                style="@style/textview_style_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="2"
+                android:textColor="@color/material_red_a200"
+                app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+
+            <TextView
                 android:id="@+id/txtInfosClient"
                 style="@style/textview_style_default"
                 android:layout_width="match_parent"
@@ -176,14 +187,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
-            <TextView
-                android:id="@+id/txtAdressClient"
-                style="@style/textview_style_default"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
         </LinearLayout>
 
 

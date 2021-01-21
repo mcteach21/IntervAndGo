@@ -24,9 +24,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 
@@ -118,9 +120,10 @@ public class InterventionActivity extends AppCompatActivity {
 
                 if(items.size() >0){
                     Client client = items.get(0);
-                    nomClient.setText(client.getNom());
+                    nomClient.setText("Nom : "+client.getNom());
                     infosClient.setText("Contact : "+client.getContact()+"\n Tél. : "+client.getTelephone()+"\n Email : "+client.getEmail());
-                    adressClient.setText("adress client..");
+
+                    setClientAdress(adressClient, client);
                 }
             });
         } catch (UnsupportedEncodingException e) {}
@@ -135,9 +138,24 @@ public class InterventionActivity extends AppCompatActivity {
         );
     }
 
+    private void setClientAdress(TextView txtAdress, Client client) {
+        AdressDao dao = new AdressDao();
+        dao.ofClient(client.getCode(), new Dao.OnSuccess() {
+            @Override
+            public void result(List<?> items, String message) {
+                List<Adress> adresses = dao.Deserialize(items, Adress.class);
+               /* for (Adress adress : adresses)
+                    client.addAdress(adress);*/
+                if(adresses.size()>0)
+                    txtAdress.setText(adresses.get(0).getVoie()+"\n"
+                            +adresses.get(0).getCp()+" "+adresses.get(0).getVille());
+            }
+        });
+    }
+
     private void onSlideDetails(View view){
-        int currentHeight = isOpen?800:0;
-        int newHeight = isOpen?0:800;
+        int currentHeight = isOpen?900:0;
+        int newHeight = isOpen?0:900;
         ValueAnimator slideAnimator = new ValueAnimator()
                 .ofInt(currentHeight, newHeight)
                 .setDuration(500);

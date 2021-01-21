@@ -1,6 +1,7 @@
 package mc.apps.demo0.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements Serializable {
@@ -13,6 +14,19 @@ public class Client implements Serializable {
 
 	private List<Intervention> interventions;
 	private List<Adress> adresses;
+
+	public List<Adress> getAdresses() {
+		return adresses;
+	}
+	public void setAdresses(List<Adress> adresses) {
+		this.adresses = adresses;
+	}
+	public void addAdress(Adress adress) {
+		if(adresses==null)
+			adresses = new ArrayList();
+
+		adresses.add(adress);
+	}
 
 	public Client(String code, String adresse, String contact, String cp, String email, String nom, String telephone, String ville) {
 		this.code = code;

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Demo.[v 0.2]</string>
+    <string name="app_name">App Demo.[v 0.3]</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Mot de Passe</string>
@@ -71,6 +71,7 @@
 
     <string name="rapport_assoc_photos">Photos (cliquer pour ajouter)</string>
     <string name="hint_title_mat_necess">Matériel Nécessaire</string>
+    <string name="btn_add_user">Ajouter Utilisateur</string>
 
     <string-array name="statuts">
         <item>en attente</item>

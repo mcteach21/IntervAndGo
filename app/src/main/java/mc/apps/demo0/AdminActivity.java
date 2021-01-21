@@ -1,15 +1,20 @@
 package mc.apps.demo0;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -53,11 +58,6 @@ public class AdminActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.admin_toolbar_layout);
         setTitle("");
         ((TextView)findViewById(R.id.title)).setText(""+user);
-
-       /* getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        getSupportActionBar().setIcon(R.drawable.ic_profil_admin);
-        getSupportActionBar().setTitle(""+user);
-        getSupportActionBar().setSubtitle("Admin.");*/
     }
     private User getCurrentUser() {
         User user = (User) getIntent().getSerializableExtra("user");
@@ -96,4 +96,11 @@ public class AdminActivity extends AppCompatActivity {
         return true;
     }
 
+    public void AddItem(View view){
+        int num=(view.getId()==R.id.btn_add_user)?2:1;
+        Intent intent = new Intent(this, AddItemActivity.class);
+        intent.putExtra("num",num);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
+    }
 }

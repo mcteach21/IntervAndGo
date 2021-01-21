@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 
 import mc.apps.demo0.ui.clients.ClientsFragment;
 import mc.apps.demo0.viewmodels.MainViewModel;
+import mc.apps.demo0.viewmodels.ViewModelFactory;
 
 public class ClientsActivity extends AppCompatActivity {
     MainViewModel mainViewModel;
@@ -29,6 +31,8 @@ public class ClientsActivity extends AppCompatActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle("Clients");
+
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setSearch("");
     }
@@ -43,6 +47,7 @@ public class ClientsActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("data", (Serializable) mainViewModel.getSelected().getValue());
         setResult(RESULT_OK, intent);*/
+
         finish();
     }
 

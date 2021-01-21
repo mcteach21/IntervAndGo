@@ -27,14 +27,18 @@ import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ClientsAdapter;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.adapters.UsersAdapter;
+import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.ClientDao;
+import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.dao.UserDao;
+import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class ClientsFragment extends Fragment {
 
+    private static final String TAG = "tests";
     private MainViewModel mainViewModel;
 
     public static ClientsFragment newInstance() {
@@ -96,7 +100,9 @@ public class ClientsFragment extends Fragment {
         adapter = new ClientsAdapter(
                 items,
                 (position, item) -> {
-                    Toast.makeText(root.getContext(), "Selected : "+item.toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(root.getContext(), "Selected : "+item.toString(), Toast.LENGTH_SHORT).show();
+                    /*Client client = (Client) item;
+                    getClientAdress(client);*/
                 }
         );
         recyclerView.setAdapter(adapter);
@@ -133,6 +139,19 @@ public class ClientsFragment extends Fragment {
                 android.R.color.holo_blue_bright
         );
     }
+
+    private void getClientAdress(Client client) {
+        AdressDao dao = new AdressDao();
+        dao.ofClient(client.getCode(), new Dao.OnSuccess() {
+            @Override
+            public void result(List<?> items, String message) {
+                List<Adress> adresses = dao.Deserialize(items, Adress.class);
+                for (Adress adress : adresses)
+                   client.addAdress(adress);
+            }
+        });
+    }
+
     private void refreshListAsync() {
         ClientDao dao = new ClientDao();
         dao.list((data, message) -> {
@@ -144,6 +163,10 @@ public class ClientsFragment extends Fragment {
                         .filter(u->u.getProfilId()>2)       //filtre techniciens
                         .collect(Collectors.toList());
             }*/
+
+            // ajout adresses!
+            for (Client client : items)
+                getClientAdress(client);
 
             loadList();
             swipeContainer.setRefreshing(false);
