@@ -64,6 +64,12 @@ public class AdminActivity extends AppCompatActivity {
         return user;
     }
 
+    @Override
+    public void onBackPressed() {
+        MyTools.confirmExit(this);
+        return;
+    }
+
     MainViewModel mainViewModel;
     /**
      * Menu

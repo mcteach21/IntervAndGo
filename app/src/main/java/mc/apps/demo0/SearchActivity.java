@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,7 +50,16 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
+        Button btn = findViewById(R.id.btn_filter_ok);
+        btn.setOnClickListener(v->{
+            applyFilter();
+        });
         initListTech();
+    }
+
+    private void applyFilter() {
+        //appliquer filtres!
+        Toast.makeText(this, "Appliquer filtre..", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -125,7 +135,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     RecyclerView tech_list;
     List<User> selected = new ArrayList();
     private void initListTech(){
-        tech_list = findViewById(R.id.tech_list);
+        tech_list = findViewById(R.id.search_tech_list);
         tech_list.setHasFixedSize(true);
         GridLayoutManager layoutManager2 = new GridLayoutManager(this, 2);
         tech_list.setLayoutManager(layoutManager2);

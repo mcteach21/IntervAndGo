@@ -27,7 +27,7 @@ public class UsersActivity extends AppCompatActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setTitle("Clients");
+        setTitle("Utilisateurs");
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setSearch("");
