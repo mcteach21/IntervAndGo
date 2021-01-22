@@ -62,8 +62,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     private void applyFilter() {
-        //appliquer filtres!
-        Toast.makeText(this, "Appliquer filtre..", Toast.LENGTH_SHORT).show();
+        //appliquer filtre!
 
         TextView txtSearchCodeClient = findViewById(R.id.txtSearchCodeClient);
         EditText edtSearchSupervisor = findViewById(R.id.edtSearchSupervisor);
