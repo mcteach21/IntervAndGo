@@ -126,9 +126,8 @@ public class RapportsFragment extends Fragment {
 
             //order by date début
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                items = items.stream().filter(i->i.getDateDebutReelle()!=null).sorted((o1, o2)->o1.getDateDebutReelle().compareTo(o2.getDateDebutReelle()))
+                items = items.stream().filter(i->i.getDateDebutReelle()!=null && i.getDateFinReelle()!=null).sorted((o1, o2)->o1.getDateDebutReelle().compareTo(o2.getDateDebutReelle()))
                         .collect(Collectors.toList());
-
             }
 
             loadList();

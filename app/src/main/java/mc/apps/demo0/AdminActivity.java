@@ -46,8 +46,7 @@ public class AdminActivity extends AppCompatActivity {
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.colorPrimary)));
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_comptes, R.id.navigation_interventions, R.id.navigation_rapports)
                 .build();
