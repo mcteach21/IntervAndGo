@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 public class SupervisorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "tests";
     private static final int SELECT_REQUEST_CODE = 2608;
+    private static final int REQUEST_FILTRE_CODE = 1603;
 
 
     @Override
@@ -70,6 +72,17 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         refreshListAsync();
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        mainViewModel.getFilter().observe(
+                this,
+                filter -> {
+                    if (filter.isEmpty())
+                        refreshListAsync();
+                    else
+                    if(adapter!=null)
+                        adapter.setFilter(filter);
+                }
+        );
     }
     MainViewModel mainViewModel;
 
@@ -236,5 +249,36 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
                     mainViewModel.updateSelected(u, true);
             }
         }
+        if(requestCode==REQUEST_FILTRE_CODE){
+
+            String codeClient = data.getStringExtra("codeClient");
+            String codeSupervisor = data.getStringExtra("codeSupervisor");
+            String dateDebutPrev = data.getStringExtra("dateDebutPrev");
+            String dateDebutReel = data.getStringExtra("dateDebutReel");
+            int status = data.getIntExtra("status",0);
+
+            Log.i(TAG, "onActivityResult: "+codeClient+" "+dateDebutPrev+" "+status);
+
+            Hashtable<String, Object> filter = new Hashtable();
+            filter.put("codeClient", codeClient);
+            filter.put("codeSupervisor", codeSupervisor);
+            filter.put("dateDebutPrev", dateDebutPrev);
+            filter.put("dateDebutReel", dateDebutReel);
+            filter.put("status", status);
+
+            mainViewModel.setFilter(filter);
+        }
+
     }
+
+    /**
+     * Filtre Détaillé Interventions (Appel)
+     * @param view
+     */
+    public void SearchDetailInterv(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivityForResult(intent, REQUEST_FILTRE_CODE);
+        overridePendingTransition(R.anim.slide_down, R.anim.slide_down);
+    }
+
 }

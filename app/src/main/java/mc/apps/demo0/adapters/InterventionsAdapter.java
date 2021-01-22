@@ -2,6 +2,7 @@ package mc.apps.demo0.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.libs.MyTools;
@@ -56,10 +59,8 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
     @Override
     public void onBindViewHolder(@NonNull InterventionsAdapter.ViewHolder holder, int position) {
-        String[] status =  context.getResources().getStringArray( R.array.statuts);
+        //String[] status =  context.getResources().getStringArray( R.array.statuts);
         Intervention interv = items.get(position);
-
-
         Date date = MyTools.getDateOfString(interv.getDateDebutPrevue()); //MySQL Date yyyy-MM-dd...
         String datefr = MyTools.formatDateFr(interv.getDateDebutPrevue()); // dd-MM-yyyy HH:mm
         String timefr = MyTools.formatTimeFr(interv.getDateDebutPrevue()); // HH:mm
@@ -69,8 +70,17 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
         holder.title.setText(interv.getDescription());
         holder.details.setText(this.details?timefr:datefr);
-        holder.state.setText(status[interv.getStatutId()-1]);
+        //holder.state.setText(status[interv.getStatutId()-1]);
 
+        String status="";
+        if(interv.getDateDebutReelle()==null)
+            status = "en attente";
+        else if(interv.getDateFinReelle()==null)
+            status = "en cours";
+        else if(interv.getDateFinReelle()!=null) //terminée
+            status = "terminée";
+
+        holder.state.setText(status);
         holder.details_more.setText(interv.getClientId()+"..");
 
         holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.parseColor("#FFA000"));
@@ -83,6 +93,38 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public void setFilter(Hashtable<String, Object> filter) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //filter.forEach((k,v)->{
+
+            String value1 = (String) filter.get("codeClient");
+            if(!value1.isEmpty())
+                items = items.stream().filter(i->i.getClientId().toLowerCase().equals(value1.toLowerCase())).collect(Collectors.toList());
+
+            String value2 = (String) filter.get("codeSupervisor");
+            if(!value2.isEmpty())
+                items = items.stream().filter(i->i.getSuperviseurId().toLowerCase().equals(value2.toLowerCase())).collect(Collectors.toList());
+
+            String value3 = (String) filter.get("dateDebutPrev");
+            if(!value3.isEmpty())
+                items = items.stream().filter(i-> MyTools.DateEquals(i.getDateDebutPrevue(), value3)).collect(Collectors.toList());
+            String value4 = (String) filter.get("dateDebutReel");
+            if(!value4.isEmpty())
+                items = items.stream().filter( i-> MyTools.DateEquals(i.getDateDebutReelle(), value4)).collect(Collectors.toList());
+
+            int status = (int) filter.get("status");
+            Log.i(TAG, "setFilter: "+status);
+
+            if(status==1) //en attente
+                items = items.stream().filter( i-> i.getDateDebutReelle()==null).collect(Collectors.toList());
+            else if(status==2) //en cours
+                items = items.stream().filter( i-> i.getDateDebutReelle()!=null && i.getDateFinReelle()==null).collect(Collectors.toList());
+            else if(status==5) //terminée
+                items = items.stream().filter( i-> i.getDateDebutReelle()!=null && i.getDateFinReelle()!=null).collect(Collectors.toList());
+        }
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -79,6 +79,10 @@
         <item name="fontFamily">casual</item>
     </style>
 
+    <style name="radio_button_style" parent="input_style_default">
+        <item name="android:padding">5dp</item>
+    </style>
+
     <style name="textview_style_default" parent="input_style_default">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

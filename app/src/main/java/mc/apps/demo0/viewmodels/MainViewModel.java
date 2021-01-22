@@ -10,6 +10,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import mc.apps.demo0.model.User;
@@ -62,5 +63,13 @@ public class MainViewModel  extends ViewModel {
             values = new ArrayList();
         values.add(image);
         images.setValue(values);
+    }
+
+    private MutableLiveData<Hashtable<String, Object>> filter = new MutableLiveData<>();
+    public MutableLiveData<Hashtable<String, Object>> getFilter() {
+        return filter;
+    }
+    public void setFilter(Hashtable<String, Object> value) {
+        filter.setValue(value);
     }
 }

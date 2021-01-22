@@ -68,6 +68,16 @@ public class InterventionsFragment extends Fragment {
                             adapter.getFilter().filter(search);
                 }
         );
+        mainViewModel.getFilter().observe(
+                getViewLifecycleOwner(),
+                filter -> {
+                    if (filter.isEmpty())
+                        refreshListAsync();
+                    else
+                        if(adapter!=null)
+                            adapter.setFilter(filter);
+                }
+        );
     }
 
     /**

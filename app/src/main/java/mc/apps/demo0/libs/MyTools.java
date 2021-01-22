@@ -66,6 +66,19 @@ public class MyTools {
             return null;
         }
     }
+    public static Date getDateFrOfString(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR_SHORT);
+        try {
+            return dateFormat.parse(dateString);
+        }catch(ParseException e){
+            return null;
+        }
+    }
+    public static String formatDateNotTimeFr(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR_SHORT);
+        return dateFormat.format(date);
+    }
+
     public static String formatDateFr(String dateString) {
         Date date = getDateOfString(dateString);
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR);
@@ -75,6 +88,15 @@ public class MyTools {
         Date date = getDateOfString(dateString);
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_24);
         return dateFormat.format(date);
+    }
+    public static boolean DateEquals(String date1, String date2){
+        try {
+            return MyTools.formatDateFr(date1).split(" ")[0].replace("-0","-").equals(date2.split(" ")[0]);
+        }catch(Exception e){
+            Log.i(TAG, "DateEquals: "+e.getMessage());
+        }
+        return false;
+
     }
 
 

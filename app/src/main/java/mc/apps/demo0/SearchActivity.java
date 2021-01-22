@@ -13,11 +13,14 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -37,7 +40,8 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "tests";
-    private static final int SELECT_REQUEST_CODE = 2608;
+    private static final int REQUEST_FILTRE_CODE = 1603;
+    private static final int SELECT_REQUEST_CODE = 2608 ;
     private   MainViewModel mainViewModel;
 
     @Override
@@ -60,6 +64,37 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private void applyFilter() {
         //appliquer filtres!
         Toast.makeText(this, "Appliquer filtre..", Toast.LENGTH_SHORT).show();
+
+        TextView txtSearchCodeClient = findViewById(R.id.txtSearchCodeClient);
+        EditText edtSearchSupervisor = findViewById(R.id.edtSearchSupervisor);
+        RecyclerView search_tech_list = findViewById(R.id.search_tech_list);
+
+        RadioGroup statusChoice = findViewById(R.id.statusChoice);
+
+        EditText edtDateDebutPrev = findViewById(R.id.edtDateDebutPrev);
+        EditText edtDateDebutReel = findViewById(R.id.edtDateDebutReel);
+
+        String codeClient = txtSearchCodeClient.getText().toString();
+        String codeSupervisor = edtSearchSupervisor.getText().toString();
+
+        String dateDebutPrev = edtDateDebutPrev.getText().toString();
+        String dateDebutReel = edtDateDebutReel.getText().toString();
+
+        int checkedID = statusChoice.getCheckedRadioButtonId();
+        int status = (checkedID==R.id.radioButton1)?1:(checkedID==R.id.radioButton2)?2:5;
+
+        Intent intent=new Intent();
+
+        intent.putExtra("codeClient", codeClient);
+        intent.putExtra("codeSupervisor", codeSupervisor);
+        intent.putExtra("dateDebutPrev", dateDebutPrev);
+        intent.putExtra("dateDebutReel", dateDebutReel);
+        intent.putExtra("status", status);
+
+        Log.i(TAG, "applyFilter: "+status);
+
+        setResult(REQUEST_FILTRE_CODE, intent);
+        finish();//finishing activity
     }
 
 

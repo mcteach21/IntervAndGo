@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +26,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class AdminActivity extends AppCompatActivity {
+
+    private static final int REQUEST_FILTRE_CODE = 1603 ;
+    private static final String TAG = "tests";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +117,42 @@ public class AdminActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
     }
 
+    /**
+     * Filtre Détaillé Interventions (Appel)
+     * @param view
+     */
     public void SearchDetailInterv(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_FILTRE_CODE);
         overridePendingTransition(R.anim.slide_down, R.anim.slide_down);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==REQUEST_FILTRE_CODE){
+            try {
+                String codeClient = data.getStringExtra("codeClient");
+                String codeSupervisor = data.getStringExtra("codeSupervisor");
+                String dateDebutPrev = data.getStringExtra("dateDebutPrev");
+                String dateDebutReel = data.getStringExtra("dateDebutReel");
+                int status = data.getIntExtra("status",0);
+
+                Log.i(TAG, "onActivityResult: "+codeClient+" "+dateDebutPrev+" "+status);
+
+                Hashtable<String, Object> filter = new Hashtable();
+                filter.put("codeClient", codeClient);
+                filter.put("codeSupervisor", codeSupervisor);
+                filter.put("dateDebutPrev", dateDebutPrev);
+                filter.put("dateDebutReel", dateDebutReel);
+                filter.put("status", status);
+
+                mainViewModel.setFilter(filter);
+            }catch(Exception e){
+                Log.i(TAG, "onActivityResult: "+e.getMessage());
+            }
+
+        }
     }
 }
