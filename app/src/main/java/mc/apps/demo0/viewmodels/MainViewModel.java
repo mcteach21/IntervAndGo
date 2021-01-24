@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.User;
 
 public class MainViewModel  extends ViewModel {
@@ -72,4 +73,16 @@ public class MainViewModel  extends ViewModel {
     public void setFilter(Hashtable<String, Object> value) {
         filter.setValue(value);
     }
+
+    private MutableLiveData<Client> client = new MutableLiveData<>();
+    public MutableLiveData<Client> getClient() { return client; }
+    public void setClient(Client value) {  client.setValue(value);  }
+
+    private MutableLiveData<User> user = new MutableLiveData<>();
+    public MutableLiveData<User> getUser() { return user; }
+    public void setUser(User value) {  user.setValue(value);  }
+
+    private MutableLiveData<Integer> profil = new MutableLiveData<>();
+    public MutableLiveData<Integer> getProfil() { return profil; }
+    public void setProfil(int value) {  profil.setValue(value);  }
 }

@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_comptes" />
 
     <fragment
+        android:id="@+id/navigation_clients"
+        android:name="mc.apps.demo0.ui.clients.ClientsFragments"
+        android:label="@string/title_clients"
+        tools:layout="@layout/fragment_clients" />
+
+    <fragment
         android:id="@+id/navigation_interventions"
         android:name="mc.apps.demo0.ui.interventions.InterventionsFragment"
         android:label="@string/title_interventions"

@@ -73,14 +73,22 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
         //holder.state.setText(status[interv.getStatutId()-1]);
 
         String status="";
-        if(interv.getDateDebutReelle()==null)
+        int color=Color.WHITE;
+
+        if(interv.getDateDebutReelle()==null) {
             status = "en attente";
-        else if(interv.getDateFinReelle()==null)
+            color = Color.parseColor("#FFA000");
+        }else if(interv.getDateFinReelle()==null) {
             status = "en cours";
-        else if(interv.getDateFinReelle()!=null) //terminée
+            color = Color.GREEN;
+        }else if(interv.getDateFinReelle()!=null) { //terminée
             status = "terminée";
+            color = Color.RED;
+        }
 
         holder.state.setText(status);
+        holder.state.setTextColor(color);
+
         holder.details_more.setText(interv.getClientId()+"..");
 
         holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.parseColor("#FFA000"));
@@ -100,12 +108,20 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
             //filter.forEach((k,v)->{
 
             String value1 = (String) filter.get("codeClient");
-            if(!value1.isEmpty())
-                items = items.stream().filter(i->i.getClientId().toLowerCase().equals(value1.toLowerCase())).collect(Collectors.toList());
+            if(!value1.isEmpty()) {
+                Log.i(TAG, "setFilter: code client = " + value1);
+
+                Log.i(TAG, "setFilter: items 0"+items.size());
+                items = items.stream().filter(i -> i.getClientId().toLowerCase().equals(value1.toLowerCase())).collect(Collectors.toList());
+                Log.i(TAG, "setFilter: items 1"+items.size());
+            }
 
             String value2 = (String) filter.get("codeSupervisor");
-            if(!value2.isEmpty())
-                items = items.stream().filter(i->i.getSuperviseurId().toLowerCase().equals(value2.toLowerCase())).collect(Collectors.toList());
+            if(!value2.isEmpty()) {
+                Log.i(TAG, "setFilter: code supervisor = " + value2);
+                items = items.stream().filter(i -> i.getSuperviseurId().toLowerCase().equals(value2.toLowerCase())).collect(Collectors.toList());
+
+            }
 
             String value3 = (String) filter.get("dateDebutPrev");
             if(!value3.isEmpty())

@@ -93,7 +93,7 @@
             app:srcCompat="@drawable/ic_clients_list" />
 
         <ImageView
-            android:id="@+id/btn_search_supervisor"
+            android:id="@+id/btn_search_supervs_list"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"

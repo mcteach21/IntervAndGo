@@ -1,5 +1,6 @@
 package mc.apps.demo0.ui.comptes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import mc.apps.demo0.ComptesActivity;
+import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.UsersAdapter;
 import mc.apps.demo0.dao.UserDao;
@@ -47,6 +50,8 @@ public class ComptesFragment extends Fragment {
 
         root = view;
         refreshListAsync();  //charger liste comptes!
+
+        view.findViewById(R.id.btn_refresh_list).setOnClickListener(v->refreshListAsync());
         super.onViewCreated(view, savedInstanceState);
     }
     @Override
@@ -83,7 +88,11 @@ public class ComptesFragment extends Fragment {
         adapter = new UsersAdapter(
                 items,
                 (position, item) -> {
-                    Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(root.getContext(), ComptesActivity.class);
+                    intent.putExtra("user", (User)item);
+                    startActivity(intent);
+
+                    //Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
                 }
         );
         recyclerView.setAdapter(adapter);

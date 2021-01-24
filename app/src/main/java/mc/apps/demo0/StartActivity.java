@@ -14,6 +14,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import mc.apps.demo0.dao.UserDao;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
@@ -39,48 +41,27 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        getSupportActionBar().hide(); //masquer barre d'actions/menus
-
-        /**
-         * Lancer animation logo + apparition form login
-         */
+        //masquer barre d'actions/menus
+        getSupportActionBar().hide();
+        //Lancer animation logo + apparition form login
         startAnimation();
-
-        /**
-         * Gestion Boutons + liens
-         */
+        // Gestion Boutons + liens
         handleActions();
     }
 
     @Override
     public void onBackPressed() {
-        confirmExit();
-    }
-
-    private void confirmExit() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Vous êtes sûr de vouloir quitter?");
-
-        alertDialogBuilder.setPositiveButton("OUI", (dialog, which) -> finish());
-        alertDialogBuilder.setNegativeButton("NON", null);
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        MyTools.confirmExit(this);
+        return;
     }
 
     private void handleActions() {
         Button btnsignin = findViewById(R.id.btnsignin);
-        TextView linksignup = findViewById(R.id.txtlinksignup);
         TextView linkforgotten = findViewById(R.id.txtlinkfortgotten);
 
         View.OnClickListener ecouteur = view -> {
             if(view.getId()==R.id.btnsignin) {
                 handleLogin();          // gestion login
-            }else if(view.getId()==R.id.txtlinksignup) {
-                Toast.makeText(StartActivity.this, "TODO : création compte..", Toast.LENGTH_SHORT).show();
-               /* Intent intent = new Intent(StartActivity.this, SignupActivity.class);
-                startActivity(intent);*/
-               fingerPrintDialog();
             }else {
                 Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
                /* Intent intent = new Intent(StartActivity.this, ForgottenActivity.class);
@@ -90,9 +71,10 @@ public class StartActivity extends AppCompatActivity {
 
         //liaison gestionnaire evenement (click) bouton + links
         btnsignin.setOnClickListener(ecouteur);
-        linksignup.setOnClickListener(ecouteur);
         linkforgotten.setOnClickListener(ecouteur);
     }
+
+
 
     private void fingerPrintDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -121,8 +103,15 @@ public class StartActivity extends AppCompatActivity {
             List<User> users = dao.Deserialize(data, User.class);
             if(!users.isEmpty()){
                 User user = users.get(0);
+
+                /**
+                 * Session
+                 */
+                MyTools.SetUserInSession(user);
+
                 Toast.makeText(StartActivity.this, "Bienvenue "+user.getFirstname(), Toast.LENGTH_SHORT).show();
                 openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
+
             }else {
                 Toast.makeText(StartActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();
             }

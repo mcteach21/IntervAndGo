@@ -45,11 +45,12 @@ public class AdminActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.colorPrimary)));
-
-
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_comptes, R.id.navigation_interventions, R.id.navigation_rapports)
-                .build();
+                                                        R.id.navigation_comptes,
+                                                        R.id.navigation_clients,
+                                                        R.id.navigation_interventions,
+                                                        R.id.navigation_rapports
+                                                ).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -57,22 +58,21 @@ public class AdminActivity extends AppCompatActivity {
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        //current user
-        User user = getCurrentUser();
-
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.admin_toolbar_layout);
         setTitle("");
-        ((TextView)findViewById(R.id.title)).setText(""+user);
     }
-    private User getCurrentUser() {
-        User user = (User) getIntent().getSerializableExtra("user");
-        return user;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        User user = MyTools.GetUserInSession();
+        ((TextView)findViewById(R.id.title)).setText(""+user);
     }
 
     @Override
     public void onBackPressed() {
-        MyTools.confirmExit(this);
+        MyTools.confirmLogout(this);
         return;
     }
 
@@ -103,7 +103,7 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.appSignOut){
-            MyTools.confirmExit(this);
+            MyTools.confirmLogout(this);
         }
         return true;
     }
@@ -111,9 +111,16 @@ public class AdminActivity extends AppCompatActivity {
     public void AddItem(View view){
         int num=(view.getId()==R.id.btn_add_user)?2:1;
         Intent intent = new Intent(this, AddItemActivity.class);
-        intent.putExtra("num",num);
+        intent.putExtra("num", num);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
+    }
+    public void AddClient(View view) {
+        Toast.makeText(this, "Open Activity Add Client..", Toast.LENGTH_SHORT).show();
+    }
+    public void RefreshList(View view) {
+        //Toast.makeText(this, "Refresh list..", Toast.LENGTH_SHORT).show();
+        mainViewModel.setSearch("");
     }
 
     /**
@@ -154,4 +161,7 @@ public class AdminActivity extends AppCompatActivity {
 
         }
     }
+
+
+
 }

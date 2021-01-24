@@ -2,59 +2,43 @@ package mc.apps.demo0;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
-
-import mc.apps.demo0.ui.clients.ClientsFragment;
-import mc.apps.demo0.ui.users.UsersFragment;
+import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
-public class UsersActivity extends AppCompatActivity {
+public class ComptesActivity extends AppCompatActivity {
     MainViewModel mainViewModel;
-    private static final int CODE_USER_SELECT = 1404;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.clients_activity);
+        setContentView(R.layout.comptes_activity);
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, UsersFragment.newInstance())
+                    .replace(R.id.container, ClientsFragment.newInstance())
                     .commitNow();
-        }
+        }*/
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setSearch("");
-        mainViewModel.getUser().observe(
-                this,
-                user -> {
-                    Intent intent = new Intent();
-                    intent.putExtra("data", user);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-        );
 
         Intent intent = getIntent();
-        int profil_filter = intent.getIntExtra("profil",0);
-        mainViewModel.setProfil(profil_filter);
+        User user = (User) intent.getSerializableExtra("user");
 
-        setTitle((profil_filter==2)?"Superviseurs":(profil_filter==3)?"Techniciens":"Utilisateurs");
+        setTitle("Compte: "+user);
     }
 
     @Override
     public void onBackPressed() {
         returnDataAndFinish();
     }
-
     private void returnDataAndFinish() {
 /*
         Intent intent = new Intent();
@@ -66,7 +50,7 @@ public class UsersActivity extends AppCompatActivity {
 
     /**
      * Menu
-     */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
@@ -87,7 +71,7 @@ public class UsersActivity extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
-
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

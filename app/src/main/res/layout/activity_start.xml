@@ -86,7 +86,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
-                android:text="ryan@gmail.com"
                 android:textColor="@android:color/white"
                 android:textColorHighlight="@color/design_default_color_primary" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -112,7 +111,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
-                android:text="admin"
                 android:textColor="@android:color/white"
                 android:textColorHighlight="@color/design_default_color_primary" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -135,28 +133,11 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputPassword" />
 
         <TextView
-            android:id="@+id/txtlinksignup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="casual"
-            android:gravity="center"
-            android:text="@string/btn_signup_txt"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnsignin" />
-
-        <TextView
             android:id="@+id/txtlinkfortgotten"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="casual"
             android:gravity="center"
@@ -167,7 +148,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtlinksignup" />
+            app:layout_constraintTop_toBottomOf="@+id/btnsignin" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

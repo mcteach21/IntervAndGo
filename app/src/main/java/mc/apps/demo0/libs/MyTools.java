@@ -6,6 +6,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -17,8 +19,44 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import mc.apps.demo0.StartActivity;
+import mc.apps.demo0.model.User;
+
 public class MyTools {
     private static final String TAG = "demo";
+
+    /**
+     * Session (Shared Preferences)
+     */
+/*    public static final String MyPREFERENCES = "Session" ;
+    public static final String CURRENT_USER_NAME = "user_name";
+    private static final String CURRENT_USER_CODE = "user_code";*/
+
+    //private static SharedPreferences sharedPreferences;
+
+    public static User CurrentUser = null ;
+
+    public static void InitSession(Context context) {
+        //sharedPreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+    }
+
+    public static void SetUserInSession(User user){
+       /* SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(CURRENT_USER_CODE, currentUser.getCode());
+        editor.putString(CURRENT_USER_NAME, currentUser.getFirstname()+" "+currentUser.getLastname());
+        editor.commit();*/
+        CurrentUser = user;
+    }
+    public static void ClearSession(){
+       /* SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();*/
+        CurrentUser = null;
+    }
+    public static User GetUserInSession(){
+        //return sharedPreferences.getString(CURRENT_USER_NAME,"");
+        return CurrentUser;
+    }
 
     /**
      * UI
@@ -33,6 +71,20 @@ public class MyTools {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+    public static void confirmLogout(Activity activity) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder.setMessage("Vous êtes sûr de point de vous déconnecter..");
+        alertDialogBuilder.setPositiveButton("Se Déconnecter",
+                (dialog, which) -> {
+                    activity.startActivity(new Intent(activity, StartActivity.class));
+                    activity.finish();
+                });
+        alertDialogBuilder.setNegativeButton("Annuler", null);
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     /**
      * Date + Time
      */
@@ -97,6 +149,12 @@ public class MyTools {
         }
         return false;
 
+    }
+
+    public static String getCurrentDateCode() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyHHmmss");
+        Date today = Calendar.getInstance().getTime();
+        return dateFormat.format(today);
     }
 
 

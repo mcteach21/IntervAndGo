@@ -18,15 +18,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import mc.apps.demo0.AdminActivity;
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.service.InterventionManager;
 import mc.apps.demo0.service.UserManager;
 import mc.apps.demo0.ui.technician.TechnicianFragments;
+import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class AddItemFragment extends Fragment {
     private static final String TAG = "tests";
-    private MainViewModel mViewModel;
+    //private MainViewModel mainViewModel;
 
     private View root ;
     private int[] fragments_layouts = {
@@ -51,35 +53,31 @@ public class AddItemFragment extends Fragment {
         TextView title = root.findViewById(R.id.fragment_title);
         title.setText(fragments_titles[num-1]);
 
+
+        //mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-
-        if(num==1) //interventions (add)
+        if(num==1) {
             prepareAddingIntervention();
-        else if(num==2)
+        }else if(num==2) {
             prepareAddingUser();
+        }
     }
 
     private void prepareAddingUser() {
         UserManager manager = new UserManager(getActivity());
-        manager.prepareAddUser(root);
+        manager.prepareAddUser(root, AdminActivity.class);
     }
 
     private void prepareAddingIntervention() {
-        //afficher liste Clients
-        root.findViewById(R.id.btn_clients_list).setOnClickListener(
-                v-> startActivity(new Intent( root.getContext(), ClientsActivity.class))
-        );
-
         //gérer ajout intervention (planification)!
         InterventionManager manager = new InterventionManager(getActivity());
-        manager.prepareAddIntervention(root);
+        manager.prepareAddIntervention(root, AdminActivity.class);
     }
 
 }

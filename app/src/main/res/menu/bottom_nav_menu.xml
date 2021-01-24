@@ -6,6 +6,10 @@
         android:icon="@drawable/ic_action_account"
         android:title="@string/title_comptes" />
     <item
+        android:id="@+id/navigation_clients"
+        android:icon="@drawable/ic_clients_list"
+        android:title="@string/title_clients" />
+    <item
         android:id="@+id/navigation_interventions"
         android:icon="@drawable/ic_intervention"
         android:title="@string/title_interventions" />

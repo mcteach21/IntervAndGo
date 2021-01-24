@@ -57,20 +57,17 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
             defineFragment(TechnicianFragment.newInstance());
         }
 
-
-        User user = getCurrentUser();
-
         //setTitle("");
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.tech_toolbar_layout);
-        ((TextView)findViewById(R.id.title)).setText(""+user);
-
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
-    private User getCurrentUser() {
-        User user = (User) getIntent().getSerializableExtra("user");
-        return user;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        User user = MyTools.GetUserInSession();
+        ((TextView)findViewById(R.id.title)).setText(""+user);
     }
 
     private void defineFragment(Fragment fragment) {
@@ -104,10 +101,8 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     }
     public void list_photos_click(View view){
         //Sélectionner images dans Galery!
-
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
-
     }
 
     @Override
@@ -116,19 +111,7 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            /*String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            Log.i(TAG , "picturePath : "+picturePath);*/
-
             mainViewModel.addImage(selectedImage);
-
-          /* ImageView logo = findViewById(R.id.logo_test);
-           logo.setImageURI(selectedImage);*/
-
         }
     }
 
@@ -137,10 +120,10 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_superv, menu);
+        getMenuInflater().inflate(R.menu.menu_simple, menu);
         MenuItem mSearch = menu.findItem(R.id.appSearchBar);
 
-        SearchView mSearchView = (SearchView) mSearch.getActionView();
+/*        SearchView mSearchView = (SearchView) mSearch.getActionView();
         mSearchView.setQueryHint("Search");
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -152,13 +135,13 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
                 //mainViewModel.setSearch(newText);
                 return true;
             }
-        });
+        });*/
         return super.onCreateOptionsMenu(menu);
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.appSignOut){
-            MyTools.confirmExit(this);
+            MyTools.confirmLogout(this);
         }
         return true;
     }

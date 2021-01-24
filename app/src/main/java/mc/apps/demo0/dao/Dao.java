@@ -43,6 +43,11 @@ public class Dao<T> {
         Log.i(TAG, url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
+    public void delete(String code, OnSuccess onSuccess){
+        String url = DB_API_URL+"list="+table+"&action=delete&id="+code;
+        Log.i(TAG, url);
+        new Http2AsyncTask(onSuccess).execute(url);
+    }
 
     /**
      * Async Task

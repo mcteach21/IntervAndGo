@@ -64,37 +64,21 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         setSupportActionBar(toolbar);
         setTitle("");
 
-        //current user
-        User user = getCurrentUser();
-        ((TextView)findViewById(R.id.title)).setText(""+user);
-
-        //list interventions
-        refreshListAsync();
-
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        mainViewModel.getFilter().observe(
-                this,
-                filter -> {
-                    if (filter.isEmpty())
-                        refreshListAsync();
-                    else
-                    if(adapter!=null)
-                        adapter.setFilter(filter);
-                }
-        );
     }
     MainViewModel mainViewModel;
 
-    private User getCurrentUser() {
-        User user = (User) getIntent().getSerializableExtra("user");
-        return user;
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        User user = MyTools.GetUserInSession();
+        ((TextView)findViewById(R.id.title)).setText(""+user);
     }
 
     @Override
     public void onBackPressed() {
-        MyTools.confirmExit(this);
-        return;
+        MyTools.confirmLogout(this);
     }
 
     /**
@@ -114,12 +98,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                if(newText == null || newText.length() == 0)
-                    refreshListAsync();
-                else
-                    adapter.getFilter().filter(newText);
-
+                mainViewModel.setSearch(newText);
                 return true;
             }
         });
@@ -129,71 +108,59 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.appSignOut){
-            MyTools.confirmExit(this);
+            MyTools.confirmLogout(this);
         }
         return true;
     }
 
-    /**
-     * Gestion liste Interventions
-     */
-    List<Intervention> items = new ArrayList<Intervention>();
-    SwipeRefreshLayout swipeContainer;
-    RecyclerView recyclerView;
-    InterventionsAdapter adapter;
-    private void loadList(){
-        recyclerView = findViewById(R.id.list);
-        recyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new InterventionsAdapter(
-                items,
-                (position, item) -> {
-                    Intent intent = new Intent(SupervisorActivity.this, InterventionActivity.class);
-                    intent.putExtra("intervention", (Intervention)item);
-                    startActivity(intent);
-                }
-        );
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
-                SupervisorActivity.this, R.anim.layout_fall_down_animation
-        ));
-
-        swipeContainer = findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-            @Override
-            public void onRefresh() {
-                refreshListAsync();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
+        if(requestCode==SELECT_REQUEST_CODE){
+            if(data.getSerializableExtra("data")!=null) {
+                List<User> selected = (List<User>) data.getSerializableExtra("data");
+                for (User u : selected)
+                    mainViewModel.updateSelected(u, true);
             }
-        });
+        }
+        if(requestCode==REQUEST_FILTRE_CODE){
+            if(data!=null) {
+                String codeClient = data.getStringExtra("codeClient");
+                String codeSupervisor = data.getStringExtra("codeSupervisor");
+                String dateDebutPrev = data.getStringExtra("dateDebutPrev");
+                String dateDebutReel = data.getStringExtra("dateDebutReel");
+                int status = data.getIntExtra("status", 0);
 
-        swipeContainer.setColorSchemeResources(
-                android.R.color.holo_red_light,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_blue_bright
-        );
+                Hashtable<String, Object> filter = new Hashtable();
+                filter.put("codeClient", codeClient);
+                filter.put("codeSupervisor", codeSupervisor);
+                filter.put("dateDebutPrev", dateDebutPrev);
+                filter.put("dateDebutReel", dateDebutReel);
+                filter.put("status", status);
+
+                mainViewModel.setFilter(filter);
+            }else{
+                //TODO : clear filter!
+            }
+        }
+
     }
-    private void refreshListAsync() {
 
-        InterventionDao dao = new InterventionDao();
-        dao.list((data, message) -> {
-            items = dao.Deserialize(data, Intervention.class);
-            Log.i(TAG, "items : "+items);
+    /**
+     * Filtre Détaillé Interventions (Appel)
+     * @param view
+     */
+    public void SearchDetailInterv(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivityForResult(intent, REQUEST_FILTRE_CODE);
+        overridePendingTransition(R.anim.slide_down, R.anim.slide_down);
+    }
 
-            //order by date début
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                items = items.stream().sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
-                        .collect(Collectors.toList());
-
-                Log.i(TAG, "refreshListAsync: ordered?");
-            }
-
-            loadList();
-            swipeContainer.setRefreshing(false);
-            //runLayoutAnimation(recyclerView);
-        });
+    public void list_techs_click(View view){
+        mainViewModel.clearSelected();
+        startActivityForResult(new Intent(this, SelectActivity.class), SELECT_REQUEST_CODE);
     }
 
     /**
@@ -234,51 +201,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     }
 
 
-    public void list_techs_click(View view){
-        mainViewModel.clearSelected();
-        startActivityForResult(new Intent(this, SelectActivity.class), SELECT_REQUEST_CODE);
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
-        if(requestCode==SELECT_REQUEST_CODE){
-            if(data.getSerializableExtra("data")!=null) {
-                List<User> selected = (List<User>) data.getSerializableExtra("data");
-                for (User u : selected)
-                    mainViewModel.updateSelected(u, true);
-            }
-        }
-        if(requestCode==REQUEST_FILTRE_CODE){
 
-            String codeClient = data.getStringExtra("codeClient");
-            String codeSupervisor = data.getStringExtra("codeSupervisor");
-            String dateDebutPrev = data.getStringExtra("dateDebutPrev");
-            String dateDebutReel = data.getStringExtra("dateDebutReel");
-            int status = data.getIntExtra("status",0);
 
-            Log.i(TAG, "onActivityResult: "+codeClient+" "+dateDebutPrev+" "+status);
-
-            Hashtable<String, Object> filter = new Hashtable();
-            filter.put("codeClient", codeClient);
-            filter.put("codeSupervisor", codeSupervisor);
-            filter.put("dateDebutPrev", dateDebutPrev);
-            filter.put("dateDebutReel", dateDebutReel);
-            filter.put("status", status);
-
-            mainViewModel.setFilter(filter);
-        }
-
-    }
-
-    /**
-     * Filtre Détaillé Interventions (Appel)
-     * @param view
-     */
-    public void SearchDetailInterv(View view) {
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivityForResult(intent, REQUEST_FILTRE_CODE);
-        overridePendingTransition(R.anim.slide_down, R.anim.slide_down);
-    }
 
 }

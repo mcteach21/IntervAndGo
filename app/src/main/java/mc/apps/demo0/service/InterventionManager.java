@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
@@ -28,6 +29,7 @@ import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
@@ -35,7 +37,6 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class InterventionManager {
     private static final String TAG = "tests";
-    private static int CPT = 1; // TODO : Cpteur code Intervention
 
     AutoCompleteTextView codeClient;
     EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
@@ -44,18 +45,22 @@ public class InterventionManager {
     MainViewModel mainViewModel;
     List<User> selected = new ArrayList();
     Activity activity;
+
     public InterventionManager(Activity activity){
         this.activity = activity;
         mainViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(MainViewModel.class);
+
     }
 
-    public void prepareAddIntervention(View root) {
+    public void prepareAddIntervention(View root, Class<?> backActivity) {
         initClientAutocomplete(root);
         initListTech(root);
 
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
             addIntervention(root);
+            root.getContext().startActivity(new Intent(root.getContext() , backActivity));
+            Log.i(TAG, "prepareAddIntervention : back to "+backActivity.getSimpleName());
         });
     }
 
@@ -74,7 +79,7 @@ public class InterventionManager {
         List<User> technicians = adapter.getItems();
 
         Intervention interv = new Intervention(
-                "INT2021"+CPT++,
+                "INT"+MyTools.getCurrentDateCode(),
                 codeClient.getText().toString(),
                 desc.getText().toString(),
                 dateDebut.getText().toString(),
@@ -82,11 +87,9 @@ public class InterventionManager {
                 comment.getText().toString(),
                 materielNecessaire.getText().toString(),
                 serviceCible.getText().toString(),
-                "MC2",  //TODO : current user code...
+                MyTools.GetUserInSession().getCode(),  //current user code...
                 technicians
         );
-
-
 
         InterventionDao dao = new InterventionDao();
         dao.add(interv, (items, message) -> {
@@ -112,11 +115,9 @@ public class InterventionManager {
             codeClient.setTextColor(Color.WHITE);
         });
 
-        root.findViewById(R.id.btn_clients_list).setOnClickListener(
-                v->{
-                    activity.startActivity(new Intent( root.getContext(), ClientsActivity.class));
-                }
-        );
+        mainViewModel.getClient().observe((LifecycleOwner) activity, selected -> {
+            codeClient.setText(selected.getCode());
+        });
     }
     private void initListTech(View root){
         tech_list = root.findViewById(R.id.tech_list);

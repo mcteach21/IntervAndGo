@@ -55,7 +55,6 @@ public class InterventionActivity extends AppCompatActivity {
             finish();
         }
 
-        //TextView title = findViewById(R.id.layout_title);
         Init();
     }
 

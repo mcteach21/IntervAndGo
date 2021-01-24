@@ -10,6 +10,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -17,12 +18,16 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.List;
 
+import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.additem.AddItemFragment;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class AddItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final int SELECT_REQUEST_CODE = 2608;
+    private static final int CODE_CLIENT_SELECT = 1304;
+    private static final int CODE_USER_SELECT = 1404;
+
     MainViewModel mainViewModel;
 
     @Override
@@ -35,6 +40,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         Intent intent = getIntent();
         int num = intent.getIntExtra("num", 1);
         defineFragment(num);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void defineFragment(int num) {
@@ -81,6 +88,14 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     }
 
 
+    /**
+     * Boutons Click
+     * @param view
+     */
+    public void list_clients_click(View view){
+        startActivityForResult(new Intent(this, ClientsActivity.class), CODE_CLIENT_SELECT);
+    }
+
     public void list_techs_click(View view){
         mainViewModel.clearSelected();
         startActivityForResult(new Intent(this, SelectActivity.class), SELECT_REQUEST_CODE);
@@ -88,13 +103,28 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
+
         if(requestCode==SELECT_REQUEST_CODE){
-            if(data.getSerializableExtra("data")!=null) {
-                List<User> selected = (List<User>) data.getSerializableExtra("data");
-                for (User u : selected)
-                    mainViewModel.updateSelected(u, true);
-            }
+            if(data!=null)
+                if(data.getSerializableExtra("data")!=null) {
+                    List<User> selected = (List<User>) data.getSerializableExtra("data");
+                    for (User u : selected)
+                        mainViewModel.updateSelected(u, true);
+                }
         }
+        else if(requestCode==CODE_CLIENT_SELECT){
+            if(data!=null)
+                if(data.getSerializableExtra("data")!=null) {
+                    Client selected = (Client) data.getSerializableExtra("data");
+                    mainViewModel.setClient(selected);
+                }
+        }
+       /* else if(requestCode==CODE_USER_SELECT){
+            if(data!=null)
+                if (data.getSerializableExtra("data") != null) {
+                    User selected = (User) data.getSerializableExtra("data");
+                    edtSearchSupervisor.setText(selected.getCode());
+                }
+        }*/
     }
 }

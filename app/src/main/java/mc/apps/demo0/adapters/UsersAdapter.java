@@ -1,5 +1,7 @@
 package mc.apps.demo0.adapters;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -10,8 +12,10 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +26,9 @@ import java.util.Date;
 import java.util.List;
 
 import mc.apps.demo0.R;
+import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.UserDao;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
@@ -63,7 +70,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = items.get(position);
-        holder.title.setText(user.getFirstname()+" "+user.getLastname());
+        holder.title.setText(user.getFirstname()+" "+user.getLastname() + " ["+user.getCode()+"]");
 
         if(this.select) {
             List<User> selected = mainViewModel.getSelected().getValue();
@@ -99,6 +106,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
             if(select) {
                 itemView.findViewById(R.id.item_select).setOnClickListener(
                         v-> {
@@ -107,8 +115,32 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                             listener.onItemClick(getAdapterPosition(), user);
                         }
                 );
+            }else{
+                itemView.findViewById(R.id.item_btn_delete).setOnClickListener(
+                        v-> ConfirmDelete(itemView.getContext(), getAdapterPosition())
+                );
             }
         }
+
+
+    }
+    private void ConfirmDelete(Context context, final int position) {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(context);
+        dlg.setMessage("Vous allez supprimer ce compte définitivement..")
+                .setPositiveButton("Supprimer", (dialog, which) -> {
+                    Toast.makeText(context, "delete.."+position, Toast.LENGTH_SHORT).show();
+
+                    User user = items.get(position);
+
+                    UserDao dao = new UserDao();
+                    dao.delete(user.getCode(),
+                            (items, message) -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    );
+
+                    items.remove(position);
+                    notifyDataSetChanged();
+                })
+                .setNegativeButton("Annuler", null).show();
     }
 
     /**

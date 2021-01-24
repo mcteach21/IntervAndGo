@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.Serializable;
 
@@ -30,11 +31,19 @@ public class ClientsActivity extends AppCompatActivity {
                     .commitNow();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setTitle("Clients");
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setSearch("");
+        mainViewModel.getClient().observe(
+                this,
+                client -> {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", client);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+        );
     }
 
     @Override
@@ -43,11 +52,6 @@ public class ClientsActivity extends AppCompatActivity {
     }
 
     private void returnDataAndFinish() {
-/*
-        Intent intent = new Intent();
-        intent.putExtra("data", (Serializable) mainViewModel.getSelected().getValue());
-        setResult(RESULT_OK, intent);*/
-
         finish();
     }
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -19,13 +20,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import mc.apps.demo0.ClientsActivity;
+import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
+import mc.apps.demo0.SupervisorActivity;
+import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
@@ -68,10 +75,12 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         int layout = (index==1)?R.layout.fragment_superv_intervs:R.layout.fragment_superv_planif;
-        View root = inflater.inflate(layout, container, false);
+        root = inflater.inflate(layout, container, false);
         final TextView textView = root.findViewById(R.id.fragment_title);
 
         pageViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
+
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         return root;
     }
 
@@ -82,12 +91,36 @@ public class PlaceholderFragment extends Fragment {
     MainViewModel mainViewModel;
     List<User> selected = new ArrayList();
 
+    View root;
     @Override
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
 
-        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        if (index==1){ //liste interventions
+            refreshListAsync();
+            root.findViewById(R.id.btn_refresh_list).setOnClickListener(v->refreshListAsync());
 
+            mainViewModel.getSearch().observe(
+                    getViewLifecycleOwner(),
+                    search -> {
+                        if (search.isEmpty())
+                            refreshListAsync();
+                        else
+                        if(adapter!=null)
+                            adapter.getFilter().filter(search);
+                    }
+            );
+            mainViewModel.getFilter().observe(
+                    getViewLifecycleOwner(),
+                    filter -> {
+                        if (filter.isEmpty())
+                            refreshListAsync();
+                        else
+                        if(adapter!=null)
+                            adapter.setFilter(filter);
+                    }
+            );
+        }
         if (index==2){ //Planifier Intervention
 
             initClientAutocomplete(root);
@@ -100,6 +133,72 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
+
+    /**
+     * Liste Interventions
+     * @param root
+     */
+
+    List<Intervention> items = new ArrayList<Intervention>();
+    SwipeRefreshLayout swipeContainer;
+    RecyclerView recyclerView;
+    InterventionsAdapter adapter;
+
+    private void loadList(){
+        recyclerView = root.findViewById(R.id.list);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new InterventionsAdapter(
+                items,
+                (position, item) -> {
+                    Intent intent = new Intent(getActivity(), InterventionActivity.class);
+                    intent.putExtra("intervention", (Intervention)item);
+                    startActivity(intent);
+                }
+        );
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
+                getActivity(), R.anim.layout_fall_down_animation
+        ));
+
+        swipeContainer = root.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(() -> refreshListAsync());
+
+        swipeContainer.setColorSchemeResources(
+                android.R.color.holo_red_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_blue_bright
+        );
+    }
+    private void refreshListAsync() {
+
+        InterventionDao dao = new InterventionDao();
+        dao.list((data, message) -> {
+            items = dao.Deserialize(data, Intervention.class);
+            Log.i(TAG, "items : "+items);
+
+            //order by date début
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                items = items.stream().sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
+                        .collect(Collectors.toList());
+
+                Log.i(TAG, "refreshListAsync: ordered?");
+            }
+
+            loadList();
+            swipeContainer.setRefreshing(false);
+            //runLayoutAnimation(recyclerView);
+        });
+    }
+
+
+    /**
+     * Planification
+     * @param root
+     */
     private void addIntervention(View root) {
         codeClient = root.findViewById(R.id.txtCodeClient);
         desc = root.findViewById(R.id.edtDesc);

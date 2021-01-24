@@ -36,12 +36,11 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Client client = items.get(position);
 
-        holder.title.setText(client.getCode()+'\n'+client.getNom());
-        holder.details.setText(client.getEmail()+"|"+client.getTelephone());
-        holder.details_more.setText(client.getContact());
+        holder.title.setText(client.getNom()+" ["+client.getCode()+"]");
+        holder.details.setText(client.getEmail()+" - Tél. : "+client.getTelephone());
+        holder.details_more.setText("Contact : "+client.getContact());
 
         if(listener!=null)
             holder.itemView.setOnClickListener(
@@ -60,7 +59,11 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
         TextView details_more = itemView.findViewById(R.id.item_details_more);
 
         public ViewHolder(@NonNull View itemView) {
+
             super(itemView);
+            itemView.setOnClickListener(view -> {
+                listener.onItemClick(getAdapterPosition(), items.get(getAdapterPosition()));
+            });
         }
     }
 

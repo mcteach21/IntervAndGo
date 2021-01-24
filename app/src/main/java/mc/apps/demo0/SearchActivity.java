@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -42,6 +43,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private static final String TAG = "tests";
     private static final int REQUEST_FILTRE_CODE = 1603;
     private static final int SELECT_REQUEST_CODE = 2608 ;
+    private static final int CODE_CLIENT_SELECT = 1304;
+    private static final int CODE_USER_SELECT = 1404;
     private   MainViewModel mainViewModel;
 
     @Override
@@ -50,28 +53,36 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         setContentView(R.layout.activity_search);
         getSupportActionBar().hide();
 
-        //TextView title = findViewById(R.id.search_title);
-
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        InitFilter();
 
         Button btn = findViewById(R.id.btn_filter_ok);
         btn.setOnClickListener(v->{
             applyFilter();
         });
         initListTech();
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
+
+    TextView txtSearchCodeClient;
+    EditText edtSearchSupervisor, edtDateDebutPrev, edtDateDebutReel;
+    RecyclerView search_tech_list;
+    RadioGroup statusChoice;
+
+    private void InitFilter() {
+        txtSearchCodeClient = findViewById(R.id.txtSearchCodeClient);
+        edtSearchSupervisor = findViewById(R.id.edtSearchSupervisor);
+        search_tech_list = findViewById(R.id.search_tech_list);
+        statusChoice = findViewById(R.id.statusChoice);
+        edtDateDebutPrev = findViewById(R.id.edtDateDebutPrev);
+        edtDateDebutReel = findViewById(R.id.edtDateDebutReel);
+    }
+
 
     private void applyFilter() {
         //appliquer filtre!
-
-        TextView txtSearchCodeClient = findViewById(R.id.txtSearchCodeClient);
-        EditText edtSearchSupervisor = findViewById(R.id.edtSearchSupervisor);
-        RecyclerView search_tech_list = findViewById(R.id.search_tech_list);
-
-        RadioGroup statusChoice = findViewById(R.id.statusChoice);
-
-        EditText edtDateDebutPrev = findViewById(R.id.edtDateDebutPrev);
-        EditText edtDateDebutReel = findViewById(R.id.edtDateDebutReel);
 
         String codeClient = txtSearchCodeClient.getText().toString();
         String codeSupervisor = edtSearchSupervisor.getText().toString();
@@ -80,7 +91,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         String dateDebutReel = edtDateDebutReel.getText().toString();
 
         int checkedID = statusChoice.getCheckedRadioButtonId();
-        int status = (checkedID==R.id.radioButton1)?1:(checkedID==R.id.radioButton2)?2:5;
+        int status = (checkedID==R.id.radioButton1)?1:(checkedID==R.id.radioButton2)?2:(checkedID==R.id.radioButton3)?5:0;
 
         Intent intent=new Intent();
 
@@ -90,10 +101,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         intent.putExtra("dateDebutReel", dateDebutReel);
         intent.putExtra("status", status);
 
-        Log.i(TAG, "applyFilter: "+status);
-
         setResult(REQUEST_FILTRE_CODE, intent);
-        finish();//finishing activity
+        finish();
     }
 
 
@@ -134,19 +143,31 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         edtDateTime.setText(mDay + "-" + (mMonth + 1) + "-" + mYear+" "+mHour+":"+mMinute);
     }
 
- /*   public void list_techs_click(View view){
-
-    }*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
+
         if(requestCode==SELECT_REQUEST_CODE){
-            if(data.getSerializableExtra("data")!=null) {
-                List<User> selected = (List<User>) data.getSerializableExtra("data");
-                for (User u : selected)
-                    mainViewModel.updateSelected(u, true);
-            }
+            if(data!=null)
+                if(data.getSerializableExtra("data")!=null) {
+                    List<User> selected = (List<User>) data.getSerializableExtra("data");
+                    for (User u : selected)
+                        mainViewModel.updateSelected(u, true);
+                }
+        }
+        else if(requestCode==CODE_CLIENT_SELECT){
+            if(data!=null)
+                if(data.getSerializableExtra("data")!=null) {
+                    Client selected = (Client) data.getSerializableExtra("data");
+                    txtSearchCodeClient.setText(selected.getCode());
+                }
+        }
+        else if(requestCode==CODE_USER_SELECT){
+            if(data!=null)
+                if (data.getSerializableExtra("data") != null) {
+                    User selected = (User) data.getSerializableExtra("data");
+                    edtSearchSupervisor.setText(selected.getCode());
+                }
         }
     }
 
@@ -154,10 +175,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         int id = view.getId();
         switch(id){
             case R.id.btn_search_clients_list:
-                startActivity(new Intent(this, ClientsActivity.class));
+                startActivityForResult(new Intent(this, ClientsActivity.class), CODE_CLIENT_SELECT);
                 break;
-            case R.id.btn_search_supervisor:
-                startActivity(new Intent(this, UsersActivity.class));
+            case R.id.btn_search_supervs_list:
+                Intent intent = new Intent(this, UsersActivity.class);
+                intent.putExtra("profil",2);            //filtre sur superviseurs
+                startActivityForResult(intent, CODE_USER_SELECT);
                 break;
             case R.id.btn_search_techs_list:
                 mainViewModel.clearSelected();
@@ -185,42 +208,4 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         });
     }
 
-    /**
-     * Gestion liste..
-
-    List<?> items = new ArrayList();
-    SwipeRefreshLayout swipeContainer;
-    RecyclerView recyclerView;
-
-    private void loadList(){
-        recyclerView = findViewById(R.id.list);
-        recyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-
-        ClientsAdapter adapter = new ClientsAdapter(
-                (List<Client>) items,
-                (position, item) -> {
-                    Toast.makeText(SearchActivity.this, "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
-                }
-        );
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
-                this, R.anim.layout_fall_down_animation
-        ));
-        swipeContainer = findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(() -> refreshListAsync());
-        swipeContainer.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_orange_light,  android.R.color.holo_blue_bright );
-    }
-    private void refreshListAsync() {
-        ClientDao dao = new ClientDao();
-        dao.list((data, message) -> {
-            items = dao.Deserialize(data, Client.class);
-            loadList();
-            swipeContainer.setRefreshing(false);
-        });
-    }*/
 }

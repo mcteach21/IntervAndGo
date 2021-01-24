@@ -49,10 +49,9 @@ public class InterventionsFragment extends Fragment {
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Admin : Interventions");
-
         root = view;
         refreshListAsync();
+        view.findViewById(R.id.btn_refresh_list).setOnClickListener(v->refreshListAsync());
         super.onViewCreated(view, savedInstanceState);
     }
     @Override
@@ -94,11 +93,7 @@ public class InterventionsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(root.getContext());
-        //val layoutManager = GridLayoutManager(this, 3)
-
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.addItemDecoration(new DividerItemDecoration(root.getContext(), LinearLayoutManager.VERTICAL));
-
         adapter = new InterventionsAdapter(
                 items,
                 (position, item) -> {

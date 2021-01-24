@@ -1,6 +1,7 @@
 package mc.apps.demo0.service;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import java.util.ArrayList;
 import java.util.List;
 
+import mc.apps.demo0.AddItemActivity;
+import mc.apps.demo0.AdminActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.InterventionDao;
@@ -33,14 +36,13 @@ public class UserManager {
         mainViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(MainViewModel.class);
     }
 
-    public void prepareAddUser(View root) {
-
-        //initListProfils(root);
-
+    public void prepareAddUser(View root, Class<?> backActivity) {
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
-            addUser(root);
-        });
+                addUser(root);
+                root.getContext().startActivity(new Intent(root.getContext() , backActivity));
+                Log.i(TAG, "prepareAddUser: back to "+backActivity.getSimpleName());
+            });
     }
 
     EditText codeUser, firstName, lastName, email, password;

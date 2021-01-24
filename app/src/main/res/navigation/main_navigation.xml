@@ -6,7 +6,7 @@
     app:startDestination="@+id/navigation_rapports">
 
 
-    <fragment
+<!--    <fragment
         android:id="@+id/navigation_interventions"
         android:name="mc.apps.demo0.ui.options.TechInterventionsFragment"
         android:label="@string/title_interventions"
@@ -22,6 +22,6 @@
         android:id="@+id/navigation_historique"
         android:name="mc.apps.demo0.ui.options.TechHistoriqueFragment"
         android:label="@string/title_histo"
-        tools:layout="@layout/fragment_tech_main00" />
+        tools:layout="@layout/fragment_tech_main00" />-->
 
 </navigation>
