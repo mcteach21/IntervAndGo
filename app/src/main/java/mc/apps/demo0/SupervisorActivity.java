@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.main.SectionsPagerAdapter;
@@ -47,6 +48,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     private static final String TAG = "tests";
     private static final int SELECT_REQUEST_CODE = 2608;
     private static final int REQUEST_FILTRE_CODE = 1603;
+    private static final int CODE_CLIENT_SELECT = 1304;
 
 
     @Override
@@ -117,13 +119,22 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Toast.makeText(this, requestCode+" : "+data, Toast.LENGTH_SHORT).show();
+
+
         if(requestCode==SELECT_REQUEST_CODE){
-            if(data.getSerializableExtra("data")!=null) {
-                List<User> selected = (List<User>) data.getSerializableExtra("data");
-                for (User u : selected)
-                    mainViewModel.updateSelected(u, true);
-            }
+            if(data!=null)
+                if(data.getSerializableExtra("data")!=null) {
+                    List<User> selected = (List<User>) data.getSerializableExtra("data");
+                    for (User u : selected)
+                        mainViewModel.updateSelected(u, true);
+                }
+        }
+        if(requestCode==CODE_CLIENT_SELECT){
+            if(data!=null)
+                if(data.getSerializableExtra("data")!=null) {
+                    Client selected = (Client) data.getSerializableExtra("data");
+                    mainViewModel.setClient(selected);
+                }
         }
         if(requestCode==REQUEST_FILTRE_CODE){
             if(data!=null) {

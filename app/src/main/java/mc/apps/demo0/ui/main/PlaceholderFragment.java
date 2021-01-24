@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,6 +46,7 @@ import mc.apps.demo0.viewmodels.MainViewModel;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
+    private static final int CODE_CLIENT_SELECT = 1304;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String TAG = "tests" ;
@@ -247,9 +249,15 @@ public class PlaceholderFragment extends Fragment {
         root.findViewById(R.id.btn_clients_list).setOnClickListener(
                 v->{
                     //Toast.makeText(root.getContext(), "open clients list..", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent( root.getContext(), ClientsActivity.class));
+                    Intent intent = new Intent(root.getContext(), ClientsActivity.class);
+                    startActivityForResult(intent, CODE_CLIENT_SELECT );
                 }
         );
+
+        mainViewModel.getClient().observe(getActivity(), selected -> {
+            codeClient.setText(selected.getCode());
+        });
+
     }
     private void initListTech(View root){
         tech_list = root.findViewById(R.id.tech_list);

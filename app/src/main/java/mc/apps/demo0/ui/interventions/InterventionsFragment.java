@@ -77,6 +77,7 @@ public class InterventionsFragment extends Fragment {
                             adapter.setFilter(filter);
                 }
         );
+
     }
 
     /**
