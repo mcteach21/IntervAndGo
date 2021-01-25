@@ -61,7 +61,7 @@ public class Intervention implements Serializable {
 		this.technicians = technicians;
 		this.affectations = new ArrayList<>();
 		for (User tech : this.technicians)
-			affectations.add(new Affectation(0, this.code,tech.getCode()));
+			affectations.add(new Affectation(0, this.code, tech.getCode()));
 	}
 
 	public Intervention(String code, String clientId, String commentaire, String dateDebutPrevue, String dateDebutReelle, String dateFinPrevue, String dateFinReelle, String description, String materielNecessaire, String serviceEquipCible, int statutId, String superviseurId) {

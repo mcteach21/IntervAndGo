@@ -35,8 +35,10 @@ import mc.apps.demo0.R;
 import mc.apps.demo0.SupervisorActivity;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
+import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
@@ -46,7 +48,7 @@ import mc.apps.demo0.viewmodels.MainViewModel;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
-    private static final int CODE_CLIENT_SELECT = 1304;
+    private static final int CODE_CLIENT_SELECT = 1000;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String TAG = "tests" ;
@@ -83,6 +85,8 @@ public class PlaceholderFragment extends Fragment {
         pageViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
 
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+
+
         return root;
     }
 
@@ -97,6 +101,7 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
+        //Toast.makeText(getActivity(), "onViewCreated : "+index, Toast.LENGTH_LONG).show();
 
         if (index==1){ //liste interventions
             refreshListAsync();
@@ -125,6 +130,7 @@ public class PlaceholderFragment extends Fragment {
         }
         if (index==2){ //Planifier Intervention
 
+
             initClientAutocomplete(root);
             initListTech(root);
 
@@ -132,6 +138,8 @@ public class PlaceholderFragment extends Fragment {
             btnadd.setOnClickListener(view -> {
                addIntervention(root);
             });
+
+
         }
     }
 
@@ -206,7 +214,7 @@ public class PlaceholderFragment extends Fragment {
         desc = root.findViewById(R.id.edtDesc);
         dateDebut = root.findViewById(R.id.edtDateDebutPrev);
         dateFin = root.findViewById(R.id.edtDateFinPrev);
-        serviceCible = root.findViewById(R.id.edtMaterielNecess);
+        serviceCible = root.findViewById(R.id.edtServiceCible);
         materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
         comment = root.findViewById(R.id.edtComment);
 
@@ -215,23 +223,37 @@ public class PlaceholderFragment extends Fragment {
         List<User> technicians = adapter.getItems();
 
         Intervention interv = new Intervention(
-                "code", codeClient.getText().toString(),
+                MyTools.getCurrentDateCode(),
+                codeClient.getText().toString(),
                 desc.getText().toString(), dateDebut.getText().toString(), dateFin.getText().toString(),
                 comment.getText().toString(),
-                "mat nécess..",serviceCible.getText().toString(),
-                "code superv",
+                materielNecessaire.getText().toString(),
+                serviceCible.getText().toString(),
+                MyTools.GetUserInSession().getCode(),
                 technicians
         );
 
         InterventionDao dao = new InterventionDao();
         dao.add(interv, (items, message) -> {
-            Log.i(TAG, "onCreate: "+message);
             Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
+            addAffectaions(interv);
         });
+
         resetFields(root); //reinitialiser form planfication!
     }
+
+    private void addAffectaions(Intervention interv) {
+        AffectationDao dao = new AffectationDao();
+        dao.add(interv, (items, message) -> {
+            Toast.makeText(root.getContext(), "Intervention affectations ok.", Toast.LENGTH_LONG).show();
+        });
+    }
+
     private void initClientAutocomplete(View root) {
-        ClientDao dao = new ClientDao();
+        codeClient = root.findViewById(R.id.txtCodeClient);
+   /*     ClientDao dao = new ClientDao();
+        codeClient.setThreshold(1);
+        codeClient.setTextColor(Color.WHITE);
 
         dao.list((data, message) -> {
             List<Client> items = dao.Deserialize(data, Client.class);
@@ -240,23 +262,22 @@ public class PlaceholderFragment extends Fragment {
                     android.R.layout.select_dialog_item,
                     items);
 
-            codeClient = root.findViewById(R.id.txtCodeClient);
-            codeClient.setThreshold(1);       //will start working from first character
             codeClient.setAdapter(adapter);
-            codeClient.setTextColor(Color.WHITE);
-        });
+        });*/
 
         root.findViewById(R.id.btn_clients_list).setOnClickListener(
                 v->{
-                    //Toast.makeText(root.getContext(), "open clients list..", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(root.getContext(), ClientsActivity.class);
-                    startActivityForResult(intent, CODE_CLIENT_SELECT );
+                    startActivityForResult(intent, CODE_CLIENT_SELECT);
                 }
         );
 
-        mainViewModel.getClient().observe(getActivity(), selected -> {
-            codeClient.setText(selected.getCode());
-        });
+        mainViewModel.getClient().observe(
+                getViewLifecycleOwner(),
+                selected -> {
+                    codeClient.setText(selected.getCode());
+                }
+        );
 
     }
     private void initListTech(View root){

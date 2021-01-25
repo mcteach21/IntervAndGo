@@ -25,6 +25,7 @@ public class ClientsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clients_activity);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, ClientsFragment.newInstance())
@@ -35,6 +36,7 @@ public class ClientsActivity extends AppCompatActivity {
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setSearch("");
+
         mainViewModel.getClient().observe(
                 this,
                 client -> {

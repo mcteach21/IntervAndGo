@@ -48,7 +48,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     private static final String TAG = "tests";
     private static final int SELECT_REQUEST_CODE = 2608;
     private static final int REQUEST_FILTRE_CODE = 1603;
-    private static final int CODE_CLIENT_SELECT = 1304;
+    private static final int CODE_CLIENT_SELECT = 1000;
 
 
     @Override
@@ -120,7 +120,6 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if(requestCode==SELECT_REQUEST_CODE){
             if(data!=null)
                 if(data.getSerializableExtra("data")!=null) {
@@ -129,13 +128,15 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
                         mainViewModel.updateSelected(u, true);
                 }
         }
-        if(requestCode==CODE_CLIENT_SELECT){
-            if(data!=null)
-                if(data.getSerializableExtra("data")!=null) {
+        //if(requestCode==CODE_CLIENT_SELECT){
+        if(data!=null)
+            if(data.getSerializableExtra("data")!=null) {
+                try {
                     Client selected = (Client) data.getSerializableExtra("data");
                     mainViewModel.setClient(selected);
-                }
-        }
+                }catch(Exception e){ }
+            }
+        //}
         if(requestCode==REQUEST_FILTRE_CODE){
             if(data!=null) {
                 String codeClient = data.getStringExtra("codeClient");

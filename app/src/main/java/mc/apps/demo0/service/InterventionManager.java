@@ -27,6 +27,7 @@ import java.util.List;
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
+import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.libs.MyTools;
@@ -95,8 +96,15 @@ public class InterventionManager {
         dao.add(interv, (items, message) -> {
             Log.i(TAG, "onCreate: "+message);
             Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
+            addAffectaions(interv);
         });
         resetFields(root); //reinitialiser form planfication!
+    }
+    private void addAffectaions(Intervention interv) {
+        AffectationDao dao = new AffectationDao();
+        dao.add(interv, (items, message) -> {
+            Log.i(TAG, "Intervention affectations ok.");
+        });
     }
 
     private void initClientAutocomplete(View root) {

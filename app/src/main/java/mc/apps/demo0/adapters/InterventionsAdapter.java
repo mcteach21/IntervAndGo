@@ -91,7 +91,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
         holder.details_more.setText(interv.getClientId()+"..");
 
-        holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.parseColor("#FFA000"));
+        holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.GREEN); //parseColor("#FFA000")
         if(listener!=null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))
