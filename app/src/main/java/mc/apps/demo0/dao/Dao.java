@@ -31,6 +31,11 @@ public class Dao<T> {
         String url = DB_API_URL+"list="+table;
         new Http2AsyncTask(onSuccess).execute(url);
     }
+   /* public void list(String tables, String whereClause, OnSuccess onSuccess){
+        String url = DB_API_URL+"list="+tables+"&"+whereClause;
+        Log.i(TAG, "list: "+url);
+        new Http2AsyncTask(onSuccess).execute(url);
+    }*/
 
     public void find(String whereClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+whereClause;

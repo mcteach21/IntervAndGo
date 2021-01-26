@@ -60,6 +60,14 @@
         <item name="android:textColorHint">@color/colorAccent</item>
         <item name="android:padding">20dp</item>
     </style>
+    <style name="spinner_style_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/input_bordered</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="android:padding">5dp</item>
+    </style>
 
     <style name="inputstyle">
         <item name="android:layout_width">0dp</item>

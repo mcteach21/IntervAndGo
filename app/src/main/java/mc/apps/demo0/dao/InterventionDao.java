@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import mc.apps.demo0.model.Intervention;
 
@@ -18,6 +19,15 @@ public class InterventionDao extends Dao<Intervention>{
         super("interventions");
     }
 
+/*    public void InterventionsOfTech(String tech_code, OnSuccess onSuccess) {
+       *//* try {
+            String whereClause = "interventions.code=affectations.intervention_id&technicien_id=" + tech_code;
+            super.list("interventions,affectations",whereClause, onSuccess);
+        }catch(Exception e){}*//*
+        super.list((items,message)->{
+
+        });
+    }*/
     public void add(Intervention u, OnSuccess onSuccess){
 
         try {

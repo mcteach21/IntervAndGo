@@ -3,6 +3,7 @@ package mc.apps.demo0;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.SearchView;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -10,11 +11,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +43,7 @@ public class InterventionActivity extends AppCompatActivity {
     private boolean isOpen;
     private LinearLayout clientDetails;
     private AppCompatImageView btn;
+    private boolean goto_rapport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,16 @@ public class InterventionActivity extends AppCompatActivity {
             finish();
         }
 
+        goto_rapport = intent.getBooleanExtra("rapport", false);
+       /* @SuppressLint("WrongViewCast") AppCompatImageView btn_rapport = findViewById(R.id.btn_goto_rapport);
+        btn_rapport.setVisibility(goto_rapport?View.VISIBLE:View.INVISIBLE);
+
+        if(goto_rapport)
+            btn_rapport.setOnClickListener(v->{
+                Toast.makeText(this, "Goto Rapport..", Toast.LENGTH_SHORT).show();
+            });*/
+
+
         Init();
     }
 
@@ -62,11 +76,26 @@ public class InterventionActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_interv, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id==android.R.id.home)
             finish();
+        
+        if (id==R.id.item_menu_rapport){
+            Toast.makeText(this, "go!", Toast.LENGTH_SHORT).show();
+            Intent data =  new Intent();
+            data.putExtra("interv", intervention);
+            setResult(RESULT_OK, data);
+            finish();
+        }
 
         return false;
     }

@@ -58,33 +58,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <AutoCompleteTextView
-            android:id="@+id/edtCodeInterv"
-            style="@style/input_style_default"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout1"
+            style="@style/inputstyle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_title_interv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title">
 
-        <AutoCompleteTextView
-            android:id="@+id/txtCodeClient"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtCodeInterv"
+                style="@style/input_style_default"
+                android:clickable="true"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="@string/hint_title_interv"
+                android:inputType="text"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!--<AutoCompleteTextView
+            android:id="@+id/edtCodeInterv"
             style="@style/input_style_default"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:hint="@string/hint_title_client"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:hint="@string/hint_title_interv"
+            app:layout_constraintEnd_toStartOf="@+id/txtCodeClient"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtCodeInterv" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />-->
 
         <!--        <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout0"
@@ -103,6 +110,41 @@
 
                 </com.google.android.material.textfield.TextInputLayout>-->
 
+       <!-- <AutoCompleteTextView
+            android:id="@+id/txtCodeClient"
+            style="@style/input_style_default"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:hint="@string/hint_title_client"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/edtCodeInterv"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout0"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:hint="@string/hint_title_client"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textInputLayout1"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtCodeClient"
+                style="@style/input_style_default"
+                android:clickable="true"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="@string/hint_title_client"
+                android:inputType="text"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout3"
             style="@style/inputstyle"
@@ -110,7 +152,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDateDebutPrev"
@@ -132,7 +174,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
-            app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout0">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDateFinPrev"
@@ -148,14 +190,19 @@
 
         <Spinner
             android:id="@+id/spinner"
-            style="@style/input_style_default"
+            style="@style/spinner_style_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
+
+            android:background="@color/colorPrimary80"
+            android:dropDownWidth="wrap_content"
             android:entries="@array/statuts"
-            android:spinnerMode="dropdown"
+            android:padding="0dp"
+            android:spinnerMode="dialog"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />

@@ -35,14 +35,18 @@ import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ImagesAdapter;
 import mc.apps.demo0.adapters.InterventionsAdapter;
+import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Affectation;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class TechnicianFragments extends Fragment {
     private static final String TAG = "tests";
+    private static final int TECH_INTERV_CODE = 1000;
     private MainViewModel mainViewModel;
     private View root ;
     private int[] fragments_layouts = {
@@ -56,9 +60,16 @@ public class TechnicianFragments extends Fragment {
            "Historique Interventions/Rapports"
     };
 
+    private static Intervention intervention=null;
     private static int num=0;
     public static TechnicianFragments newInstance(int num) {
         TechnicianFragments.num = num;
+        TechnicianFragments.intervention = null;
+        return new TechnicianFragments();
+    }
+    public static TechnicianFragments newInstance(int num, Intervention intervention) {
+        TechnicianFragments.num = num;
+        TechnicianFragments.intervention = intervention;
         return new TechnicianFragments();
     }
     @Nullable
@@ -129,11 +140,24 @@ public class TechnicianFragments extends Fragment {
     /**
      * Saisie Rapport / Technicien
      */
-    AutoCompleteTextView codeClient;
-    EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
+    //AutoCompleteTextView codeClient;
+    EditText codeClient, codeIntervention, desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
     private void initAutocomplete(View root) {
-        ClientDao dao = new ClientDao();
+        codeIntervention = root.findViewById(R.id.edtCodeInterv);
+        codeClient = root.findViewById(R.id.txtCodeClient);
+        dateDebut = root.findViewById(R.id.edtDateDebutPrev);
 
+
+        if(TechnicianFragments.intervention!=null){
+            codeIntervention.setText(TechnicianFragments.intervention.getCode());
+            codeClient.setText(TechnicianFragments.intervention.getClientId());
+
+            dateDebut.setText(TechnicianFragments.intervention.getDateDebutPrevue());
+
+            //TODO..
+        }
+
+     /*   ClientDao dao = new ClientDao();
         dao.list((data, message) -> {
             List<Client> items = dao.Deserialize(data, Client.class);
             ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
@@ -141,11 +165,14 @@ public class TechnicianFragments extends Fragment {
                     android.R.layout.select_dialog_item,
                     items);
 
-            codeClient = root.findViewById(R.id.txtCodeClient);
+
             codeClient.setThreshold(1);
             codeClient.setAdapter(adapter);
             codeClient.setTextColor(Color.WHITE);
-        });
+        });*/
+
+
+
     }
 
     RecyclerView photos_list;
@@ -202,7 +229,8 @@ public class TechnicianFragments extends Fragment {
                 (position, item) -> {
                     Intent intent = new Intent(root.getContext(), InterventionActivity.class);
                     intent.putExtra("intervention", (Intervention)item);
-                    startActivity(intent);
+                    intent.putExtra("rapport", true);
+                    getActivity().startActivityForResult(intent, TECH_INTERV_CODE);
                 },
                 true
         );
@@ -238,6 +266,8 @@ public class TechnicianFragments extends Fragment {
     private void refreshListAsync() {
         noResult = root.findViewById(R.id.noResult);
         InterventionDao dao = new InterventionDao();
+
+        String tech_code = MyTools.GetUserInSession().getCode();
         dao.list((data, message) -> {
             items = dao.Deserialize(data, Intervention.class);
 

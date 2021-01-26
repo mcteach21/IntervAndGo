@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,8 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
         holder.title.setText(interv.getDescription());
         holder.details.setText(this.details?timefr:datefr);
         //holder.state.setText(status[interv.getStatutId()-1]);
+
+        //holder.btn_goto_rapport.setVisibility(this.details?View.VISIBLE:View.INVISIBLE);
 
         String status="";
         int color=Color.WHITE;
@@ -148,8 +151,15 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
         TextView state = itemView.findViewById(R.id.item_state);
         TextView details = itemView.findViewById(R.id.item_details);
         TextView details_more = itemView.findViewById(R.id.item_details_more);
+
+        //ImageView btn_goto_rapport = itemView.findViewById(R.id.btn_item_goto_rapport);
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            /*btn_goto_rapport.setOnClickListener(v->{
+                Log.i(TAG, "ViewHolder: goto rapport!");
+
+            });*/
         }
     }
 

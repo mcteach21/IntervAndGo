@@ -32,11 +32,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Calendar;
 
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.technician.TechnicianFragment;
 import mc.apps.demo0.ui.technician.TechnicianFragments;
@@ -45,6 +47,7 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 public class TechnicianActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
 
     private static final int RESULT_LOAD_IMAGE = 2608 ;
+    private static final int TECH_INTERV_CODE = 1000;
     private static final String TAG = "tests";
     private MainViewModel mainViewModel;
 
@@ -57,7 +60,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
             defineFragment(TechnicianFragment.newInstance());
         }
 
-        //setTitle("");
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.tech_toolbar_layout);
 
@@ -71,17 +73,13 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void defineFragment(Fragment fragment) {
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-        //transaction.addToBackStack(null);
-
         transaction.replace(R.id.container, fragment).commitNow();
     }
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
         defineFragment(TechnicianFragment.newInstance());
     }
 
@@ -112,6 +110,11 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             mainViewModel.addImage(selectedImage);
+        }
+
+        //Toast.makeText(this, "requestCode = "+requestCode, Toast.LENGTH_LONG).show();
+        if (requestCode == TECH_INTERV_CODE && resultCode == RESULT_OK && null != data) {
+            defineFragment(TechnicianFragments.newInstance(1, (Intervention) data.getSerializableExtra("interv")));
         }
     }
 
