@@ -46,7 +46,9 @@ public class InterventionDao extends Dao<Intervention>{
 
                     +"&comment="+URLEncoder.encode(u.getCommentaire(), "utf-8")
                     +"&datedebut="+URLEncoder.encode(u.getDateDebutPrevue(), "utf-8")
-                    +"&datefin="+URLEncoder.encode(u.getDateFinPrevue(), "utf-8");
+                    +"&datefin="+URLEncoder.encode(u.getDateFinPrevue(), "utf-8")
+                    +"&datedebutR=null"
+                    +"&datefinR=null";
 
             Log.i(TAG, "addIntervention: **********************************************");
             Log.i(TAG,  addClause);

@@ -60,7 +60,10 @@ public class InterventionManager {
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
             addIntervention(root);
-            root.getContext().startActivity(new Intent(root.getContext() , backActivity));
+
+            Intent intent = new Intent(root.getContext(), backActivity);
+            intent.putExtra("num",2);
+            root.getContext().startActivity(intent);
             Log.i(TAG, "prepareAddIntervention : back to "+backActivity.getSimpleName());
         });
     }

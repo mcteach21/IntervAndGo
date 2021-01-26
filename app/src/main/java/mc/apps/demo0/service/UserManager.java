@@ -40,7 +40,10 @@ public class UserManager {
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
                 addUser(root);
-                root.getContext().startActivity(new Intent(root.getContext() , backActivity));
+
+                Intent intent = new Intent(root.getContext(), backActivity);
+                intent.putExtra("num",1);
+                root.getContext().startActivity(intent);
                 Log.i(TAG, "prepareAddUser: back to "+backActivity.getSimpleName());
             });
     }

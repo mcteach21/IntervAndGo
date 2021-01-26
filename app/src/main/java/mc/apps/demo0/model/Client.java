@@ -35,7 +35,7 @@ public class Client implements Serializable {
 		this.email = email;
 		this.telephone = telephone;
 
-		Adress adress = new Adress(0, "principale" , adresse, Integer.parseInt(cp), ville, this.code);
+		Adress adress = new Adress(0, "principale" , adresse, cp, ville, this.code);
 		addAdress(adress);
 	}
 

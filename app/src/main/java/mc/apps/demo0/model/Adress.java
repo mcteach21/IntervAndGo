@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Adress implements Serializable {
     private int id;
-    private int cp;
+    private String cp;
     private String nom;
     private String ville;
     private String voie;
@@ -17,7 +17,7 @@ public class Adress implements Serializable {
     //...
     private Client client;
 
-    public Adress(int id, String nom, String voie, int cp, String ville, String clientId) {
+    public Adress(int id, String nom, String voie, String cp, String ville, String clientId) {
         this.id = id;
         this.nom = nom;
         this.voie = voie;
@@ -26,23 +26,15 @@ public class Adress implements Serializable {
         this.clientId = clientId;
     }
 
-    public Adress(int id, int cp, String nom, String ville, String voie, String clientId) {
-        this.id = id;
-        this.cp = cp;
-        this.nom = nom;
-        this.ville = ville;
-        this.voie = voie;
-        this.clientId = clientId;
-    }
 
-    public Adress(int id, int cp, String nom, String ville, String voie, Client client) {
+/*    public Adress(int id, String cp, String nom, String ville, String voie, String client) {
         this.id = id;
         this.cp = cp;
         this.nom = nom;
         this.ville = ville;
         this.voie = voie;
         this.client = client;
-    }
+    */
 
     public int getId() {
         return id;
@@ -52,11 +44,11 @@ public class Adress implements Serializable {
         this.id = id;
     }
 
-    public int getCp() {
+    public String getCp() {
         return cp;
     }
 
-    public void setCp(int cp) {
+    public void setCp(String cp) {
         this.cp = cp;
     }
 

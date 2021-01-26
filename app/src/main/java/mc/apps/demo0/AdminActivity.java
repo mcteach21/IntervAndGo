@@ -61,7 +61,16 @@ public class AdminActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.admin_toolbar_layout);
         setTitle("");
+
+        Intent intent = getIntent();
+        int currentFragment = intent.getIntExtra("num", 1);
+
+        if(currentFragment==3)
+            navView.setSelectedItemId(R.id.navigation_clients);
+        if(currentFragment==2)
+            navView.setSelectedItemId(R.id.navigation_interventions);
     }
+
 
     @Override
     protected void onResume() {
