@@ -28,8 +28,12 @@ public class InterventionDao extends Dao<Intervention>{
 
         });
     }*/
-    public void add(Intervention u, OnSuccess onSuccess){
 
+    public void find(String code, OnSuccess onSuccess){
+        find("code=" + code, onSuccess);
+    }
+
+    public void add(Intervention u, OnSuccess onSuccess){
         try {
             String addClause="action=add&"
                     +"id="+ URLEncoder.encode(u.getCode(), "utf-8")
@@ -52,6 +56,32 @@ public class InterventionDao extends Dao<Intervention>{
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+    public void update(Intervention u, OnSuccess onSuccess){
+        try {
+            String updateClause="action=update&"
+                    +"id="+ URLEncoder.encode(u.getCode(), "utf-8")
 
+                    +"&clientid="+ URLEncoder.encode(u.getClientId(), "utf-8")
+                    +"&desc="+ URLEncoder.encode(u.getDescription(), "utf-8")
+                    +"&service_equip_cible="+ URLEncoder.encode(u.getServiceEquipCible(), "utf-8")
+                    +"&materiel_necessaire="+ URLEncoder.encode(u.getMaterielNecessaire(), "utf-8")
+                    +"&superviseurId="+ URLEncoder.encode(u.getSuperviseurId(), "utf-8")
+                    +"&datedebut="+URLEncoder.encode(u.getDateDebutPrevue(), "utf-8")
+                    +"&datefin="+URLEncoder.encode(u.getDateFinPrevue(), "utf-8")
+
+                    +"&comment="+URLEncoder.encode(u.getCommentaire(), "utf-8")
+                    +"&datedebutR="+URLEncoder.encode(u.getDateDebutReelle(), "utf-8")
+                    +"&datefinR="+URLEncoder.encode(u.getDateFinReelle(), "utf-8")
+                    +"&statut="+u.getStatutId();
+
+            Log.i(TAG, "addIntervention: **********************************************");
+            Log.i(TAG,  updateClause);
+            Log.i(TAG, "addIntervention: **********************************************");
+
+            super.update(updateClause, onSuccess);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

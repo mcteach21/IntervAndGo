@@ -51,8 +51,12 @@
     <string name="hint_title_client">Code Client</string>
     <string name="hint_title_desc">Description Intervention</string>
     <string name="hint_title_service_cible">Service (Equipement) Cible</string>
-    <string name="hint_title_date_debut_prev">Date Début</string>
-    <string name="hint_title_date_fin_prev">Date Fin</string>
+
+    <string name="hint_title_date_debut_prev">Date Début Prévue</string>
+    <string name="hint_title_date_fin_prev">Date Fin Prévue</string>
+    <string name="hint_title_date_debut_reel">Date Début Réelle</string>
+    <string name="hint_title_date_fin_reel">Date Fin Réelle</string>
+
     <string name="hint_title_comment">Commentaires</string>
     <string name="btn_planif_txt">Planifier Intervention</string>
     <string name="search_txt">Search..</string>
@@ -70,7 +74,7 @@
     <string name="btn_rapport_save">Sauvegarder Rapport Intervention</string>
     <string name="hint_title_interv">Code Intervention</string>
 
-    <string name="rapport_assoc_photos">Photos (cliquer pour ajouter)</string>
+    <string name="rapport_assoc_photos">Photos</string>
     <string name="hint_title_mat_necess">Matériel Nécessaire</string>
     <string name="btn_add_user">Ajouter Utilisateur</string>
     <string name="hint_code_user">Code Utilisateur</string>
@@ -85,6 +89,17 @@
     <string name="hint_search_debut_reel">Date Début Réelle</string>
     <string name="btn_filter_txt">Filtrer Interventions</string>
     <string name="title_clients">Clients</string>
+    <string name="saisie_rapport_title">Saisir Rapport :</string>
+    <string name="interv_status_title">Statut Intervention</string>
+    <string name="btn_add_client">Ajouter Client</string>
+    <string name="hint_code_client">Code Client</string>
+    <string name="hint_nom_client">Nom Client</string>
+    <string name="hint_contact_client">Nom Contact</string>
+    <string name="hint_email_client">Email Client</string>
+    <string name="hint_tel_client">Téléphone Client</string>
+    <string name="hint_adress_client">Adresse Client</string>
+    <string name="hint_cp_client">CP</string>
+    <string name="hint_ville_client">Ville</string>
 
 
     <string-array name="statuts">

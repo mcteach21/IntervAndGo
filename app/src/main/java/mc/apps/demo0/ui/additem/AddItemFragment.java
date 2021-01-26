@@ -21,6 +21,7 @@ import android.widget.Toast;
 import mc.apps.demo0.AdminActivity;
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.R;
+import mc.apps.demo0.service.ClientManager;
 import mc.apps.demo0.service.InterventionManager;
 import mc.apps.demo0.service.UserManager;
 import mc.apps.demo0.ui.technician.TechnicianFragments;
@@ -33,11 +34,13 @@ public class AddItemFragment extends Fragment {
     private View root ;
     private int[] fragments_layouts = {
             R.layout.fragment_superv_planif,
-            R.layout.fragment_user_add
+            R.layout.fragment_user_add,
+            R.layout.fragment_client_add
     };
     private String[] fragments_titles = {
             "PLanifier Intervention",
-            "Ajout Utilisateur"
+            "Ajout Utilisateur",
+            "Ajout Client"
     };
 
     private static int num=0;
@@ -53,7 +56,6 @@ public class AddItemFragment extends Fragment {
         TextView title = root.findViewById(R.id.fragment_title);
         title.setText(fragments_titles[num-1]);
 
-
         //mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         return root;
     }
@@ -66,7 +68,14 @@ public class AddItemFragment extends Fragment {
             prepareAddingIntervention();
         }else if(num==2) {
             prepareAddingUser();
+        }else if(num==3) {
+            prepareAddingClient();
         }
+    }
+
+    private void prepareAddingClient() {
+        ClientManager manager = new ClientManager(getActivity());
+        manager.prepareAddClient(root, AdminActivity.class);
     }
 
     private void prepareAddingUser() {

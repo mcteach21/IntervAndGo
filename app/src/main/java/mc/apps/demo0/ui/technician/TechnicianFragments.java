@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +57,7 @@ public class TechnicianFragments extends Fragment {
     };
     private String[] fragments_titles = {
            "Interventions du Jour",
-           "Saisir Rapport Intervention",
+           "Intervention", //Saisir Rapport
            "Historique Interventions/Rapports"
     };
 
@@ -103,49 +104,38 @@ public class TechnicianFragments extends Fragment {
         }else if(num==1){
             //Ajouter Rapport
 
-            initAutocomplete(root); //AutoCompletion sur Champ CodeClient!
+            initCurrentIntervention(root); //AutoCompletion sur Champ CodeClient!
             initListPhotos(root);   //liste photos / Rapport
 
             Button btnadd = root.findViewById(R.id.btn_add);
             btnadd.setOnClickListener(view -> {
-                addIntervention(root);
+                addRapport(root);
             });
         }
     }
 
-    private void addIntervention(View root) {
-        codeClient = root.findViewById(R.id.txtCodeClient);
-        desc = root.findViewById(R.id.edtDesc);
-        dateDebut = root.findViewById(R.id.edtDateDebutPrev);
-        dateFin = root.findViewById(R.id.edtDateFinPrev);
-        serviceCible = root.findViewById(R.id.edtMaterielNecess);
-        materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
-        comment = root.findViewById(R.id.edtComment);
 
-        Intervention interv = new Intervention(
-                "code", codeClient.getText().toString(),
-                desc.getText().toString(), dateDebut.getText().toString(), dateFin.getText().toString(),
-                comment.getText().toString(),
-                "mat nécess..",serviceCible.getText().toString(),
-                "code superv"
-        );
-        InterventionDao dao = new InterventionDao();
-        dao.add(interv, (items, message) -> {
-            Log.i(TAG, "onCreate: "+message);
-            Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
-        });
-        resetFields(root); //reinitialiser form planfication!
-    }
 
     /**
      * Saisie Rapport / Technicien
      */
     //AutoCompleteTextView codeClient;
-    EditText codeClient, codeIntervention, desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
-    private void initAutocomplete(View root) {
+    EditText codeClient, codeIntervention, comment, dateDebut, dateFin, dateDebutR, dateFinR;
+    Spinner statutChoice;
+    int statut;
+    //, serviceCible, materielNecessaire, desc;
+
+    private void initCurrentIntervention(View root) {
         codeIntervention = root.findViewById(R.id.edtCodeInterv);
         codeClient = root.findViewById(R.id.txtCodeClient);
+        //desc = root.findViewById(R.id.desc);
         dateDebut = root.findViewById(R.id.edtDateDebutPrev);
+        dateFin = root.findViewById(R.id.edtDateFinPrev);
+        dateDebutR = root.findViewById(R.id.edtDateDebutReel);
+        dateFinR = root.findViewById(R.id.edtDateFinReel);
+
+        comment = root.findViewById(R.id.edtComment);
+        statutChoice = root.findViewById(R.id.statutChoice);
 
 
         if(TechnicianFragments.intervention!=null){
@@ -153,57 +143,62 @@ public class TechnicianFragments extends Fragment {
             codeClient.setText(TechnicianFragments.intervention.getClientId());
 
             dateDebut.setText(TechnicianFragments.intervention.getDateDebutPrevue());
+            dateFin.setText(TechnicianFragments.intervention.getDateFinPrevue());
 
-            //TODO..
+            comment.setText(TechnicianFragments.intervention.getCommentaire());
+            statutChoice.setSelection(TechnicianFragments.intervention.getStatutId()-1);
         }
+    }
 
-     /*   ClientDao dao = new ClientDao();
-        dao.list((data, message) -> {
-            List<Client> items = dao.Deserialize(data, Client.class);
-            ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
-                    root.getContext(),
-                    android.R.layout.select_dialog_item,
-                    items);
+    private void addRapport(View root) {
+        //codeClient = root.findViewById(R.id.txtCodeClient);
+        //desc = root.findViewById(R.id.edtDesc);
+        dateDebutR = root.findViewById(R.id.edtDateDebutPrev);
+        dateFinR = root.findViewById(R.id.edtDateFinPrev);
 
+        //serviceCible = root.findViewById(R.id.edtMaterielNecess);
+        //materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
+        comment = root.findViewById(R.id.edtComment);
 
-            codeClient.setThreshold(1);
-            codeClient.setAdapter(adapter);
-            codeClient.setTextColor(Color.WHITE);
-        });*/
+        TechnicianFragments.intervention.setCommentaire(comment.getText().toString());
+        TechnicianFragments.intervention.setDateDebutReelle(dateDebutR.getText().toString());
+        TechnicianFragments.intervention.setDateFinReelle(dateFinR.getText().toString());
 
+        statut = (int) (statutChoice.getSelectedItemId()+1);
+        TechnicianFragments.intervention.setStatutId(statut);
 
+        InterventionDao dao = new InterventionDao();
+        dao.update(TechnicianFragments.intervention, (items, message)->{
+            Toast.makeText(root.getContext(), "Rapport ajouté avec succès!", Toast.LENGTH_SHORT).show();
+        });
 
+        resetFields(root); //reinitialiser form planfication!
     }
 
     RecyclerView photos_list;
     List<Uri> images = new ArrayList();
     private void initListPhotos(View root){
-
         photos_list = root.findViewById(R.id.photos_list);
         photos_list.setHasFixedSize(true);
-
         GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 4);
         photos_list.setLayoutManager(layoutManager2);
-
         ImagesAdapter adapter = new ImagesAdapter(
                 images,
                 null
         );
         photos_list.setAdapter(adapter);
-
         mainViewModel.getImages().observe(getActivity(), images -> {
-            Log.i("tests", "loadList: "+images);
             adapter.refresh(images);
         });
     }
 
     private void resetFields(View root) {
-        codeClient.getText().clear();
-        desc.getText().clear();
-        dateDebut.getText().clear();
-        dateFin.getText().clear();
-        serviceCible.getText().clear();
-        comment.getText().clear();
+       /* codeClient.getText().clear();
+        //desc.getText().clear();
+        dateDebutR.getText().clear();
+        dateFinR.getText().clear();
+        //serviceCible.getText().clear();
+        comment.getText().clear();*/
     }
 
 

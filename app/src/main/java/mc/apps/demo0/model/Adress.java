@@ -17,6 +17,15 @@ public class Adress implements Serializable {
     //...
     private Client client;
 
+    public Adress(int id, String nom, String voie, int cp, String ville, String clientId) {
+        this.id = id;
+        this.nom = nom;
+        this.voie = voie;
+        this.cp = cp;
+        this.ville = ville;
+        this.clientId = clientId;
+    }
+
     public Adress(int id, int cp, String nom, String ville, String voie, String clientId) {
         this.id = id;
         this.cp = cp;

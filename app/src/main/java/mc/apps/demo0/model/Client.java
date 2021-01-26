@@ -28,12 +28,15 @@ public class Client implements Serializable {
 		adresses.add(adress);
 	}
 
-	public Client(String code, String adresse, String contact, String cp, String email, String nom, String telephone, String ville) {
+	public Client(String code, String nom, String contact, String email, String telephone, String adresse, String cp,  String ville) {
 		this.code = code;
+		this.nom = nom;
 		this.contact = contact;
 		this.email = email;
-		this.nom = nom;
 		this.telephone = telephone;
+
+		Adress adress = new Adress(0, "principale" , adresse, Integer.parseInt(cp), ville, this.code);
+		addAdress(adress);
 	}
 
 	public String getCode() {

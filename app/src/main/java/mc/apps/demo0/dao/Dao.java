@@ -39,11 +39,17 @@ public class Dao<T> {
 
     public void find(String whereClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+whereClause;
+        Log.i(TAG, "find: "+url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
 
     public void add(String addClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+addClause;
+        Log.i(TAG, url);
+        new Http2AsyncTask(onSuccess).execute(url);
+    }
+    public void update(String updateClause, OnSuccess onSuccess){
+        String url = DB_API_URL+"list="+table+"&"+updateClause;
         Log.i(TAG, url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
@@ -101,11 +107,12 @@ public class Dao<T> {
         Gson gs = new Gson();
         T item;
         List<T> items = new ArrayList<T>();
-        for (Object json_object : data) {
-            String js = gs.toJson(json_object);
-            item = (T) gs.fromJson(js, type);
-            items.add(item);
-        }
+        if(data!=null)
+            for (Object json_object : data) {
+                String js = gs.toJson(json_object);
+                item = (T) gs.fromJson(js, type);
+                items.add(item);
+            }
         return items;
     }
 }

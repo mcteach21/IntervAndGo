@@ -8,13 +8,13 @@
     tools:context=".AdminActivity">
 
     <ImageButton
-        android:id="@+id/btn_add_user"
+        android:id="@+id/btn_add_client"
         style="@style/menu_button_style"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:onClick="AddClient"
+        android:onClick="AddItem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_menu_new_user" />
@@ -26,7 +26,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_add_user"
+        app:layout_constraintEnd_toStartOf="@+id/btn_add_client"
         app:layout_constraintTop_toTopOf="parent"
         android:onClick="RefreshList"
         app:srcCompat="@drawable/ic_menu_refresh" />

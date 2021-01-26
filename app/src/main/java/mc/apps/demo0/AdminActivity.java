@@ -109,7 +109,12 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     public void AddItem(View view){
-        int num=(view.getId()==R.id.btn_add_user)?2:1;
+        int num=1;
+        if(view.getId()==R.id.btn_add_user)
+            num=2;
+        if(view.getId()==R.id.btn_add_client)
+            num=3;
+
         Intent intent = new Intent(this, AddItemActivity.class);
         intent.putExtra("num", num);
         startActivity(intent);
