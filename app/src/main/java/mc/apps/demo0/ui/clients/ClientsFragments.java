@@ -1,5 +1,6 @@
 package mc.apps.demo0.ui.clients;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import mc.apps.demo0.ClientActivity;
+import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ClientsAdapter;
 import mc.apps.demo0.dao.AdressDao;
@@ -24,6 +27,7 @@ import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
+import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class ClientsFragments extends Fragment {
@@ -87,8 +91,9 @@ public class ClientsFragments extends Fragment {
                     //Toast.makeText(root.getContext(), "Selected : "+item.toString(), Toast.LENGTH_SHORT).show();
                     mainViewModel.setClient((Client) item);
 
-                    /*Client client = (Client) item;
-                    getClientAdress(client);*/
+                    Intent intent = new Intent(root.getContext(), ClientActivity.class);
+                    intent.putExtra("client", (Client)item);
+                    startActivity(intent);
                 }
         );
         recyclerView.setAdapter(adapter);

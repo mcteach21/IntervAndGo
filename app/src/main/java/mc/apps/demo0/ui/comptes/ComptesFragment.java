@@ -7,14 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,8 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import mc.apps.demo0.ComptesActivity;
-import mc.apps.demo0.InterventionActivity;
+import mc.apps.demo0.CompteActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.UsersAdapter;
 import mc.apps.demo0.dao.UserDao;
@@ -88,11 +84,9 @@ public class ComptesFragment extends Fragment {
         adapter = new UsersAdapter(
                 items,
                 (position, item) -> {
-                    Intent intent = new Intent(root.getContext(), ComptesActivity.class);
-                    intent.putExtra("user", (User)item);
+                    Intent intent = new Intent(root.getContext(), CompteActivity.class);
+                    intent.putExtra("compte", (User)item);
                     startActivity(intent);
-
-                    //Toast.makeText(root.getContext(), "click on : "+item.toString(), Toast.LENGTH_SHORT).show();
                 }
         );
         recyclerView.setAdapter(adapter);

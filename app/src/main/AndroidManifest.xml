@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AddItemActivity"></activity>
         <activity android:name=".ClientsActivity" />
-        <activity android:name=".ComptesActivity" />
 
         <activity android:name=".UsersActivity" />
 
@@ -23,12 +22,10 @@
         <activity android:name=".TechnicianActivity" />
         <activity android:name=".SelectActivity" />
         <activity android:name=".SearchActivity" />
-        <!--
-  <activity
-            android:name=".Technician00Activity"
-            android:label="@string/title_activity_technician"
-            android:theme="@style/AppTheme.NoActionBar" />
-        -->
+
+        <activity android:name=".ClientActivity" />
+        <activity android:name=".CompteActivity" />
+
         <activity
             android:name=".SupervisorActivity"
             android:label="@string/title_activity_supervisor"
