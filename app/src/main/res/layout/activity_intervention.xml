@@ -60,11 +60,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/clientDetails" />
+            app:layout_constraintTop_toBottomOf="@+id/list_techs" />
 
         <TextView
             android:id="@+id/txtServiceCible"
@@ -189,6 +189,29 @@
                 app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_techs"
+            style="@style/input_style_default"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clientDetails" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/tech_assoc_2_txt"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintStart_toStartOf="@+id/list_techs"
+            app:layout_constraintTop_toBottomOf="@+id/clientDetails" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

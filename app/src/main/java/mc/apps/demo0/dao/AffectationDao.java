@@ -34,4 +34,7 @@ public class AffectationDao extends Dao<Affectation>{
     public void find(String interv_code, String tech_code, OnSuccess onSuccess){
         find("intervention_id=" + interv_code+"&technicien_id="+tech_code, onSuccess);
     }
+    public void find(String interv_code, OnSuccess onSuccess){
+        find("intervention_id=" + interv_code, onSuccess);
+    }
 }

@@ -96,14 +96,15 @@ public class UsersFragment extends Fragment {
     View root;
     private void loadList(){
         recyclerView = root.findViewById(R.id.list);
-        recyclerView_selected = root.findViewById(R.id.selected_items);
+        //recyclerView_selected = root.findViewById(R.id.selected_items);
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(root.getContext());
         GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 2);
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView_selected.setLayoutManager(layoutManager2);
+
+        //recyclerView_selected.setLayoutManager(layoutManager2);
 
         adapter = new UsersAdapter(
                 items,

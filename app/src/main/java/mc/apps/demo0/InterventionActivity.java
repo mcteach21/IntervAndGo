@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -25,15 +27,21 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
+import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.AdressDao;
+import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Adress;
+import mc.apps.demo0.model.Affectation;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.User;
 
 public class InterventionActivity extends AppCompatActivity {
 
@@ -79,7 +87,8 @@ public class InterventionActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_interv, menu);
+        if(goto_rapport)
+            getMenuInflater().inflate(R.menu.menu_interv, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -112,7 +121,7 @@ public class InterventionActivity extends AppCompatActivity {
         comment = findViewById(R.id.txtCommentaire);
 
         codeClient.setText( "Client : "+intervention.getClientId());
-        desc.setText(intervention.getDescription());
+        desc.setText("Description Intervention : \n"+intervention.getDescription());
 
         String prevue = "Date Intervention Prévue \n"+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
         String reelle = "Date Intervention Réelle \n";
@@ -124,16 +133,13 @@ public class InterventionActivity extends AppCompatActivity {
         dateDebut.setText(prevue);
         dateDebutR.setText(reelle);
 
-        serviceCible.setText(intervention.getServiceEquipCible());
-        comment.setText(intervention.getCommentaire());
-        materielNecessaire.setText(intervention.getMaterielNecessaire());
+        serviceCible.setText("Service/Equipement ciblé : \n"+intervention.getServiceEquipCible());
+        comment.setText("Observations : \n"+intervention.getCommentaire());
+        materielNecessaire.setText("Matériel nécessaire : \n"+intervention.getMaterielNecessaire());
 
         //TODO..
         //InitAffectations();
 
-        /**
-         * Infos Client
-         */
         TextView nomClient =  findViewById(R.id.txtNomClient);
         TextView infosClient =  findViewById(R.id.txtInfosClient);
         TextView adressClient =  findViewById(R.id.txtAdressClient);
@@ -202,17 +208,43 @@ public class InterventionActivity extends AppCompatActivity {
         isOpen = !isOpen;
     }
 
+    RecyclerView tech_list;
+    List<User> technicians = new ArrayList();
+
     private void InitAffectations(){
-       /* tech_list = findViewById(R.id.tech_list);
+        AffectationDao dao = new AffectationDao();
+        UserDao udao = new UserDao();
+
+
+        try {
+            dao.find(intervention.getCode(), (items, message)->{
+                List<Affectation> affectations =  dao.Deserialize(items, Affectation.class);
+                for (Affectation affectation : affectations) {
+                    Log.i(TAG, "InitAffectations: "+affectation.getTechnicienId());
+
+                    udao.find(affectation.getTechnicienId(), (items2, message2)->{
+                        List<User> users =  udao.Deserialize(items2, User.class);
+                        technicians.addAll(users);
+                    });
+                }
+                tech_list.getAdapter().notifyDataSetChanged();
+            });
+        }catch (Exception x){
+            Log.i(TAG, "InitAffectations: "+x);
+        }
+
+
+        tech_list = findViewById(R.id.list_techs);
         tech_list.setHasFixedSize(true);
         GridLayoutManager layoutManager2 = new GridLayoutManager(this, 2);
         tech_list.setLayoutManager(layoutManager2);
+
         SelectedUsersAdapter adapter = new SelectedUsersAdapter(
-                selected,
+                technicians,
                 null,
-                true
+                false
         );
-        tech_list.setAdapter(adapter);*/
+        tech_list.setAdapter(adapter);
 
         /*mainViewModel.getSelected().observe(getActivity(), selected -> {
             adapter.refresh(selected);
