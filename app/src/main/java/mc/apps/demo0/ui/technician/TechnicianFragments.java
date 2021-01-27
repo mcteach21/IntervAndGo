@@ -103,9 +103,6 @@ public class TechnicianFragments extends Fragment {
             refreshListAsync();
         }else if(num==1){
             //Ajouter Rapport
-
-
-
             initCurrentIntervention(root); //AutoCompletion sur Champ CodeClient!
             initListPhotos(root);   //liste photos / Rapport
 
@@ -121,11 +118,9 @@ public class TechnicianFragments extends Fragment {
     /**
      * Saisie Rapport / Technicien
      */
-    //AutoCompleteTextView codeClient;
     EditText codeClient, codeIntervention, descIntervention, comment, dateDebut, dateFin, dateDebutR, dateFinR;
     Spinner statutChoice;
     int statut;
-    //, serviceCible, materielNecessaire, desc;
 
     private void initCurrentIntervention(View root) {
         codeIntervention = root.findViewById(R.id.edtCodeInterv);
@@ -154,6 +149,8 @@ public class TechnicianFragments extends Fragment {
                 getViewLifecycleOwner(),
                 intervention -> {
                     if (intervention != null){
+                        TechnicianFragments.intervention = intervention;
+
                         codeIntervention.setText(intervention.getCode());
                         descIntervention.setText(intervention.getDescription());
                         codeClient.setText(intervention.getClientId());
@@ -167,13 +164,11 @@ public class TechnicianFragments extends Fragment {
     }
 
     private void addRapport(View root) {
-        //codeClient = root.findViewById(R.id.txtCodeClient);
-        //desc = root.findViewById(R.id.edtDesc);
+        if(TechnicianFragments.intervention==null)
+            return;
+
         dateDebutR = root.findViewById(R.id.edtDateDebutPrev);
         dateFinR = root.findViewById(R.id.edtDateFinPrev);
-
-        //serviceCible = root.findViewById(R.id.edtMaterielNecess);
-        //materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
         comment = root.findViewById(R.id.edtComment);
 
         TechnicianFragments.intervention.setCommentaire(comment.getText().toString());
@@ -188,7 +183,7 @@ public class TechnicianFragments extends Fragment {
             Toast.makeText(root.getContext(), "Rapport ajouté avec succès!", Toast.LENGTH_SHORT).show();
         });
 
-        resetFields(root); //reinitialiser form planfication!
+        resetFields(); //reinitialiser form
     }
 
     RecyclerView photos_list;
@@ -208,13 +203,16 @@ public class TechnicianFragments extends Fragment {
         });
     }
 
-    private void resetFields(View root) {
-       /* codeClient.getText().clear();
-        //desc.getText().clear();
+    private void resetFields() {
+        codeIntervention.getText().clear();
+        descIntervention.getText().clear();
+        codeClient.getText().clear();
+        dateDebut.getText().clear();
+        dateFin.getText().clear();
+        statutChoice.setSelection(0);
         dateDebutR.getText().clear();
         dateFinR.getText().clear();
-        //serviceCible.getText().clear();
-        comment.getText().clear();*/
+        comment.getText().clear();
     }
 
 
