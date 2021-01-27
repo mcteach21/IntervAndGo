@@ -122,15 +122,15 @@ public class TechnicianFragments extends Fragment {
      * Saisie Rapport / Technicien
      */
     //AutoCompleteTextView codeClient;
-    EditText codeClient, codeIntervention, comment, dateDebut, dateFin, dateDebutR, dateFinR;
+    EditText codeClient, codeIntervention, descIntervention, comment, dateDebut, dateFin, dateDebutR, dateFinR;
     Spinner statutChoice;
     int statut;
     //, serviceCible, materielNecessaire, desc;
 
     private void initCurrentIntervention(View root) {
         codeIntervention = root.findViewById(R.id.edtCodeInterv);
+        descIntervention = root.findViewById(R.id.edtDescInterv);
         codeClient = root.findViewById(R.id.txtCodeClient);
-        //desc = root.findViewById(R.id.desc);
         dateDebut = root.findViewById(R.id.edtDateDebutPrev);
         dateFin = root.findViewById(R.id.edtDateFinPrev);
         dateDebutR = root.findViewById(R.id.edtDateDebutReel);
@@ -141,6 +141,7 @@ public class TechnicianFragments extends Fragment {
 
         if(TechnicianFragments.intervention!=null){
             codeIntervention.setText(TechnicianFragments.intervention.getCode());
+            descIntervention.setText(TechnicianFragments.intervention.getDescription());
             codeClient.setText(TechnicianFragments.intervention.getClientId());
 
             dateDebut.setText(TechnicianFragments.intervention.getDateDebutPrevue());
@@ -154,6 +155,7 @@ public class TechnicianFragments extends Fragment {
                 intervention -> {
                     if (intervention != null){
                         codeIntervention.setText(intervention.getCode());
+                        descIntervention.setText(intervention.getDescription());
                         codeClient.setText(intervention.getClientId());
                         dateDebut.setText(intervention.getDateDebutPrevue());
                         dateFin.setText(intervention.getDateFinPrevue());
