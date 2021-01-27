@@ -138,7 +138,7 @@ public class InterventionActivity extends AppCompatActivity {
         materielNecessaire.setText("Matériel nécessaire : \n"+intervention.getMaterielNecessaire());
 
         //TODO..
-        //InitAffectations();
+        InitAffectations();
 
         TextView nomClient =  findViewById(R.id.txtNomClient);
         TextView infosClient =  findViewById(R.id.txtInfosClient);
@@ -178,8 +178,6 @@ public class InterventionActivity extends AppCompatActivity {
             @Override
             public void result(List<?> items, String message) {
                 List<Adress> adresses = dao.Deserialize(items, Adress.class);
-               /* for (Adress adress : adresses)
-                    client.addAdress(adress);*/
                 if(adresses.size()>0)
                     txtAdress.setText(adresses.get(0).getVoie()+"\n"
                             +adresses.get(0).getCp()+" "+adresses.get(0).getVille());
@@ -212,7 +210,7 @@ public class InterventionActivity extends AppCompatActivity {
     List<User> technicians = new ArrayList();
 
     private void InitAffectations(){
-        AffectationDao dao = new AffectationDao();
+  /*      AffectationDao dao = new AffectationDao();
         UserDao udao = new UserDao();
 
 
@@ -222,16 +220,16 @@ public class InterventionActivity extends AppCompatActivity {
                 for (Affectation affectation : affectations) {
                     Log.i(TAG, "InitAffectations: "+affectation.getTechnicienId());
 
-                    udao.find(affectation.getTechnicienId(), (items2, message2)->{
+                   *//* udao.find(affectation.getTechnicienId(), (items2, message2)->{
                         List<User> users =  udao.Deserialize(items2, User.class);
                         technicians.addAll(users);
-                    });
+                    });*//*
                 }
-                tech_list.getAdapter().notifyDataSetChanged();
+                //tech_list.getAdapter().notifyDataSetChanged();
             });
         }catch (Exception x){
             Log.i(TAG, "InitAffectations: "+x);
-        }
+        }*/
 
 
         tech_list = findViewById(R.id.list_techs);

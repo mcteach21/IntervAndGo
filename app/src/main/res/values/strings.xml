@@ -100,6 +100,9 @@
     <string name="hint_adress_client">Adresse Client</string>
     <string name="hint_cp_client">CP</string>
     <string name="hint_ville_client">Ville</string>
+    <string name="forgotten_password_txt">Veuillez saisir votre adresse mail. Un mail vous sera envoyé pour réinitialiser votre mot de passe.</string>
+    <string name="forgotten_password_title">Réinitialisation Mot de Passe</string>
+    <string name="reset_password_btn">Réinitialiser Mot de Passe</string>
 
 
     <string-array name="statuts">

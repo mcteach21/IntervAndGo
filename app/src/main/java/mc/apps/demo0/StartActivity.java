@@ -63,9 +63,8 @@ public class StartActivity extends AppCompatActivity {
             if(view.getId()==R.id.btnsignin) {
                 handleLogin();          // gestion login
             }else {
-                Toast.makeText(StartActivity.this, "TODO : récup mot de passe oublié..", Toast.LENGTH_SHORT).show();
-               /* Intent intent = new Intent(StartActivity.this, ForgottenActivity.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(StartActivity.this, PasswordActivity.class);
+                startActivity(intent);
             }
         };
 
@@ -179,5 +178,4 @@ public class StartActivity extends AppCompatActivity {
         animatorSet.play(fade1Anim); //.before(fade2Anim);
         animatorSet.start();
     }
-
 }

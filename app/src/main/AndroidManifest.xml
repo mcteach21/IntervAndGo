@@ -13,19 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_blue_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddItemActivity"></activity>
+        <activity android:name=".PasswordActivity"></activity>
+        <activity android:name=".AddItemActivity" />
         <activity android:name=".ClientsActivity" />
-
         <activity android:name=".UsersActivity" />
-
         <activity android:name=".InterventionActivity" />
         <activity android:name=".TechnicianActivity" />
         <activity android:name=".SelectActivity" />
         <activity android:name=".SearchActivity" />
-
         <activity android:name=".ClientActivity" />
         <activity android:name=".CompteActivity" />
-
         <activity
             android:name=".SupervisorActivity"
             android:label="@string/title_activity_supervisor"
