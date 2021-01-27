@@ -14,6 +14,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import mc.apps.demo0.model.Client;
+import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 
 public class MainViewModel  extends ViewModel {
@@ -85,4 +86,8 @@ public class MainViewModel  extends ViewModel {
     private MutableLiveData<Integer> profil = new MutableLiveData<>();
     public MutableLiveData<Integer> getProfil() { return profil; }
     public void setProfil(int value) {  profil.setValue(value);  }
+
+    private MutableLiveData<Intervention> intervention = new MutableLiveData<>();
+    public MutableLiveData<Intervention> getIntervention() { return intervention; }
+    public void setIntervention(Intervention value) {  intervention.setValue(value);  }
 }

@@ -104,6 +104,8 @@ public class TechnicianFragments extends Fragment {
         }else if(num==1){
             //Ajouter Rapport
 
+
+
             initCurrentIntervention(root); //AutoCompletion sur Champ CodeClient!
             initListPhotos(root);   //liste photos / Rapport
 
@@ -137,7 +139,6 @@ public class TechnicianFragments extends Fragment {
         comment = root.findViewById(R.id.edtComment);
         statutChoice = root.findViewById(R.id.statutChoice);
 
-
         if(TechnicianFragments.intervention!=null){
             codeIntervention.setText(TechnicianFragments.intervention.getCode());
             codeClient.setText(TechnicianFragments.intervention.getClientId());
@@ -148,6 +149,19 @@ public class TechnicianFragments extends Fragment {
             comment.setText(TechnicianFragments.intervention.getCommentaire());
             statutChoice.setSelection(TechnicianFragments.intervention.getStatutId()-1);
         }
+        mainViewModel.getIntervention().observe(
+                getViewLifecycleOwner(),
+                intervention -> {
+                    if (intervention != null){
+                        codeIntervention.setText(intervention.getCode());
+                        codeClient.setText(intervention.getClientId());
+                        dateDebut.setText(intervention.getDateDebutPrevue());
+                        dateFin.setText(intervention.getDateFinPrevue());
+                        comment.setText(intervention.getCommentaire());
+                        statutChoice.setSelection(intervention.getStatutId()-1);
+                    }
+                }
+        );
     }
 
     private void addRapport(View root) {

@@ -39,7 +39,7 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
         Client client = items.get(position);
 
         holder.title.setText(client.getNom()+" ["+client.getCode()+"]");
-        holder.details.setText(client.getEmail()+" - Tél. : "+client.getTelephone());
+        holder.details.setText(client.getEmail()+" - "+client.getTelephone());
         holder.details_more.setText("Contact : "+client.getContact());
 
         if(listener!=null)

@@ -38,6 +38,7 @@ import java.io.File;
 import java.util.Calendar;
 
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.ClientIntervention;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.technician.TechnicianFragment;
@@ -49,6 +50,7 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     private static final int RESULT_LOAD_IMAGE = 2608 ;
     private static final int TECH_INTERV_CODE = 1000;
     private static final String TAG = "tests";
+    private static final int CLIENT_INTERV_CODE = 2000;
     private MainViewModel mainViewModel;
 
     @Override
@@ -112,9 +114,13 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
             mainViewModel.addImage(selectedImage);
         }
 
-        //Toast.makeText(this, "requestCode = "+requestCode, Toast.LENGTH_LONG).show();
         if (requestCode == TECH_INTERV_CODE && resultCode == RESULT_OK && null != data) {
             defineFragment(TechnicianFragments.newInstance(1, (Intervention) data.getSerializableExtra("interv")));
+        }
+
+        if (requestCode == CLIENT_INTERV_CODE && resultCode == RESULT_OK && null != data) {
+            Intervention item = (Intervention) data.getSerializableExtra("item_filter");
+            mainViewModel.setIntervention(item);
         }
     }
 
@@ -148,6 +154,13 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         }
         return true;
     }
+
+
+    public void ClientIntervFilter(View view){
+        Intent intent = new Intent(this, InterventionsFilterActivity.class);
+        startActivityForResult(intent, CLIENT_INTERV_CODE);
+    }
+
 
 
     /**

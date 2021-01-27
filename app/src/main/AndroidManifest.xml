@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_blue_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PasswordActivity"></activity>
+        <activity android:name=".InterventionsFilterActivity"></activity>
+        <activity android:name=".PasswordActivity" />
         <activity android:name=".AddItemActivity" />
         <activity android:name=".ClientsActivity" />
         <activity android:name=".UsersActivity" />
