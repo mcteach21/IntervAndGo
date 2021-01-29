@@ -13,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_blue_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".InterventionsFilterActivity"></activity>
+
+        <!-- <activity android:name=".SendEmailActivity">
+        </activity>-->
+
+        <activity android:name=".InterventionsFilterActivity" />
         <activity android:name=".PasswordActivity" />
         <activity android:name=".AddItemActivity" />
         <activity android:name=".ClientsActivity" />

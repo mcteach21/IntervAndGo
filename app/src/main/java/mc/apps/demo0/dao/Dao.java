@@ -39,6 +39,7 @@ public class Dao<T> {
 
     public void find(String whereClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+whereClause;
+        Log.i(TAG, "find: "+url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
 

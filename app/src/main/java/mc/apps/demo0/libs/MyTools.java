@@ -18,12 +18,48 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import mc.apps.demo0.StartActivity;
+import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.model.User;
 
 public class MyTools {
     private static final String TAG = "demo";
+
+    /**
+     * Password Generator + Sens Mail
+     */
+
+    private static final String SENDER_EMAIL_ID = "adm.mc69@gmail.com";
+    private static final String SENDER_EMAIL_PASSWORD = "Azerty123_";
+
+    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
+    private static final int sizeOfPasswordString=12;
+    public static String GetRandomPassword(){
+        final Random random=new Random();
+        final StringBuilder sb=new StringBuilder(sizeOfPasswordString);
+
+        for(int i=0;i<sizeOfPasswordString;++i)
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+
+        return sb.toString();
+    }
+    public static void SendPasswordMail(String name_sendto, String mail_sendto, String generated_password){
+        String mail_subject = "Votre Mot de Passe";
+        String mail_body="Bonjour "+name_sendto+"\n\nVous trouverez ci-après votre mot de passe TEMPORAIRE, pensez à le changer lors de votre prochaine connection :\n";
+
+        new Thread(() -> {
+            try {
+                GMailSender sender = new GMailSender(SENDER_EMAIL_ID , SENDER_EMAIL_PASSWORD);
+                // sender.addAttachment(picturePath);
+                sender.sendMail(mail_subject, mail_body + "\n" + generated_password , SENDER_EMAIL_ID, mail_sendto);
+                Log.i(TAG, "Mail Envoyé!");
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }).start();
+    }
 
     /**
      * Session (Shared Preferences)
