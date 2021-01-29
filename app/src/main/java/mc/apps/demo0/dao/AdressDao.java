@@ -1,5 +1,7 @@
 package mc.apps.demo0.dao;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -7,6 +9,8 @@ import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 
 public class AdressDao extends Dao<Adress> {
+    private static final String TAG = "tests";
+
     public AdressDao() {
         super("adresses");
     }

@@ -83,7 +83,6 @@ public class ClientsInterventionsAdapter extends RecyclerView.Adapter<ClientsInt
     }
 
     InterventionsAdapter adapter;
-    //List<Intervention> interventions;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ClientIntervention item = items.get(position);

@@ -35,6 +35,7 @@ public class ClientManager {
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
                 addClient(root);
+
                 Intent intent = new Intent(root.getContext(), backActivity);
                 intent.putExtra("num",3);
                 root.getContext().startActivity(intent);
@@ -64,14 +65,18 @@ public class ClientManager {
                 cp.getText().toString(),
                 ville.getText().toString()
         );
+        Adress adress = new Adress(0, "principale" ,
+                voie.getText().toString() , cp.getText().toString(),
+                ville.getText().toString(), code.getText().toString());
+
+        Log.i(TAG, "client to add : "+client);
+        Log.i(TAG, "adress to add : "+adress.getVoie()+" "+adress.getClientId());
 
         ClientDao dao = new ClientDao();
         dao.add(client, (items, message) -> {
             Log.i(TAG, "onCreate: "+message);
             Toast.makeText(root.getContext(), "Client ajouté avec succès!", Toast.LENGTH_LONG).show();
 
-            Adress adress = new Adress(0, "principale" , voie.getText().toString() , cp.getText().toString(),
-                    ville.getText().toString(), code.getText().toString());
             AdressDao dao2 = new AdressDao();
             dao2.add(adress, (items2, message2) -> {
                 Log.i(TAG, "onCreate: "+message2);
