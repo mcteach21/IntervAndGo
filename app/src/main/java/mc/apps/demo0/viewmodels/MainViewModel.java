@@ -90,4 +90,5 @@ public class MainViewModel  extends ViewModel {
     private MutableLiveData<Intervention> intervention = new MutableLiveData<>();
     public MutableLiveData<Intervention> getIntervention() { return intervention; }
     public void setIntervention(Intervention value) {  intervention.setValue(value);  }
+
 }

@@ -54,6 +54,13 @@ public class PlaceholderFragment extends Fragment {
     private static final String TAG = "tests" ;
 
     private PageViewModel pageViewModel;
+    private MainViewModel mainViewModel;
+    private List<User> selected = new ArrayList();
+    private View root;
+
+    private EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
+    private RecyclerView tech_list;
+    private Button btnadd;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -85,23 +92,12 @@ public class PlaceholderFragment extends Fragment {
         pageViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
 
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-
-
         return root;
     }
 
-    AutoCompleteTextView codeClient;
-    EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
-    RecyclerView tech_list;
-
-    MainViewModel mainViewModel;
-    List<User> selected = new ArrayList();
-
-    View root;
     @Override
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
-        //Toast.makeText(getActivity(), "onViewCreated : "+index, Toast.LENGTH_LONG).show();
 
         if (index==1){ //liste interventions
             refreshListAsync();
@@ -130,16 +126,42 @@ public class PlaceholderFragment extends Fragment {
         }
         if (index==2){ //Planifier Intervention
 
+            codeClient = root.findViewById(R.id.txtCodeClient);
+            codeSupervisor = root.findViewById(R.id.edtSupervisor);
+            desc = root.findViewById(R.id.edtDesc);
+            dateDebut = root.findViewById(R.id.edtDateDebutPrev);
+            dateFin = root.findViewById(R.id.edtDateFinPrev);
+            serviceCible = root.findViewById(R.id.edtServiceCible);
+            materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
+            comment = root.findViewById(R.id.edtComment);
 
-            initClientAutocomplete(root);
-            initListTech(root);
+            btnadd = root.findViewById(R.id.btn_add);
 
-            Button btnadd = root.findViewById(R.id.btn_add);
+            root.findViewById(R.id.btn_clients_list).setOnClickListener(
+                    v->{
+                        Intent intent = new Intent(root.getContext(), ClientsActivity.class);
+                        startActivityForResult(intent, CODE_CLIENT_SELECT);
+                    }
+            );
+            mainViewModel.getClient().observe(
+                    getViewLifecycleOwner(),
+                    selected -> {
+                        codeClient.setText(selected.getCode());
+                    }
+            );
+
+            mainViewModel.getUser().observe(
+                    getViewLifecycleOwner(),
+                    selected -> {
+                        codeSupervisor.setText(selected.getCode());
+                    }
+            );
+
             btnadd.setOnClickListener(view -> {
                addIntervention(root);
             });
 
-
+            initListTech(root);
         }
     }
 
@@ -210,14 +232,6 @@ public class PlaceholderFragment extends Fragment {
      * @param root
      */
     private void addIntervention(View root) {
-        codeClient = root.findViewById(R.id.txtCodeClient);
-        desc = root.findViewById(R.id.edtDesc);
-        dateDebut = root.findViewById(R.id.edtDateDebutPrev);
-        dateFin = root.findViewById(R.id.edtDateFinPrev);
-        serviceCible = root.findViewById(R.id.edtServiceCible);
-        materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
-        comment = root.findViewById(R.id.edtComment);
-
         //technicien(s) affecté(s)
         SelectedUsersAdapter adapter = (SelectedUsersAdapter) tech_list.getAdapter();
         List<User> technicians = adapter.getItems();
@@ -247,38 +261,6 @@ public class PlaceholderFragment extends Fragment {
         dao.add(interv, (items, message) -> {
             Toast.makeText(root.getContext(), "Intervention affectations ok.", Toast.LENGTH_LONG).show();
         });
-    }
-
-    private void initClientAutocomplete(View root) {
-        codeClient = root.findViewById(R.id.txtCodeClient);
-   /*     ClientDao dao = new ClientDao();
-        codeClient.setThreshold(1);
-        codeClient.setTextColor(Color.WHITE);
-
-        dao.list((data, message) -> {
-            List<Client> items = dao.Deserialize(data, Client.class);
-            ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
-                    root.getContext(),
-                    android.R.layout.select_dialog_item,
-                    items);
-
-            codeClient.setAdapter(adapter);
-        });*/
-
-        root.findViewById(R.id.btn_clients_list).setOnClickListener(
-                v->{
-                    Intent intent = new Intent(root.getContext(), ClientsActivity.class);
-                    startActivityForResult(intent, CODE_CLIENT_SELECT);
-                }
-        );
-
-        mainViewModel.getClient().observe(
-                getViewLifecycleOwner(),
-                selected -> {
-                    codeClient.setText(selected.getCode());
-                }
-        );
-
     }
     private void initListTech(View root){
         tech_list = root.findViewById(R.id.tech_list);

@@ -46,9 +46,10 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class SupervisorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "tests";
-    private static final int SELECT_REQUEST_CODE = 2608;
+    private static final int SELECT_REQUEST_CODE_1 = 1000;
+    private static final int SELECT_REQUEST_CODE_2 = 2000;
     private static final int REQUEST_FILTRE_CODE = 1603;
-    private static final int CODE_CLIENT_SELECT = 1000;
+    //private static final int CODE_CLIENT_SELECT = 1000;
 
 
     @Override
@@ -120,13 +121,18 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==SELECT_REQUEST_CODE){
-            if(data!=null)
+        if(requestCode==SELECT_REQUEST_CODE_1 && data!=null){
                 if(data.getSerializableExtra("data")!=null) {
                     List<User> selected = (List<User>) data.getSerializableExtra("data");
                     for (User u : selected)
                         mainViewModel.updateSelected(u, true);
                 }
+        }
+        if(requestCode==SELECT_REQUEST_CODE_2 && data!=null){
+            if(data.getSerializableExtra("data")!=null) {
+                User selected = (User) data.getSerializableExtra("data");
+                mainViewModel.setUser(selected);
+            }
         }
         //if(requestCode==CODE_CLIENT_SELECT){
         if(data!=null)
@@ -172,7 +178,16 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
 
     public void list_techs_click(View view){
         mainViewModel.clearSelected();
-        startActivityForResult(new Intent(this, SelectActivity.class), SELECT_REQUEST_CODE);
+
+        Intent intent = new Intent(this, SelectActivity.class);
+        intent.putExtra("num",1);
+        startActivityForResult(intent, SELECT_REQUEST_CODE_1);
+    }
+
+    public void list_supervs_click(View view){
+        Intent intent = new Intent(this, SelectActivity.class);
+        intent.putExtra("num",2);
+        startActivityForResult(intent, SELECT_REQUEST_CODE_2);
     }
 
     /**

@@ -39,9 +39,9 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 public class InterventionManager {
     private static final String TAG = "tests";
 
-    AutoCompleteTextView codeClient;
-    EditText desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
+    EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
     RecyclerView tech_list;
+    Button btnadd;
 
     MainViewModel mainViewModel;
     List<User> selected = new ArrayList();
@@ -50,34 +50,41 @@ public class InterventionManager {
     public InterventionManager(Activity activity){
         this.activity = activity;
         mainViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(MainViewModel.class);
-
     }
 
     public void prepareAddIntervention(View root, Class<?> backActivity) {
-        initClientAutocomplete(root);
-        initListTech(root);
-
-        Button btnadd = root.findViewById(R.id.btn_add);
-        btnadd.setOnClickListener(view -> {
-            addIntervention(root);
-
-            Intent intent = new Intent(root.getContext(), backActivity);
-            intent.putExtra("num",2);
-            root.getContext().startActivity(intent);
-            Log.i(TAG, "prepareAddIntervention : back to "+backActivity.getSimpleName());
-        });
-    }
-
-    private void addIntervention(View root) {
-
         codeClient = root.findViewById(R.id.txtCodeClient);
+        codeSupervisor = root.findViewById(R.id.edtSupervisor);
         desc = root.findViewById(R.id.edtDesc);
         dateDebut = root.findViewById(R.id.edtDateDebutPrev);
         dateFin = root.findViewById(R.id.edtDateFinPrev);
         serviceCible = root.findViewById(R.id.edtMaterielNecess);
         materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
         comment = root.findViewById(R.id.edtComment);
+        btnadd = root.findViewById(R.id.btn_add);
 
+        mainViewModel.getClient().observe((LifecycleOwner) activity, selected -> {
+            codeClient.setText(selected.getCode());
+        });
+
+        mainViewModel.getUser().observe((LifecycleOwner) activity, selected -> {
+            codeSupervisor.setText(selected.getCode());
+        });
+
+        initListTech(root);
+
+        btnadd.setOnClickListener(view -> {
+            addIntervention(root);
+
+            Intent intent = new Intent(root.getContext(), backActivity);
+            intent.putExtra("num",2);
+            root.getContext().startActivity(intent);
+
+            //Log.i(TAG, "prepareAddIntervention : back to "+backActivity.getSimpleName());
+        });
+    }
+
+    private void addIntervention(View root) {
         //technicien(s) affecté(s)
         SelectedUsersAdapter adapter = (SelectedUsersAdapter) tech_list.getAdapter();
         List<User> technicians = adapter.getItems();
@@ -110,26 +117,6 @@ public class InterventionManager {
         });
     }
 
-    private void initClientAutocomplete(View root) {
-        ClientDao dao = new ClientDao();
-
-        dao.list((data, message) -> {
-            List<Client> items = dao.Deserialize(data, Client.class);
-            ArrayAdapter<Client> adapter = new ArrayAdapter<Client>(
-                    root.getContext(),
-                    android.R.layout.select_dialog_item,
-                    items);
-
-            codeClient = root.findViewById(R.id.txtCodeClient);
-            codeClient.setThreshold(1);       //will start working from first character
-            codeClient.setAdapter(adapter);
-            codeClient.setTextColor(Color.WHITE);
-        });
-
-        mainViewModel.getClient().observe((LifecycleOwner) activity, selected -> {
-            codeClient.setText(selected.getCode());
-        });
-    }
     private void initListTech(View root){
         tech_list = root.findViewById(R.id.tech_list);
         tech_list.setHasFixedSize(true);
@@ -149,6 +136,7 @@ public class InterventionManager {
 
     private void resetFields(View root) {
         codeClient.getText().clear();
+        codeSupervisor.getText().clear();
         desc.getText().clear();
         dateDebut.getText().clear();
         dateFin.getText().clear();
@@ -156,7 +144,8 @@ public class InterventionManager {
         comment.getText().clear();
         materielNecessaire.getText().clear();
 
-        ((SelectedUsersAdapter)tech_list.getAdapter()).getItems().clear();
-        ((SelectedUsersAdapter)tech_list.getAdapter()).notifyDataSetChanged();
+        SelectedUsersAdapter adapter = (SelectedUsersAdapter)tech_list.getAdapter();
+        adapter.getItems().clear();
+        adapter.notifyDataSetChanged();
     }
 }

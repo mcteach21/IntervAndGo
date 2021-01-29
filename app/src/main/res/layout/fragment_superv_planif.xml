@@ -29,18 +29,53 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout20"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout00">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtSupervisor"
+                style="@style/input_style_default"
+                android:hint="@string/hint_title_supervisor" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <ImageView
             android:id="@+id/btn_techs_list"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="8dp"
             android:onClick="list_techs_click"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout9"
             app:srcCompat="@drawable/ic_clients_list" />
 
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout00"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtCodeClient"
+                style="@style/input_style_default"
+                android:hint="@string/hint_title_client" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+<!--        <AutoCompleteTextView
             android:id="@+id/txtCodeClient"
             style="@style/input_style_default"
             android:layout_width="0dp"
@@ -50,7 +85,7 @@
             android:hint="@string/hint_title_client"
             app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />-->
 
 <!--        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout0"
@@ -72,10 +107,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
             style="@style/inputstyle"
-            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCodeClient">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout20">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDesc"
@@ -207,20 +241,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:clickable="true"
             android:onClick="list_techs_click"
-            app:layout_constraintEnd_toStartOf="@+id/btn_techs_list"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_techs_list" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="56dp"
             android:clickable="true"
             android:text="@string/tech_assoc_2_txt"
             android:textColor="@color/colorAccent"
@@ -232,13 +266,22 @@
             android:id="@+id/btn_clients_list"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:onClick="list_clients_click"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtCodeClient"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title"
+            app:srcCompat="@drawable/ic_clients_list" />
+
+        <ImageView
+            android:id="@+id/btn_superv_list"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="list_supervs_click"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_clients_list"
             app:srcCompat="@drawable/ic_clients_list" />
 
 

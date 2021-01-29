@@ -3,6 +3,7 @@ package mc.apps.demo0;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,23 +20,34 @@ import mc.apps.demo0.ui.select.SelectFragment;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class SelectActivity extends AppCompatActivity {
-    MainViewModel mainViewModel;
+    private MainViewModel mainViewModel;
+    private int num; // 1: liste techniciens | 2 : liste superviseurs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_activity);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, SelectFragment.newInstance())
-                    .commitNow();
-        }
+        Intent intent = getIntent();
+        num = intent.getIntExtra("num", 1);
+
+        if (savedInstanceState == null)
+            defineFragment(num);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(num==1?"Techniciens":"Superviseurs");
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.setSearch("");
+
+        mainViewModel.getUser().observe(this, selected -> {
+            if(num == 2)
+                returnDataAndFinish();
+        });
+    }
+
+    private void defineFragment(int num) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new SelectFragment(num)).commitNow();
     }
 
     @Override
@@ -43,8 +56,13 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void returnDataAndFinish() {
+
         Intent intent = new Intent();
-        intent.putExtra("data", (Serializable) mainViewModel.getSelected().getValue());
+        if(num==1)
+            intent.putExtra("data", (Serializable) mainViewModel.getSelected().getValue());
+        else
+            intent.putExtra("data", (Serializable) mainViewModel.getUser().getValue());
+
         setResult(RESULT_OK, intent);
         finish();
     }
