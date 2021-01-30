@@ -42,6 +42,7 @@ import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.main.SectionsPagerAdapter;
+import mc.apps.demo0.ui.technician.TechnicianFragments;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class SupervisorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -60,6 +61,7 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
+
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
@@ -68,6 +70,14 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
         setTitle("");
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        mainViewModel.getNum().observe(
+                this,
+                num -> {
+                    //Toast.makeText(this, "num="+num, Toast.LENGTH_SHORT).show();
+                    viewPager.setCurrentItem(num, true);
+                }
+        );
     }
     MainViewModel mainViewModel;
 

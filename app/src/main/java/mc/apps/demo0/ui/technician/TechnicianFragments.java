@@ -53,7 +53,7 @@ public class TechnicianFragments extends Fragment {
     private int[] fragments_layouts = {
             R.layout.technician_intervs_fragment,
             R.layout.technician_rapport_fragment,
-            R.layout.technician_histo_fragment
+            R.layout.technician_intervs_fragment   //R.layout.technician_histo_fragment
     };
     private String[] fragments_titles = {
            "Interventions du Jour",
@@ -76,7 +76,6 @@ public class TechnicianFragments extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         root = inflater.inflate(fragments_layouts[num], container, false);
         TextView title = root.findViewById(R.id.fragment_title);
         title.setText(fragments_titles[num]);
@@ -89,7 +88,7 @@ public class TechnicianFragments extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
 
-        if(num==0) {
+        if(num==0 || num==2) {
             //Recherche / Liste Interventions..
             mainViewModel.getSearch().observe(
                     getViewLifecycleOwner(),
@@ -105,7 +104,6 @@ public class TechnicianFragments extends Fragment {
             //Ajouter Rapport
             initCurrentIntervention(root); //AutoCompletion sur Champ CodeClient!
             initListPhotos(root);   //liste photos / Rapport
-
             Button btnadd = root.findViewById(R.id.btn_add);
             btnadd.setOnClickListener(view -> {
                 addRapport(root);
@@ -181,6 +179,7 @@ public class TechnicianFragments extends Fragment {
         InterventionDao dao = new InterventionDao();
         dao.update(TechnicianFragments.intervention, (items, message)->{
             Toast.makeText(root.getContext(), "Rapport ajouté avec succès!", Toast.LENGTH_SHORT).show();
+            mainViewModel.setNum(0);
         });
 
         resetFields(); //reinitialiser form
@@ -214,8 +213,6 @@ public class TechnicianFragments extends Fragment {
         dateFinR.getText().clear();
         comment.getText().clear();
     }
-
-
 
     /**
      * Gestion liste Interventions jour / Technicien
@@ -272,23 +269,30 @@ public class TechnicianFragments extends Fragment {
     private String getCurrentDate(){
         return simpleDateFormat.format(new Date());
     }
+
     private void refreshListAsync() {
         noResult = root.findViewById(R.id.noResult);
         InterventionDao dao = new InterventionDao();
 
         String tech_code = MyTools.GetUserInSession().getCode();
-        dao.list((data, message) -> {
+        dao.findByTech(tech_code, (data, message) -> {
             items = dao.Deserialize(data, Intervention.class);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                items = items.stream()
-                        .sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
-                        .filter(i->getDate(i.getDateDebutPrevue()).equals(getCurrentDate()))
-                        .collect(Collectors.toList());
+                if(num==0) {
+                    items = items.stream()
+                            .sorted((o1, o2) -> o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
+                            .filter(i -> getDate(i.getDateDebutPrevue()).equals(getCurrentDate()) && i.getStatutId() != 5)
+                            .collect(Collectors.toList());
+                }else{
+                    items = items.stream()
+                            .sorted((o1, o2) -> o2.getDateDebutPrevue().compareTo(o1.getDateDebutPrevue()))
+                            .filter(i->i.getStatutId() == 5)
+                            .collect(Collectors.toList());
+                }
             }
 
             noResult.setVisibility(items.size()>0?View.GONE:View.VISIBLE);
-
             loadList();
             swipeContainer.setRefreshing(false);
         });

@@ -127,7 +127,13 @@ public class PlaceholderFragment extends Fragment {
         if (index==2){ //Planifier Intervention
 
             codeClient = root.findViewById(R.id.txtCodeClient);
+
             codeSupervisor = root.findViewById(R.id.edtSupervisor);
+
+            codeSupervisor.setText(MyTools.GetUserInSession().getCode());
+            root.findViewById(R.id.textInputLayout20).setVisibility(View.GONE);
+            root.findViewById(R.id.btn_superv_list).setVisibility(View.GONE);
+
             desc = root.findViewById(R.id.edtDesc);
             dateDebut = root.findViewById(R.id.edtDateDebutPrev);
             dateFin = root.findViewById(R.id.edtDateFinPrev);
@@ -251,6 +257,8 @@ public class PlaceholderFragment extends Fragment {
         dao.add(interv, (items, message) -> {
             Toast.makeText(root.getContext(), "Intervention planifiée!", Toast.LENGTH_LONG).show();
             addAffectaions(interv);
+
+            mainViewModel.setNum(0);
         });
 
         resetFields(root); //reinitialiser form planfication!
@@ -259,7 +267,7 @@ public class PlaceholderFragment extends Fragment {
     private void addAffectaions(Intervention interv) {
         AffectationDao dao = new AffectationDao();
         dao.add(interv, (items, message) -> {
-            Toast.makeText(root.getContext(), "Intervention affectations ok.", Toast.LENGTH_LONG).show();
+            //Toast.makeText(root.getContext(), "Intervention affectations ok.", Toast.LENGTH_LONG).show();
         });
     }
     private void initListTech(View root){

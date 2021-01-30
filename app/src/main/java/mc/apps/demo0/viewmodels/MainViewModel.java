@@ -91,4 +91,8 @@ public class MainViewModel  extends ViewModel {
     public MutableLiveData<Intervention> getIntervention() { return intervention; }
     public void setIntervention(Intervention value) {  intervention.setValue(value);  }
 
+    private MutableLiveData<Integer> num = new MutableLiveData<>();
+    public MutableLiveData<Integer> getNum() { return num; }
+    public void setNum(int value) {  num.setValue(value);  }
+
 }

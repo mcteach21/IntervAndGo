@@ -66,6 +66,13 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         getSupportActionBar().setCustomView(R.layout.tech_toolbar_layout);
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        mainViewModel.getNum().observe(
+                this,
+                num -> {
+                    defineFragment(TechnicianFragments.newInstance(num));
+                }
+        );
     }
     @Override
     protected void onResume() {

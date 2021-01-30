@@ -32,6 +32,9 @@ public class InterventionDao extends Dao<Intervention>{
     public void find(String code, OnSuccess onSuccess){
         find("code=" + code, onSuccess);
     }
+    public void findByTech(String tech_code, OnSuccess onSuccess){
+        super.query("intervs_tech", tech_code, onSuccess);
+    }
 
     public void add(Intervention u, OnSuccess onSuccess){
         try {
