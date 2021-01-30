@@ -63,9 +63,12 @@ public class InterventionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         intervention = (Intervention) intent.getSerializableExtra("intervention");
+
+
         if(intervention==null){
             finish();
         }
+
 
         goto_rapport = intent.getBooleanExtra("rapport", false);
        /* @SuppressLint("WrongViewCast") AppCompatImageView btn_rapport = findViewById(R.id.btn_goto_rapport);
@@ -75,7 +78,6 @@ public class InterventionActivity extends AppCompatActivity {
             btn_rapport.setOnClickListener(v->{
                 Toast.makeText(this, "Goto Rapport..", Toast.LENGTH_SHORT).show();
             });*/
-
 
         Init();
     }
@@ -111,6 +113,7 @@ public class InterventionActivity extends AppCompatActivity {
 
     @SuppressLint("WrongViewCast")
     private void Init() {
+
         codeClient = findViewById(R.id.txtCodeClient);
         desc = findViewById(R.id.txtDescription);
         dateDebut = findViewById(R.id.txtDateDebutPrevue);
@@ -120,11 +123,15 @@ public class InterventionActivity extends AppCompatActivity {
         materielNecessaire = findViewById(R.id.txtMaterielNecessaire);
         comment = findViewById(R.id.txtCommentaire);
 
+        TextView title = findViewById(R.id.fragment_title);
+        title.setText(intervention.getCode());
+
         codeClient.setText( "Client : "+intervention.getClientId());
         desc.setText("Description Intervention : \n"+intervention.getDescription());
 
         String prevue = "Date Intervention Prévue \n"+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
         String reelle = "Date Intervention Réelle \n";
+
         if(intervention.getDateDebutReelle()!=null)
             reelle += MyTools.formatDateFr(intervention.getDateDebutReelle());
         if(intervention.getDateFinReelle()!=null)
@@ -137,7 +144,6 @@ public class InterventionActivity extends AppCompatActivity {
         comment.setText("Observations : \n"+intervention.getCommentaire());
         materielNecessaire.setText("Matériel nécessaire : \n"+intervention.getMaterielNecessaire());
 
-        //TODO..
         InitAffectations();
 
         TextView nomClient =  findViewById(R.id.txtNomClient);
@@ -210,27 +216,15 @@ public class InterventionActivity extends AppCompatActivity {
     List<User> technicians = new ArrayList();
 
     private void InitAffectations(){
-  /*      AffectationDao dao = new AffectationDao();
-        UserDao udao = new UserDao();
+        AffectationDao dao = new AffectationDao();
+        dao.find(intervention.getCode(), (items, message)->{
+            List<User> users =  new UserDao().Deserialize(items, User.class);
+            Log.i(TAG, "Affectations - Users : "+users);
 
-
-        try {
-            dao.find(intervention.getCode(), (items, message)->{
-                List<Affectation> affectations =  dao.Deserialize(items, Affectation.class);
-                for (Affectation affectation : affectations) {
-                    Log.i(TAG, "InitAffectations: "+affectation.getTechnicienId());
-
-                   *//* udao.find(affectation.getTechnicienId(), (items2, message2)->{
-                        List<User> users =  udao.Deserialize(items2, User.class);
-                        technicians.addAll(users);
-                    });*//*
-                }
-                //tech_list.getAdapter().notifyDataSetChanged();
-            });
-        }catch (Exception x){
-            Log.i(TAG, "InitAffectations: "+x);
-        }*/
-
+            technicians.clear();
+            technicians.addAll(users);
+            tech_list.getAdapter().notifyDataSetChanged();
+        });
 
         tech_list = findViewById(R.id.list_techs);
         tech_list.setHasFixedSize(true);
@@ -243,10 +237,6 @@ public class InterventionActivity extends AppCompatActivity {
                 false
         );
         tech_list.setAdapter(adapter);
-
-        /*mainViewModel.getSelected().observe(getActivity(), selected -> {
-            adapter.refresh(selected);
-        });*/
     }
 
 }

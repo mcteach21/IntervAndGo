@@ -24,6 +24,12 @@ public class Dao<T> {
         this.table = table;
     }
 
+    protected void query(String named_query, String id, OnSuccess onSuccess) {
+        String url = DB_API_URL+"named="+named_query+"&id="+id;
+        //Log.i(TAG, "query: "+url);
+        new Http2AsyncTask(onSuccess).execute(url);
+    }
+
     public interface OnSuccess{
         void result(List<?> items, String message);
     }
@@ -39,12 +45,13 @@ public class Dao<T> {
 
     public void find(String whereClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+whereClause;
-        Log.i(TAG, "find: "+url);
+        //Log.i(TAG, "find: "+url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
 
     public void add(String addClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+addClause;
+        Log.i(TAG, "add: "+url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
     public void update(String updateClause, OnSuccess onSuccess){

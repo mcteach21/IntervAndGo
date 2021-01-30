@@ -58,7 +58,7 @@ public class InterventionManager {
         desc = root.findViewById(R.id.edtDesc);
         dateDebut = root.findViewById(R.id.edtDateDebutPrev);
         dateFin = root.findViewById(R.id.edtDateFinPrev);
-        serviceCible = root.findViewById(R.id.edtMaterielNecess);
+        serviceCible = root.findViewById(R.id.edtServiceCible);
         materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
         comment = root.findViewById(R.id.edtComment);
         btnadd = root.findViewById(R.id.btn_add);
@@ -114,6 +114,7 @@ public class InterventionManager {
         AffectationDao dao = new AffectationDao();
         dao.add(interv, (items, message) -> {
             Log.i(TAG, "Intervention affectations ok.");
+
         });
     }
 

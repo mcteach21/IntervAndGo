@@ -104,6 +104,11 @@
     <string name="forgotten_password_title">Réinitialisation Mot de Passe</string>
     <string name="reset_password_btn">Réinitialiser Mot de Passe</string>
     <string name="hint_title_supervisor">Code Superviseur</string>
+    <string name="change_password_title">Modification Mot de Passe</string>
+    <string name="prompt_temp_password_hint">Mot de passe actuel</string>
+    <string name="prompt_new_password_hint">Nouveau mot de passe</string>
+    <string name="prompt_new_2_password_hint">Confirmation mot de passe</string>
+    <string name="change_password_btn">Modifier Mot de Passe</string>
 
 
     <string-array name="statuts">

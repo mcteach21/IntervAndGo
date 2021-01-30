@@ -24,10 +24,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
+import mc.apps.demo0.dao.AffectationDao;
+import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Affectation;
+import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
@@ -47,6 +52,34 @@ public class StartActivity extends AppCompatActivity {
         startAnimation();
         // Gestion Boutons + liens
         handleActions();
+
+    }
+
+    private void test() {
+        InterventionDao dao1 = new InterventionDao();
+        AffectationDao dao2 = new AffectationDao();
+
+        dao1.list((items, mess)->{
+            List<Intervention> intervs = dao1.Deserialize(items, Intervention.class);
+            for (Intervention interv: intervs) {
+
+                interv.setAffectations(
+                        Arrays.asList(
+                                new Affectation(0, interv.getCode(), "MC1")
+                        )
+                );
+                dao2.add(interv, (x, m) -> Log.i(TAG, "add affectation.."));
+
+                if(interv.getDescription().contains("Installation ")) {
+                    interv.setAffectations(
+                            Arrays.asList(
+                                    new Affectation(0, interv.getCode(), "MC2")
+                            )
+                    );
+                    dao2.add(interv, (x, m) -> Log.i(TAG, "add affectation.."));
+                }
+            }
+        });
     }
 
     @Override

@@ -63,16 +63,17 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
         //String[] status =  context.getResources().getStringArray( R.array.statuts);
         Intervention interv = items.get(position);
         Date date = MyTools.getDateOfString(interv.getDateDebutPrevue()); //MySQL Date yyyy-MM-dd...
+
         String datefr = MyTools.formatDateFr(interv.getDateDebutPrevue()); // dd-MM-yyyy HH:mm
         String timefr = MyTools.formatTimeFr(interv.getDateDebutPrevue()); // HH:mm
 
         /*Log.i(TAG, "currentDate - currentTime : "+MyTools.getCurrentDate()+" - "+MyTools.getCurrentTime());
         Log.i(TAG, "Date Debut Prevue : "+date+" => "+datefr+" - "+timefr);*/
 
-        holder.title.setText(interv.getDescription());
+        holder.title.setText(interv.getDescription()+" ["+interv.getCode()+"]");
         holder.details.setText(this.details?timefr:datefr);
-        //holder.state.setText(status[interv.getStatutId()-1]);
 
+        //holder.state.setText(status[interv.getStatutId()-1]);
         //holder.btn_goto_rapport.setVisibility(this.details?View.VISIBLE:View.INVISIBLE);
 
         String status="";
