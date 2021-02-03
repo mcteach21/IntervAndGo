@@ -14,6 +14,7 @@ public class Client implements Serializable {
 
 	private List<Intervention> interventions;
 	private List<Adress> adresses;
+	private List<Contrat> contrats;
 
 	public List<Adress> getAdresses() {
 		return adresses;
@@ -27,8 +28,14 @@ public class Client implements Serializable {
 
 		adresses.add(adress);
 	}
+	public void addContrat(Contrat contrat) {
+		if(contrats==null)
+			contrats = new ArrayList();
 
-	public Client(String code, String nom, String contact, String email, String telephone, String adresse, String cp,  String ville) {
+		contrats.add(contrat);
+	}
+
+	public Client(String code, String nom, String contact, String email, String telephone, String adresse, String cp, String ville, String contrat) {
 		this.code = code;
 		this.nom = nom;
 		this.contact = contact;
@@ -37,6 +44,10 @@ public class Client implements Serializable {
 
 		Adress adress = new Adress(0, "principale" , adresse, cp, ville, this.code);
 		addAdress(adress);
+
+		//TODO : code contrat..
+		Contrat contrat_client = new Contrat("C"+this.code, contrat, this.code);
+		addContrat(contrat_client);
 	}
 
 	public String getCode() {

@@ -14,6 +14,20 @@
         android:background="@color/colorPrimary"
         android:id="@+id/form_planif">
 
+        <ImageView
+            android:id="@+id/btn_maps"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/txtContratClient"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtInfosClient"
+            app:srcCompat="@drawable/ic_google_maps"
+            tools:layout_conversion_absoluteHeight="43dp"
+            tools:layout_conversion_absoluteWidth="386dp" />
+
         <TextView
             android:id="@+id/txtCodeClient"
             style="@style/textview_style_default"
@@ -49,15 +63,30 @@
         <TextView
             android:id="@+id/txtAdressClient"
             style="@style/textview_style_default"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:minLines="2"
             android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_maps"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtInfosClient" />
+
+        <TextView
+            android:id="@+id/txtContratClient"
+            style="@style/textview_style_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:minLines="2"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtAdressClient" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

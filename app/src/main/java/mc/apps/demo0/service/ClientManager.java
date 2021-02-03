@@ -15,9 +15,11 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import mc.apps.demo0.R;
 import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.ClientDao;
+import mc.apps.demo0.dao.ContratDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
+import mc.apps.demo0.model.Contrat;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
@@ -43,11 +45,12 @@ public class ClientManager {
             });
     }
 
-    EditText code, nom, contact, email, tel, voie, cp, ville;
+    EditText code, nom, contrat, contact, email, tel, voie, cp, ville;
 
     private void addClient(View root) {
         code = root.findViewById(R.id.txtCodeClient);
         nom = root.findViewById(R.id.edtNomClient);
+        contrat = root.findViewById(R.id.edtContratClient);
         contact = root.findViewById(R.id.edtNomContact);
         email = root.findViewById(R.id.edtEmail);
         tel = root.findViewById(R.id.edtTelephone);
@@ -63,14 +66,16 @@ public class ClientManager {
                 tel.getText().toString(),
                 voie.getText().toString(),
                 cp.getText().toString(),
-                ville.getText().toString()
+                ville.getText().toString(),
+                contrat.getText().toString()
         );
         Adress adress = new Adress(0, "principale" ,
                 voie.getText().toString() , cp.getText().toString(),
                 ville.getText().toString(), code.getText().toString());
 
-        Log.i(TAG, "client to add : "+client);
-        Log.i(TAG, "adress to add : "+adress.getVoie()+" "+adress.getClientId());
+        //TODO : code contrat..
+        Contrat contrat_client = new Contrat("C"+code.getText().toString(), contrat.getText().toString(), code.getText().toString());
+
 
         ClientDao dao = new ClientDao();
         dao.add(client, (items, message) -> {
@@ -80,6 +85,11 @@ public class ClientManager {
             AdressDao dao2 = new AdressDao();
             dao2.add(adress, (items2, message2) -> {
                 Log.i(TAG, "onCreate: "+message2);
+            });
+
+            ContratDao dao3 = new ContratDao();
+            dao3.add(contrat_client, (items3, message3) -> {
+                Log.i(TAG, "onCreate: "+message3);
             });
         });
 

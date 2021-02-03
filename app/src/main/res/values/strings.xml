@@ -129,5 +129,6 @@
 
     <string name="fingerprint_use_text">Utiliser empreinte digitale</string>
     <string name="fingerprint_config_text">Configurer empreinte digitale</string>
+    <string name="hint_contrat_client">Contrat Client</string>
 
 </resources>

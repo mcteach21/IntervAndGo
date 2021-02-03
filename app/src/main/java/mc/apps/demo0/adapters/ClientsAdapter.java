@@ -59,7 +59,6 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ViewHold
         TextView details_more = itemView.findViewById(R.id.item_details_more);
 
         public ViewHolder(@NonNull View itemView) {
-
             super(itemView);
             itemView.setOnClickListener(view -> {
                 listener.onItemClick(getAdapterPosition(), items.get(getAdapterPosition()));

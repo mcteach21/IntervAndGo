@@ -29,10 +29,12 @@ import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.adapters.UsersAdapter;
 import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.ClientDao;
+import mc.apps.demo0.dao.ContratDao;
 import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
+import mc.apps.demo0.model.Contrat;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.additem.AddItemFragment;
 import mc.apps.demo0.viewmodels.MainViewModel;
@@ -154,6 +156,14 @@ public class ClientsFragment extends Fragment {
             }
         });
     }
+    private void getClientContrat(Client client) {
+        ContratDao dao = new ContratDao();
+        dao.ofClient(client.getCode(), (items, message) -> {
+            List<Contrat> contrats = dao.Deserialize(items, Contrat.class);
+            for (Contrat contrat : contrats)
+                client.addContrat(contrat);
+        });
+    }
 
     private void refreshListAsync() {
         ClientDao dao = new ClientDao();
@@ -167,9 +177,11 @@ public class ClientsFragment extends Fragment {
                         .collect(Collectors.toList());
             }*/
 
-            // ajout adresses!
-            for (Client client : items)
+            // ajout adresses+contrats!
+            for (Client client : items) {
                 getClientAdress(client);
+                getClientContrat(client);
+            }
 
             loadList();
             swipeContainer.setRefreshing(false);
