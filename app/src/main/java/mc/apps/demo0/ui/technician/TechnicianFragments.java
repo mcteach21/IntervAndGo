@@ -88,6 +88,12 @@ public class TechnicianFragments extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
 
+        mainViewModel.getRefresh().observe(
+                getViewLifecycleOwner(),
+                search -> {
+                    refreshListAsync();
+                }
+        );
         if(num==0 || num==2) {
             //Recherche / Liste Interventions..
             mainViewModel.getSearch().observe(

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Demo.[v 0.4]</string>
+    <string name="app_name">App Demo.[v 0.5]</string>
 
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -123,5 +123,8 @@
         <item>Superviseur</item>
         <item>Technicien</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
+    <string name="btn_start_text">Commencer Intervention</string>
+    <string name="btn_finish_text">Terminer Intervention</string>
 
 </resources>

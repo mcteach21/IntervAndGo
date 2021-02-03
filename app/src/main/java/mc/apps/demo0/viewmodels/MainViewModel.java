@@ -95,4 +95,7 @@ public class MainViewModel  extends ViewModel {
     public MutableLiveData<Integer> getNum() { return num; }
     public void setNum(int value) {  num.setValue(value);  }
 
+    private MutableLiveData<Boolean> refresh = new MutableLiveData<>();
+    public MutableLiveData<Boolean> getRefresh() { return refresh; }
+    public void setRefresh(boolean value) {  refresh.setValue(value);  }
 }

@@ -1,6 +1,7 @@
 package mc.apps.demo0.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
@@ -26,8 +27,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import mc.apps.demo0.MapsActivity;
 import mc.apps.demo0.R;
+import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.Adress;
+import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 
 public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdapter.ViewHolder> implements Filterable {
@@ -49,8 +54,7 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     @NonNull
     @Override
     public InterventionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        int layout = R.layout.item_layout_details; //this.details?R.layout.item_layout_details:R.layout.item_layout;
+        int layout = R.layout.item_layout_interv; //this.details?R.layout.item_layout_details:R.layout.item_layout;
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
 
         context = parent.getContext();
@@ -60,46 +64,73 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
 
     @Override
     public void onBindViewHolder(@NonNull InterventionsAdapter.ViewHolder holder, int position) {
-        //String[] status =  context.getResources().getStringArray( R.array.statuts);
         Intervention interv = items.get(position);
         Date date = MyTools.getDateOfString(interv.getDateDebutPrevue()); //MySQL Date yyyy-MM-dd...
 
         String datefr = MyTools.formatDateFr(interv.getDateDebutPrevue()); // dd-MM-yyyy HH:mm
         String timefr = MyTools.formatTimeFr(interv.getDateDebutPrevue()); // HH:mm
 
-        /*Log.i(TAG, "currentDate - currentTime : "+MyTools.getCurrentDate()+" - "+MyTools.getCurrentTime());
-        Log.i(TAG, "Date Debut Prevue : "+date+" => "+datefr+" - "+timefr);*/
+        String datefrDebutR = interv.getDateDebutReelle()!=null?MyTools.formatDateFr(interv.getDateDebutReelle()):""; // dd-MM-yyyy HH:mm
+        String timefrDebutR = interv.getDateDebutReelle()!=null?MyTools.formatTimeFr(interv.getDateDebutPrevue()):""; // HH:mm
+        //String datefrFinR = interv.getDateFinReelle()!=null?MyTools.formatDateFr(interv.getDateFinReelle()):""; // dd-MM-yyyy HH:mm
 
+        holder.client.setText(interv.getClientId());
         holder.title.setText(interv.getDescription()+" ["+interv.getCode()+"]");
-        holder.details.setText(this.details?timefr:datefr);
+
+        holder.details.setText("Prévue : "+datefr); //(this.details?timefr:datefr)
+        if(!datefrDebutR.isEmpty())
+           holder.details_more.setText("Début : "+datefrDebutR);
+
+        holder.details_more.setVisibility(datefrDebutR.isEmpty()?View.GONE:View.VISIBLE);
+        holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.GREEN);
 
         //holder.state.setText(status[interv.getStatutId()-1]);
         //holder.btn_goto_rapport.setVisibility(this.details?View.VISIBLE:View.INVISIBLE);
-
-        String status="";
-        int color=Color.WHITE;
-
-        if(interv.getDateDebutReelle()==null) {
+        /*if(interv.getDateDebutReelle()==null) {
             status = "en attente";
-            color = Color.parseColor("#FFA000");
+
         }else if(interv.getDateFinReelle()==null) {
             status = "en cours";
-            color = Color.GREEN;
+
         }else if(interv.getDateFinReelle()!=null) { //terminée
             status = "terminée";
             color = Color.RED;
-        }
+        }*/
 
-        holder.state.setText(status);
+        String statut="en attente";
+        int color = Color.parseColor("#FFA000");
+        switch(interv.getStatutId()){
+            case 2:statut="en cours"; color = Color.GREEN; break;
+            case 3:statut="abandonnée"; color = Color.BLACK; break;
+            case 4:statut="à poursuivre"; color = Color.YELLOW; break;
+            case 5:statut="terminée"; color = Color.RED; break;
+        }
+        holder.state.setText(statut);
         holder.state.setTextColor(color);
 
-        holder.details_more.setText(interv.getClientId()+"..");
-
-        holder.details.setTextColor(date.before(new Date()) ? Color.RED : Color.GREEN); //parseColor("#FFA000")
         if(listener!=null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))
             );
+
+        setClientAdress(interv.getClientId(), holder.btn_goto_maps);
+    }
+    private void setClientAdress(String code_client, ImageView btn_goto_maps) {
+        AdressDao dao = new AdressDao();
+        dao.ofClient(code_client, (items, message) -> {
+            List<Adress> adresses = dao.Deserialize(items, Adress.class);
+            if(adresses.size()>0) {
+                String adress = adresses.get(0).getVoie()+" "+adresses.get(0).getCp()+ " " + adresses.get(0).getVille();
+                btn_goto_maps.setOnClickListener(
+                        v-> showAdressInMaps(adress)
+                );
+            }
+        });
+    }
+    private void showAdressInMaps(String adress) {
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra("adress", adress);
+        context.startActivity(intent);
     }
 
     @Override
@@ -148,20 +179,25 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView client = itemView.findViewById(R.id.item_interv_client);
         TextView title = itemView.findViewById(R.id.item_title);
         TextView state = itemView.findViewById(R.id.item_state);
         TextView details = itemView.findViewById(R.id.item_details);
         TextView details_more = itemView.findViewById(R.id.item_details_more);
 
-        //ImageView btn_goto_rapport = itemView.findViewById(R.id.btn_item_goto_rapport);
+        ImageView btn_goto_maps = itemView.findViewById(R.id.btn_maps);
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            /*btn_goto_rapport.setOnClickListener(v->{
-                Log.i(TAG, "ViewHolder: goto rapport!");
-
+            /*btn_goto_maps.setOnClickListener(v->{
+                Log.i(TAG, "ViewHolder: goto maps!");
+*//*                String adress = adresses.get(0).getVoie()+" "+adresses.get(0).getCp()+ " " + adresses.get(0).getVille();
+                btn_maps.setOnClickListener(
+                        v-> showAdressInMaps(adress)
+                );*//*
             });*/
         }
+
     }
 
     /**

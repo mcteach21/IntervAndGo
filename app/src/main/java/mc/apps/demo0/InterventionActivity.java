@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +12,7 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +37,7 @@ import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Adress;
@@ -49,9 +52,10 @@ public class InterventionActivity extends AppCompatActivity {
     Intervention intervention;
     TextView codeClient, desc, dateDebut, dateFin, dateDebutR, dateFinR, serviceCible, materielNecessaire, comment;
     private boolean isOpen;
-    private LinearLayout clientDetails;
-    private AppCompatImageView btn;
+    private ConstraintLayout clientDetails;
+    private AppCompatImageView btn, btn_maps;
     private boolean goto_rapport;
+    private Button btn_start, btn_finish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +73,7 @@ public class InterventionActivity extends AppCompatActivity {
             finish();
         }
 
-
         goto_rapport = intent.getBooleanExtra("rapport", false);
-       /* @SuppressLint("WrongViewCast") AppCompatImageView btn_rapport = findViewById(R.id.btn_goto_rapport);
-        btn_rapport.setVisibility(goto_rapport?View.VISIBLE:View.INVISIBLE);
-
-        if(goto_rapport)
-            btn_rapport.setOnClickListener(v->{
-                Toast.makeText(this, "Goto Rapport..", Toast.LENGTH_SHORT).show();
-            });*/
-
         Init();
     }
 
@@ -101,7 +96,6 @@ public class InterventionActivity extends AppCompatActivity {
             finish();
         
         if (id==R.id.item_menu_rapport){
-            Toast.makeText(this, "go!", Toast.LENGTH_SHORT).show();
             Intent data =  new Intent();
             data.putExtra("interv", intervention);
             setResult(RESULT_OK, data);
@@ -124,7 +118,15 @@ public class InterventionActivity extends AppCompatActivity {
         comment = findViewById(R.id.txtCommentaire);
 
         TextView title = findViewById(R.id.fragment_title);
-        title.setText(intervention.getCode());
+        String statut="en attente";
+        switch(intervention.getStatutId()){
+            case 2:statut="en cours";break;
+            case 3:statut="abandonnée";break;
+            case 4:statut="à poursuivre";break;
+            case 5:statut="terminée";break;
+        }
+
+        title.setText(intervention.getCode()+" ["+statut+"]");
 
         codeClient.setText( "Client : "+intervention.getClientId());
         desc.setText("Description Intervention : \n"+intervention.getDescription());
@@ -172,25 +174,62 @@ public class InterventionActivity extends AppCompatActivity {
         clientDetails = findViewById(R.id.clientDetails);
         clientDetails.getLayoutParams().height = 0;
 
-        btn = (AppCompatImageView) findViewById(R.id.btn_client_detail);
+        btn = findViewById(R.id.btn_client_detail);
         btn.setOnClickListener(
                 v-> onSlideDetails(clientDetails)
         );
+
+        btn_maps = findViewById(R.id.btn_maps);
+
+        btn_start = findViewById(R.id.btn_start_interv);
+        btn_finish = findViewById(R.id.btn_finish_interv);
+
+        btn_start.setVisibility(intervention.getStatutId()==5?View.GONE:View.VISIBLE);
+        btn_finish.setVisibility(intervention.getStatutId()==5?View.GONE:View.VISIBLE);
+
+        btn_start.setEnabled(intervention.getStatutId()==1);
+        if(intervention.getStatutId()!=1)
+            btn_start.setTextColor(Color.WHITE);
+
+        btn_start.setOnClickListener(v->updateIntervention(true));
+        btn_finish.setOnClickListener(v->updateIntervention(false));
+    }
+
+    private void updateIntervention(boolean start) {
+        String now =  MyTools.getCurrentDate();
+        if(start)
+            intervention.setDateDebutReelle(now);
+        else
+            intervention.setDateFinReelle(now);
+
+        intervention.setStatutId(start?2:5);
+        InterventionDao dao = new InterventionDao();
+        dao.update(intervention, (items, mess)->{
+            Toast.makeText(this, "Intervention "+(start?"Commencée!":"Terminée!"), Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK, null);
+            finish();
+        });
     }
 
     private void setClientAdress(TextView txtAdress, Client client) {
         AdressDao dao = new AdressDao();
-        dao.ofClient(client.getCode(), new Dao.OnSuccess() {
-            @Override
-            public void result(List<?> items, String message) {
-                List<Adress> adresses = dao.Deserialize(items, Adress.class);
-                if(adresses.size()>0)
-                    txtAdress.setText(adresses.get(0).getVoie()+"\n"
-                            +adresses.get(0).getCp()+" "+adresses.get(0).getVille());
+        dao.ofClient(client.getCode(), (items, message) -> {
+            List<Adress> adresses = dao.Deserialize(items, Adress.class);
+            if(adresses.size()>0) {
+                txtAdress.setText(adresses.get(0).getVoie() + "\n" + adresses.get(0).getCp() + " " + adresses.get(0).getVille());
+
+                String adress = adresses.get(0).getVoie()+" "+adresses.get(0).getCp()+ " " + adresses.get(0).getVille();
+                btn_maps.setOnClickListener(
+                        v-> showAdressInMaps(adress)
+                );
             }
         });
     }
-
+    private void showAdressInMaps(String adress) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("adress", adress);
+        startActivity(intent);
+    }
     private void onSlideDetails(View view){
         int currentHeight = isOpen?900:0;
         int newHeight = isOpen?0:900;

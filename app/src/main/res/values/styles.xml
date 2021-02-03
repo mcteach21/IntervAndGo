@@ -100,10 +100,23 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-<!--    <style name="Divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">?android:attr/listDivider</item>
-    </style>-->
+    <style name="button_cmde_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:background">@drawable/styled_button_selector</item>
+        <item name="android:fontFamily">casual</item>
+        <item name="android:textColor">@android:color/holo_orange_dark</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--    <style name="Divider">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">1dp</item>
+            <item name="android:background">?android:attr/listDivider</item>
+        </style>-->
 
 </resources>

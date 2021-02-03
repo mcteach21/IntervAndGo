@@ -56,7 +56,9 @@ public class Dao<T> {
     }
     public void update(String updateClause, OnSuccess onSuccess){
         String url = DB_API_URL+"list="+table+"&"+updateClause;
+        Log.i(TAG, "**********************************************");
         Log.i(TAG, url);
+        Log.i(TAG, "**********************************************");
         new Http2AsyncTask(onSuccess).execute(url);
     }
     public void delete(String code, OnSuccess onSuccess){

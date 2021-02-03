@@ -66,7 +66,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         getSupportActionBar().setCustomView(R.layout.tech_toolbar_layout);
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
         mainViewModel.getNum().observe(
                 this,
                 num -> {
@@ -115,14 +114,15 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             mainViewModel.addImage(selectedImage);
         }
 
-        if (requestCode == TECH_INTERV_CODE && resultCode == RESULT_OK && null != data) {
-            defineFragment(TechnicianFragments.newInstance(1, (Intervention) data.getSerializableExtra("interv")));
+        if (requestCode == TECH_INTERV_CODE && resultCode == RESULT_OK) {
+            mainViewModel.setRefresh(true);
+            if(null != data)
+                defineFragment(TechnicianFragments.newInstance(1, (Intervention) data.getSerializableExtra("interv")));
         }
 
         if (requestCode == CLIENT_INTERV_CODE && resultCode == RESULT_OK && null != data) {
@@ -161,14 +161,10 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         }
         return true;
     }
-
-
     public void ClientIntervFilter(View view){
         Intent intent = new Intent(this, InterventionsFilterActivity.class);
         startActivityForResult(intent, CLIENT_INTERV_CODE);
     }
-
-
 
     /**
      * Gestion calendrier

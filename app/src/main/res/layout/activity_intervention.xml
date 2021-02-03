@@ -9,10 +9,28 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/form_planif"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:id="@+id/form_planif">
+        android:background="@color/colorPrimary">
+
+        <Button
+            android:id="@+id/btn_finish_interv"
+            style="@style/button_cmde_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/styled_button_selector"
+            android:drawableLeft="@drawable/ic_rapport_white"
+            android:padding="16dp"
+            android:text="@string/btn_finish_text"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_start_interv" />
 
         <TextView
             android:id="@+id/fragment_title"
@@ -22,8 +40,10 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="casual"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="18sp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/material_red_a200"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,10 +51,10 @@
         <TextView
             android:id="@+id/txtCodeClient"
             style="@style/textview_style_default"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toStartOf="@+id/btn_client_detail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_finish_interv" />
 
         <!--        <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout0"
@@ -137,15 +157,15 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:clickable="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txtCodeClient"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_title"
+            app:layout_constraintTop_toBottomOf="@+id/btn_finish_interv"
             app:srcCompat="@drawable/ic_client_detail" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clientDetails"
             style="@style/input_style_default"
             android:layout_width="0dp"
@@ -162,33 +182,63 @@
             <TextView
                 android:id="@+id/txtNomClient"
                 style="@style/textview_style_default"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="64dp"
+                tools:layout_conversion_absoluteWidth="378dp" />
 
             <TextView
                 android:id="@+id/txtAdressClient"
                 style="@style/textview_style_default"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:minLines="2"
                 android:textColor="@color/colorAccent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+                app:layout_constraintEnd_toStartOf="@+id/btn_maps"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+                app:layout_constraintTop_toBottomOf="@+id/txtNomClient"
+                tools:layout_conversion_absoluteHeight="86dp"
+                tools:layout_conversion_absoluteWidth="378dp" />
 
             <TextView
                 android:id="@+id/txtInfosClient"
                 style="@style/textview_style_default"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@+id/btn_clients_list"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
+                app:layout_constraintTop_toBottomOf="@+id/txtAdressClient"
+                tools:layout_conversion_absoluteHeight="64dp"
+                tools:layout_conversion_absoluteWidth="378dp" />
 
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_maps"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtNomClient"
+                app:srcCompat="@drawable/ic_google_maps"
+                tools:layout_conversion_absoluteHeight="43dp"
+                tools:layout_conversion_absoluteWidth="386dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_techs"
@@ -212,6 +262,23 @@
             android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="@+id/list_techs"
             app:layout_constraintTop_toBottomOf="@+id/clientDetails" />
+
+        <Button
+            android:id="@+id/btn_start_interv"
+            style="@style/button_cmde_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/styled_button_selector"
+            android:drawableLeft="@drawable/ic_rapport_white"
+            android:padding="16dp"
+            android:text="@string/btn_start_text"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
