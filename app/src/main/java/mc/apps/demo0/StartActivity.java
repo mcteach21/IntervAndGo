@@ -1,17 +1,21 @@
 package mc.apps.demo0;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.core.content.ContextCompat;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.InterventionDao;
@@ -34,12 +39,12 @@ import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Affectation;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
-import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class StartActivity extends AppCompatActivity {
     private static final String TAG = "tests";
     ImageView logo;
     ConstraintLayout root, login_root;
+    EditText login, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,40 +53,109 @@ public class StartActivity extends AppCompatActivity {
 
         //masquer barre d'actions/menus
         getSupportActionBar().hide();
+
         //Lancer animation logo + apparition form login
         startAnimation();
+
         // Gestion Boutons + liens
         handleActions();
 
+        //fingerprint init
+        initFingerPrint();
     }
 
-    private void test() {
-        InterventionDao dao1 = new InterventionDao();
-        AffectationDao dao2 = new AffectationDao();
+    private SharedPreferences sharedpreferences;
+    private static final String prefs = "preferences";
+    private static final String FingerPrintKey1 = "FingerPrintEmail";
+    private static final String FingerPrintKey2 = "FingerPrintPassword";
 
-        dao1.list((items, mess)->{
-            List<Intervention> intervs = dao1.Deserialize(items, Intervention.class);
-            for (Intervention interv: intervs) {
+    private void initFingerPrint() {
+        TextView fpLink = findViewById(R.id.txtlinkfingerprint);
 
-                interv.setAffectations(
-                        Arrays.asList(
-                                new Affectation(0, interv.getCode(), "MC1")
-                        )
-                );
-                dao2.add(interv, (x, m) -> Log.i(TAG, "add affectation.."));
+        sharedpreferences = getSharedPreferences(prefs, Context.MODE_PRIVATE);
+        String fingerPrintEmail="";
+        if (sharedpreferences.contains(FingerPrintKey1))
+            fingerPrintEmail = sharedpreferences.getString(FingerPrintKey1, "");
 
-                if(interv.getDescription().contains("Installation ")) {
-                    interv.setAffectations(
-                            Arrays.asList(
-                                    new Affectation(0, interv.getCode(), "MC2")
-                            )
-                    );
-                    dao2.add(interv, (x, m) -> Log.i(TAG, "add affectation.."));
+        noFingerPrint = "".equals(fingerPrintEmail);
+        fpLink.setText(noFingerPrint?R.string.fingerprint_config_text:R.string.fingerprint_use_text);
+        fpLink.setOnClickListener(v->useBiometric());
+    }
+
+    private boolean noFingerPrint=true;
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
+    private void useBiometric() {
+
+        login = findViewById(R.id.edtlogin);
+        password = findViewById(R.id.edtpassword);
+
+        if(noFingerPrint && (login.getText().equals("") || password.getText().equals(""))){
+            Toast.makeText(this, "Authentification par empreinte : saisir email et mot de passe du compte à associer!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(noFingerPrint){
+            UserDao dao = new UserDao();
+            dao.login(login.getText().toString(), password.getText().toString(), (data, message) -> {
+                List<User> users = dao.Deserialize(data, User.class);
+                if(!users.isEmpty()){
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(FingerPrintKey1, login.getText().toString());
+                    editor.putString(FingerPrintKey2,  password.getText().toString());
+                    editor.commit();
+                }else {
+                    Toast.makeText(this, "Authentification par empreinte : saisir email et mot de passe du compte à associer!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+            });
+        }
+
+        executor = ContextCompat.getMainExecutor(this);
+        biometricPrompt = new BiometricPrompt(StartActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+
+                if(noFingerPrint){
+                    Toast.makeText(StartActivity.this, "Authentification par empreinte : compte à associé!", Toast.LENGTH_SHORT).show();
+                }else {
+                    login = findViewById(R.id.edtlogin);
+                    password = findViewById(R.id.edtpassword);
+
+                    sharedpreferences = getSharedPreferences(prefs, Context.MODE_PRIVATE);
+                    String fingerPrintEmail = sharedpreferences.getString(FingerPrintKey1, "");
+                    String fingerPrintPassword = sharedpreferences.getString(FingerPrintKey2, "");
+
+                    login.setText(fingerPrintEmail);
+                    password.setText(fingerPrintPassword);
+                }
+
+                handleLogin();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Empreinte non reconnue!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Authentification")
+                .setSubtitle("Utiliser l'empreinte digitale")
+                .setNegativeButtonText("Se connecter par mot de passe")
+                .build();
+
+        biometricPrompt.authenticate(promptInfo);
+    }
     @Override
     public void onBackPressed() {
         MyTools.confirmExit(this);
@@ -106,27 +180,9 @@ public class StartActivity extends AppCompatActivity {
         linkforgotten.setOnClickListener(ecouteur);
     }
 
-
-
-    private void fingerPrintDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-
-        View view = inflater.inflate(R.layout.dialog_signin, null);
-        builder.setView(view);
-        /*.setPositiveButton(R.string.fp_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });*/
-        AlertDialog dialog = builder.create();
-        view.findViewById(R.id.fp_dialog_cancel).setOnClickListener((v)->dialog.dismiss());
-        dialog.show();
-    }
-
     private void handleLogin() {
-        EditText login = findViewById(R.id.edtlogin);
-        EditText password = findViewById(R.id.edtpassword);
+        login = findViewById(R.id.edtlogin);
+        password = findViewById(R.id.edtpassword);
 
         String login_txt = login.getText().toString();
         String password_txt = password.getText().toString();

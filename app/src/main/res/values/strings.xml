@@ -11,7 +11,7 @@
     <string name="btn_signin_txt">Se Connecter</string>
 
     <string name="btn_signup_txt">pas encore de compte?</string>
-    <string name="btn_forgotten_txt">mot de passe oublié?</string>
+    <string name="btn_forgotten_txt">Mot de passe oublié?</string>
 
     <string name="title_activity_admin">Admin</string>
 
@@ -126,5 +126,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="btn_start_text">Commencer Intervention</string>
     <string name="btn_finish_text">Terminer Intervention</string>
+
+    <string name="fingerprint_use_text">Utiliser empreinte digitale</string>
+    <string name="fingerprint_config_text">Configurer empreinte digitale</string>
 
 </resources>
