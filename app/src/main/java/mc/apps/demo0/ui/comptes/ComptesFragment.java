@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import mc.apps.demo0.CompteActivity;
 import mc.apps.demo0.R;
@@ -116,6 +117,13 @@ public class ComptesFragment extends Fragment {
         UserDao dao = new UserDao();
         dao.list((data, message) -> {
             items = dao.Deserialize(data, User.class);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                items = items.stream()
+                        .sorted((o1, o2)->o1.getLastname().compareTo(o2.getLastname()))
+                        //.filter(u->u.getProfilId()>2)       //filtre techniciens
+                        .collect(Collectors.toList());
+            }
+
             loadList();
             swipeContainer.setRefreshing(false);
         });

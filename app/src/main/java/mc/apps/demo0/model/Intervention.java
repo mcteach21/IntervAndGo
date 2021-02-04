@@ -30,6 +30,10 @@ public class Intervention implements Serializable {
 	@SerializedName("superviseur_id")
 	private String superviseurId;
 
+
+	@SerializedName("date_creation")
+	private String dateCreation;
+
 	private List<User> technicians;
 	private List<Affectation> affectations;
 	private Statut statut;
@@ -197,6 +201,14 @@ public class Intervention implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getDateCreation() {
+		return dateCreation;
+	}
+
+	public void setDateCreation(String dateCreation) {
+		this.dateCreation = dateCreation;
 	}
 
 	@Override

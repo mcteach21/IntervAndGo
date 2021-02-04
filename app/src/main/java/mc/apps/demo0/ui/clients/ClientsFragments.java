@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import mc.apps.demo0.ClientActivity;
 import mc.apps.demo0.InterventionActivity;
@@ -133,12 +134,11 @@ public class ClientsFragments extends Fragment {
         dao.list((data, message) -> {
             items = dao.Deserialize(data, Client.class);
 
-            /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 items = items.stream()
-                        .sorted((o1, o2)->o1.getLastname().compareTo(o2.getLastname()))
-                        .filter(u->u.getProfilId()>2)       //filtre techniciens
+                        .sorted((o1, o2)->o1.getNom().compareTo(o2.getNom()))
                         .collect(Collectors.toList());
-            }*/
+            }
 
             // ajout adresses!
             for (Client client : items)

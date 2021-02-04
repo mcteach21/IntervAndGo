@@ -133,12 +133,13 @@ public class InterventionsFragment extends Fragment {
             items = dao.Deserialize(data, Intervention.class);
             //Log.i(TAG, "items : "+items);
 
-            //order by date début
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                items = items.stream().sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
-                        .collect(Collectors.toList());
+            //order by date création décroissant!
 
-                //Log.i(TAG, "refreshListAsync: ordered?");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                items = items.stream()
+                        .sorted((o1, o2)->o2.getDateCreation().compareTo(o1.getDateCreation()))
+                        //.sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
+                        .collect(Collectors.toList());
             }
 
             loadList();

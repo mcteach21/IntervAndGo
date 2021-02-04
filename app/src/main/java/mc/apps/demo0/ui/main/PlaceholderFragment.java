@@ -220,15 +220,13 @@ public class PlaceholderFragment extends Fragment {
 
             //order by date début
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                items = items.stream().sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
+                items = items.stream()
+                        .sorted((o1, o2)->o2.getDateCreation().compareTo(o1.getDateCreation()))
                         .collect(Collectors.toList());
-
-                Log.i(TAG, "refreshListAsync: ordered?");
             }
 
             loadList();
             swipeContainer.setRefreshing(false);
-            //runLayoutAnimation(recyclerView);
         });
     }
 
