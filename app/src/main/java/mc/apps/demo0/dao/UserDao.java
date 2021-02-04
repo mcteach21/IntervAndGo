@@ -31,7 +31,8 @@ public class UserDao extends Dao<User> {
                     +"&lastname="+ URLEncoder.encode(u.getLastname(), "utf-8")
                     +"&email="+ URLEncoder.encode(u.getEmail(), "utf-8")
                     +"&password="+ URLEncoder.encode(u.getPassword(), "utf-8")
-                    +"&profil_id="+ u.getProfilId();
+                    +"&profil_id="+ u.getProfilId()
+                    +"&activated="+ u.getActivated();
 
             if(action.equals("add"))
                 super.add(addClause, onSuccess);

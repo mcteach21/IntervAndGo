@@ -65,7 +65,8 @@ public class UserManager {
                 firstName.getText().toString(),
                 lastName.getText().toString(),
                 password.getText().toString(),
-                (byte) profil);
+                (byte) profil,
+                1);
 
         UserDao dao = new UserDao();
         dao.add(user, (items, message) -> {

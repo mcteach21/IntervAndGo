@@ -1,25 +1,35 @@
 package mc.apps.demo0;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.model.User;
 
 public class PasswordResetActivity extends AppCompatActivity {
 
     private static final String TAG = "tests";
-
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_reset);
         setTitle("Modifier Mot de Passe");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+        if(user==null)
+            finish();
 
     }
 
@@ -28,44 +38,26 @@ public class PasswordResetActivity extends AppCompatActivity {
        EditText password1 = findViewById(R.id.edtNewPassword);
        EditText password2 = findViewById(R.id.edtConfirmPassword);
 
-
-
- /*        if(!email.getText().toString().isEmpty()) {
-
-            UserDao dao = new UserDao();
-            dao.findByLogin(email.getText().toString(), (items, message)->{
-                List<User> users = dao.Deserialize(items, User.class);
-                Log.i(TAG, "ResetPassword: "+users);
-                if(users.size()>0) {
-                    User u = users.get(0);
-
-                    //envoi mail avec mot de passe temporaire
-                    String generated_password = MyTools.GetRandomPassword();
-                    MyTools.SendPasswordMail(u.getFirstname() , email.getText().toString(), generated_password);
-
-                    //mise à jour mot de passe dans base de données
-                    u.setPassword(generated_password);
-                    UpdateUserPassword(u);
-
-                    ((TextView) findViewById(R.id.reset_how_txt)).setText("Un email pour réinitiliser votre mot de passe est envoyé à l'adresse mail de votre compte.");
-                    findViewById(R.id.textInputLogin).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.btnResetPassword).setVisibility(View.INVISIBLE);
-                }else{
-                    ((TextView) findViewById(R.id.reset_how_txt)).setText("Adresse mail non reconnue! Veuillez ressaisir.");
-                    email.requestFocus();
-                }
-            });
-        }else{
-            email.requestFocus();
-        }*/
+       if(user.getPassword().equals(password0.getText().toString())){
+           if(!password1.getText().toString().isEmpty() && password1.getText().toString().equals(password2.getText().toString())){
+               user.setPassword(password1.getText().toString());
+               user.setActivated(1);
+               UpdateUserPassword(user);
+           }else{
+               Toast.makeText(this, "les 2 mots de passe ne correspondent pas!", Toast.LENGTH_SHORT).show();
+               password1.requestFocus();
+           }
+       }else{
+           Toast.makeText(this, "Mot de passe temporaire non valide!", Toast.LENGTH_SHORT).show();
+           password0.requestFocus();
+       }
     }
-
     private void UpdateUserPassword(User u) {
-
-        /*UserDao dao = new UserDao();
+        UserDao dao = new UserDao();
         dao.update(u, (items, message)->{
-            Log.i(TAG , "UpdateUserPassword: "+message);
-        });*/
+            Toast.makeText(this, "Mot de passe modifié avec succès!", Toast.LENGTH_SHORT).show();
+            finish();
+        });
     }
 
     @Override

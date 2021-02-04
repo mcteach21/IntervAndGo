@@ -1,65 +1,214 @@
 package mc.apps.demo0;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
-import androidx.biometric.BiometricPrompt;
-
-import android.content.Intent;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.Button;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
-import java.util.concurrent.Executor;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public class TestsActivity extends AppCompatActivity {
-    private Executor executor;
-    private BiometricPrompt biometricPrompt;
-    private BiometricPrompt.PromptInfo promptInfo;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+public class TestsActivity extends FragmentActivity implements OnMapReadyCallback {
+    private static final String TAG = "tests";
+
+    //@RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
 
-        executor = ContextCompat.getMainExecutor(this);
-        biometricPrompt = new BiometricPrompt(TestsActivity.this,
-                executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+        findViewById(R.id.btn_route_calcul).setOnClickListener(view -> calcRoute());
+    }
+
+    private void calcRoute() {
+        //gMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        Log.i(TAG , "SupportMapFragment : "+mapFragment);
+        mapFragment.getMapAsync(this);
+    }
+
+    GoogleMap mMap;
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        final String editDepart = "17 rue saint antoine 69003 Lyon France";    //getIntent().getStringExtra("DEPART");
+        final String editArrivee = "2 rue gabillot 69003 Lyon France";         //getIntent().getStringExtra("ARRIVEE");
+
+        new ItineraireTask(this, mMap, editDepart, editArrivee).execute();
+    }
+
+    private class ItineraireTask extends AsyncTask<Void, Integer, Boolean> {
+        private static final String TOAST_MSG = "Calcul de l'itinéraire en cours";
+        private static final String TOAST_ERR_MAJ = "Impossible de trouver un itinéraire";
+
+        private Context context;
+        private GoogleMap gMap;
+        private String editDepart;
+        private String editArrivee;
+        private final ArrayList<LatLng> lstLatLng = new ArrayList<LatLng>();
+
+
+        public ItineraireTask(final Context context, final GoogleMap gMap, final String editDepart, final String editArrivee) {
+            this.context = context;
+            this.gMap = gMap;
+            this.editDepart = editDepart;
+            this.editArrivee = editArrivee;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            Toast.makeText(context, TOAST_MSG, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                //Construction de l'url à appeler
+                final StringBuilder url = new StringBuilder("http://maps.googleapis.com/maps/api/directions/xml?sensor=false&language=fr");
+                url.append("&origin=");
+                url.append(editDepart.replace(' ', '+'));
+                url.append("&destination=");
+                url.append(editArrivee.replace(' ', '+'));
+
+                //Appel du web service
+                final InputStream stream = new URL(url.toString()).openStream();
+                Log.i(TAG, "doInBackground: url.toString()="+url.toString());
+                Log.i(TAG, "doInBackground: stream="+stream);
+
+                //Traitement des données
+                final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                documentBuilderFactory.setIgnoringComments(true);
+
+                final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+                final Document document = documentBuilder.parse(stream);
+                document.getDocumentElement().normalize();
+
+                //On récupère d'abord le status de la requête
+                final String status = document.getElementsByTagName("status").item(0).getTextContent();
+                Log.i(TAG, "doInBackground: status="+status);
+
+                if (!"OK".equals(status)) {
+                    return false;
+                }
+
+                //On récupère les steps
+                final Element elementLeg = (Element) document.getElementsByTagName("leg").item(0);
+                final NodeList nodeListStep = elementLeg.getElementsByTagName("step");
+                final int length = nodeListStep.getLength();
+
+                for (int i = 0; i < length; i++) {
+                    final Node nodeStep = nodeListStep.item(i);
+
+                    if (nodeStep.getNodeType() == Node.ELEMENT_NODE) {
+                        final Element elementStep = (Element) nodeStep;
+
+                        //On décode les points du XML
+                        decodePolylines(elementStep.getElementsByTagName("points").item(0).getTextContent());
+                    }
+                }
+                Log.i(TAG, "doInBackground: OK");
+                return true;
+            } catch (final Exception e) {
+                Log.i(TAG, "doInBackground: Error = "+e);
+                return false;
             }
+        }
 
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+        private void decodePolylines(final String encodedPoints) {
+            int index = 0;
+            int lat = 0, lng = 0;
+
+            while (index < encodedPoints.length()) {
+                int b, shift = 0, result = 0;
+
+                do {
+                    b = encodedPoints.charAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+
+                int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lat += dlat;
+                shift = 0;
+                result = 0;
+
+                do {
+                    b = encodedPoints.charAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+
+                int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lng += dlng;
+
+                lstLatLng.add(new LatLng((double) lat / 1E5, (double) lng / 1E5));
             }
+        }
 
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-                Toast.makeText(getApplicationContext(), "Empreinte non reconnue!", Toast.LENGTH_SHORT).show();
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void onPostExecute(final Boolean result) {
+            if (!result) {
+                Toast.makeText(context, TOAST_ERR_MAJ, Toast.LENGTH_SHORT).show();
+            } else {
+                //On déclare le polyline, c'est-à-dire le trait (ici bleu) que l'on ajoute sur la carte pour tracer l'itinéraire
+                final PolylineOptions polylines = new PolylineOptions();
+                polylines.color(Color.BLUE);
+
+                //On construit le polyline
+                for (final LatLng latLng : lstLatLng) {
+                    polylines.add(latLng);
+                }
+
+                //On déclare un marker vert que l'on placera sur le départ
+                final MarkerOptions markerA = new MarkerOptions();
+                markerA.position(lstLatLng.get(0));
+                markerA.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+                //On déclare un marker rouge que l'on mettra sur l'arrivée
+                final MarkerOptions markerB = new MarkerOptions();
+                markerB.position(lstLatLng.get(lstLatLng.size() - 1));
+                markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                //On met à jour la carte
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lstLatLng.get(0), 10));
+                gMap.addMarker(markerA);
+                gMap.addPolyline(polylines);
+                gMap.addMarker(markerB);
             }
-        });
-
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Authentification")
-                .setSubtitle("Utiliser l'empreinte digitale")
-                .setNegativeButtonText("Se connecter par mot de passe")
-                .build();
-
-        // Prompt appears when user clicks "Log in".
-        // Consider integrating with the keystore to unlock cryptographic operations,
-        // if needed by your app.
-        Button biometricLoginButton = findViewById(R.id.biometric_login);
-        biometricLoginButton.setOnClickListener(view -> {
-            biometricPrompt.authenticate(promptInfo);
-        });
+        }
     }
 }

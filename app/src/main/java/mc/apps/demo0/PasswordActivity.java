@@ -45,11 +45,13 @@ public class PasswordActivity extends AppCompatActivity {
 
                     //mise à jour mot de passe dans base de données
                     u.setPassword(generated_password);
+                    u.setActivated(0);
                     UpdateUserPassword(u);
 
                     ((TextView) findViewById(R.id.reset_how_txt)).setText("Un email pour réinitiliser votre mot de passe est envoyé à l'adresse mail de votre compte.");
                     findViewById(R.id.textInputLogin).setVisibility(View.INVISIBLE);
                     findViewById(R.id.btnResetPassword).setVisibility(View.INVISIBLE);
+
                 }else{
                     ((TextView) findViewById(R.id.reset_how_txt)).setText("Adresse mail non reconnue! Veuillez ressaisir.");
                     email.requestFocus();

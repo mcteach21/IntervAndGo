@@ -209,7 +209,9 @@ public class MyTools {
      */
     private static String[] REQUIRED_PERMISSIONS = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
     };
 
     public static void CheckThenAskPermissions(Context context, ActivityResultLauncher<String> requestPermissionLauncher){

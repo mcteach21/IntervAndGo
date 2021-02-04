@@ -18,9 +18,9 @@ import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 
 public class MainViewModel  extends ViewModel {
-    private MutableLiveData<String> demo = new MutableLiveData<>();
+/*    private MutableLiveData<String> demo = new MutableLiveData<>();
     public MutableLiveData<String> getDemo() { return demo; }
-    public void setDemo(String value) { demo.setValue(value); }
+    public void setDemo(String value) { demo.setValue(value); }*/
 
     private MutableLiveData<String> search = new MutableLiveData<>();
     private MutableLiveData<List<User>> selected = new MutableLiveData<>();

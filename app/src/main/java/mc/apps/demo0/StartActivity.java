@@ -192,13 +192,18 @@ public class StartActivity extends AppCompatActivity {
             if(!users.isEmpty()){
                 User user = users.get(0);
 
-                /**
-                 * Session
-                 */
-                MyTools.SetUserInSession(user);
-
-                Toast.makeText(StartActivity.this, "Bienvenue "+user.getFirstname(), Toast.LENGTH_SHORT).show();
-                openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
+                Log.i(TAG, "user : "+user+" ==> "+user.getActivated());
+                if(user.getActivated()==1) {
+                    //compte activé..
+                    MyTools.SetUserInSession(user);
+                    Toast.makeText(StartActivity.this, "Bienvenue " + user.getFirstname(), Toast.LENGTH_SHORT).show();
+                    openActivity(user); //ouvrir nvlle fenêtre / profil utilisateur connecté!
+                }else{
+                    //..compte avec mot de passe temporaire
+                    Intent intent = new Intent(StartActivity.this, PasswordResetActivity.class);
+                    intent.putExtra("user", (Serializable) user);
+                    startActivity(intent);
+                }
 
             }else {
                 Toast.makeText(StartActivity.this, R.string.login_failed, Toast.LENGTH_SHORT).show();

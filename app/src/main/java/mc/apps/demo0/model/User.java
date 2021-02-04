@@ -13,6 +13,8 @@ public class User implements Serializable {
 	private String lastname;
 	private String password;
 
+	private int activated;
+
 	@SerializedName("profil_id")
 	private byte profilId;
 
@@ -22,13 +24,14 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(String code, String email, String firstname, String lastname, String password, byte profilId) {
+	public User(String code, String email, String firstname, String lastname, String password, byte profilId, int activated) {
 		this.code = code;
 		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.password = password;
 		this.profilId = profilId;
+		this.activated = activated;
 	}
 
 	public String getCode() {
@@ -119,6 +122,14 @@ public class User implements Serializable {
 		//intervention.setUser(null);
 
 		return intervention;
+	}
+
+	public int getActivated() {
+		return activated;
+	}
+
+	public void setActivated(int activated) {
+		this.activated = activated;
 	}
 
 	@Override

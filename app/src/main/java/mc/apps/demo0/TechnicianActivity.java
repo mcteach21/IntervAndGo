@@ -1,6 +1,7 @@
 package mc.apps.demo0;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Calendar;
 
+import mc.apps.demo0.libs.GPSTracker;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.ClientIntervention;
 import mc.apps.demo0.model.Intervention;
@@ -72,7 +74,26 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
                     defineFragment(TechnicianFragments.newInstance(num));
                 }
         );
+
+        checkPermissions();
+        //getCurrentLocation();
     }
+
+    private void checkPermissions() {
+        // gradle : +  implementation "androidx.activity:activity:1.2.0-alpha04" //androidX
+        ActivityResultLauncher<String> requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        Toast.makeText(this, "Permission is granted!", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(this, "Permission not granted : feature is unavailable!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        MyTools.CheckThenAskPermissions(TechnicianActivity.this, requestPermissionLauncher);
+    }
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
