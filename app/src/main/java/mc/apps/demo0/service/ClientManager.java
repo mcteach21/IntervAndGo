@@ -33,21 +33,7 @@ public class ClientManager {
         mainViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(MainViewModel.class);
     }
 
-    public void prepareAddClient(View root, Class<?> backActivity) {
-        Button btnadd = root.findViewById(R.id.btn_add);
-        btnadd.setOnClickListener(view -> {
-                addClient(root);
-
-                Intent intent = new Intent(root.getContext(), backActivity);
-                intent.putExtra("num",3);
-                root.getContext().startActivity(intent);
-                Log.i(TAG, "prepareAddClient: back to "+backActivity.getSimpleName());
-            });
-    }
-
-    EditText code, nom, contrat, contact, email, tel, voie, cp, ville;
-
-    private void addClient(View root) {
+    private void getForm(View root) {
         code = root.findViewById(R.id.txtCodeClient);
         nom = root.findViewById(R.id.edtNomClient);
         contrat = root.findViewById(R.id.edtContratClient);
@@ -57,6 +43,35 @@ public class ClientManager {
         voie = root.findViewById(R.id.edtAdresseClient);
         cp = root.findViewById(R.id.edtCpClient);
         ville = root.findViewById(R.id.edtVilleClient);
+    }
+
+    private boolean checkForm(View root) {
+        getForm(root);
+        return !(code.getText().toString().isEmpty() || nom.getText().toString().isEmpty() || email.getText().toString().isEmpty()
+                || contrat.getText().toString().isEmpty() || contact.getText().toString().isEmpty()
+                || tel.getText().toString().isEmpty() || voie.getText().toString().isEmpty()
+                || cp.getText().toString().isEmpty() || ville.getText().toString().isEmpty());
+    }
+
+    public void prepareAddClient(View root, Class<?> backActivity) {
+        Button btnadd = root.findViewById(R.id.btn_add);
+        btnadd.setOnClickListener(view -> {
+                if(addClient(root)) {
+                    Intent intent = new Intent(root.getContext(), backActivity);
+                    intent.putExtra("num",3);
+                    root.getContext().startActivity(intent);
+                }else{
+                    Toast.makeText(activity, "Tous les champs sont obligatoires!", Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    EditText code, nom, contrat, contact, email, tel, voie, cp, ville;
+
+    private boolean addClient(View root) {
+        boolean ok = checkForm(root);
+        if(!ok)
+            return false;
 
         Client client = new Client(
                 code.getText().toString(),
@@ -93,8 +108,8 @@ public class ClientManager {
             });
         });
 
-
-        resetFields(root); //reinitialiser form planfication!
+        resetFields(root);
+        return true;
     }
 
     private void resetFields(View root) {

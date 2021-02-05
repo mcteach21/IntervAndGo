@@ -208,7 +208,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tech_list">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtComment"
+                android:id="@+id/edtConsignes"
                 style="@style/input_style_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

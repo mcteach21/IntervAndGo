@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,28 +37,40 @@ public class UserManager {
         mainViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(MainViewModel.class);
     }
 
-    public void prepareAddUser(View root, Class<?> backActivity) {
-        Button btnadd = root.findViewById(R.id.btn_add);
-        btnadd.setOnClickListener(view -> {
-                addUser(root);
-
-                Intent intent = new Intent(root.getContext(), backActivity);
-                intent.putExtra("num",1);
-                root.getContext().startActivity(intent);
-                Log.i(TAG, "prepareAddUser: back to "+backActivity.getSimpleName());
-            });
-    }
-
     EditText codeUser, firstName, lastName, email, password;
     int profil;
-    private void addUser(View root) {
+    private void getForm(View root) {
         codeUser = root.findViewById(R.id.txtCodeUser);
         firstName = root.findViewById(R.id.edtFirstname);
         lastName = root.findViewById(R.id.edtLastname);
         email = root.findViewById(R.id.edtlogin);
         password = root.findViewById(R.id.edtpassword);
         Spinner profils = root.findViewById(R.id.spinnerProfil);
-        profil = profils.getSelectedItemPosition()+1;
+        profil = profils.getSelectedItemPosition() + 1;
+    }
+
+    private boolean checkForm(View root) {
+        getForm(root);
+        return !(codeUser.getText().toString().isEmpty() || email.getText().toString().isEmpty()
+                || firstName.getText().toString().isEmpty() || lastName.getText().toString().isEmpty()
+                || password.getText().toString().isEmpty());
+    }
+    public void prepareAddUser(View root, Class<?> backActivity) {
+        Button btnadd = root.findViewById(R.id.btn_add);
+        btnadd.setOnClickListener(view -> {
+                if(addUser(root)) {
+                    Intent intent = new Intent(root.getContext(), backActivity);
+                    intent.putExtra("num", 1);
+                    root.getContext().startActivity(intent);
+                }else{
+                    Toast.makeText(activity, "Tous les champs sont obligatoires!", Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+    private boolean addUser(View root) {
+        boolean ok = checkForm(root);
+        if(!ok)
+            return false;
 
         User user = new User(
                 codeUser.getText().toString(),
@@ -72,8 +85,10 @@ public class UserManager {
         dao.add(user, (items, message) -> {
             Log.i(TAG, "onCreate: "+message);
             Toast.makeText(root.getContext(), "Utilisateur ajouté avec succès!", Toast.LENGTH_LONG).show();
+
         });
-        resetFields(root); //reinitialiser form planfication!
+        resetFields(root);
+        return true;
     }
 
     private void resetFields(View root) {

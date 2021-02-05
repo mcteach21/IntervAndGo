@@ -39,7 +39,7 @@ import mc.apps.demo0.viewmodels.MainViewModel;
 public class InterventionManager {
     private static final String TAG = "tests";
 
-    EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
+    EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, consignes;
     RecyclerView tech_list;
     Button btnadd;
 
@@ -52,7 +52,7 @@ public class InterventionManager {
         mainViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(MainViewModel.class);
     }
 
-    public void prepareAddIntervention(View root, Class<?> backActivity) {
+    private void getForm(View root) {
         codeClient = root.findViewById(R.id.txtCodeClient);
         codeSupervisor = root.findViewById(R.id.edtSupervisor);
         desc = root.findViewById(R.id.edtDesc);
@@ -60,31 +60,50 @@ public class InterventionManager {
         dateFin = root.findViewById(R.id.edtDateFinPrev);
         serviceCible = root.findViewById(R.id.edtServiceCible);
         materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
-        comment = root.findViewById(R.id.edtComment);
-        btnadd = root.findViewById(R.id.btn_add);
+        consignes = root.findViewById(R.id.edtConsignes);
+    }
 
+    private boolean checkForm(View root) {
+        getForm(root);
+        return !(codeClient.getText().toString().isEmpty() ||
+                codeSupervisor.getText().toString().isEmpty() ||
+                desc.getText().toString().isEmpty()
+                || dateDebut.getText().toString().isEmpty());
+    }
+
+
+    public void prepareAddIntervention(View root, Class<?> backActivity) {
+
+        btnadd = root.findViewById(R.id.btn_add);
         mainViewModel.getClient().observe((LifecycleOwner) activity, selected -> {
             codeClient.setText(selected.getCode());
         });
-
         mainViewModel.getUser().observe((LifecycleOwner) activity, selected -> {
             codeSupervisor.setText(selected.getCode());
         });
 
         initListTech(root);
-
         btnadd.setOnClickListener(view -> {
-            addIntervention(root);
 
             Intent intent = new Intent(root.getContext(), backActivity);
             intent.putExtra("num",2);
-            root.getContext().startActivity(intent);
+
+            if(addIntervention(root)) {
+                root.getContext().startActivity(intent);
+
+            }else{
+                Toast.makeText(activity, "Des champs obligatoires non renseignés!!", Toast.LENGTH_SHORT).show();
+            }
 
             //Log.i(TAG, "prepareAddIntervention : back to "+backActivity.getSimpleName());
         });
     }
 
-    private void addIntervention(View root) {
+    private boolean addIntervention(View root) {
+        boolean ok = checkForm(root);
+        if(!ok)
+            return false;
+
         //technicien(s) affecté(s)
         SelectedUsersAdapter adapter = (SelectedUsersAdapter) tech_list.getAdapter();
         List<User> technicians = adapter.getItems();
@@ -95,7 +114,7 @@ public class InterventionManager {
                 desc.getText().toString(),
                 dateDebut.getText().toString(),
                 dateFin.getText().toString(),
-                comment.getText().toString(),
+                consignes.getText().toString(),
                 materielNecessaire.getText().toString(),
                 serviceCible.getText().toString(),
                 MyTools.GetUserInSession().getCode(),  //current user code...
@@ -109,6 +128,7 @@ public class InterventionManager {
             addAffectaions(interv);
         });
         resetFields(root); //reinitialiser form planfication!
+        return true;
     }
     private void addAffectaions(Intervention interv) {
         AffectationDao dao = new AffectationDao();
@@ -142,7 +162,7 @@ public class InterventionManager {
         dateDebut.getText().clear();
         dateFin.getText().clear();
         serviceCible.getText().clear();
-        comment.getText().clear();
+        consignes.getText().clear();
         materielNecessaire.getText().clear();
 
         SelectedUsersAdapter adapter = (SelectedUsersAdapter)tech_list.getAdapter();

@@ -1,15 +1,12 @@
 package mc.apps.demo0.ui.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,14 +28,11 @@ import java.util.stream.Collectors;
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
-import mc.apps.demo0.SupervisorActivity;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.AffectationDao;
-import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.libs.MyTools;
-import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
@@ -58,7 +51,7 @@ public class PlaceholderFragment extends Fragment {
     private List<User> selected = new ArrayList();
     private View root;
 
-    private EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, comment;
+    private EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, consignes;
     private RecyclerView tech_list;
     private Button btnadd;
 
@@ -127,9 +120,7 @@ public class PlaceholderFragment extends Fragment {
         if (index==2){ //Planifier Intervention
 
             codeClient = root.findViewById(R.id.txtCodeClient);
-
             codeSupervisor = root.findViewById(R.id.edtSupervisor);
-
             codeSupervisor.setText(MyTools.GetUserInSession().getCode());
             root.findViewById(R.id.textInputLayout20).setVisibility(View.GONE);
             root.findViewById(R.id.btn_superv_list).setVisibility(View.GONE);
@@ -139,7 +130,7 @@ public class PlaceholderFragment extends Fragment {
             dateFin = root.findViewById(R.id.edtDateFinPrev);
             serviceCible = root.findViewById(R.id.edtServiceCible);
             materielNecessaire = root.findViewById(R.id.edtMaterielNecess);
-            comment = root.findViewById(R.id.edtComment);
+            consignes = root.findViewById(R.id.edtConsignes);
 
             btnadd = root.findViewById(R.id.btn_add);
 
@@ -235,7 +226,21 @@ public class PlaceholderFragment extends Fragment {
      * Planification
      * @param root
      */
+
+    private boolean checkForm(View root) {
+        return !(codeClient.getText().toString().isEmpty() ||
+                codeSupervisor.getText().toString().isEmpty() ||
+                desc.getText().toString().isEmpty()
+                || dateDebut.getText().toString().isEmpty());
+    }
     private void addIntervention(View root) {
+        boolean ok = checkForm(root);
+        if(!ok){
+            Toast.makeText(getContext(), "Des champs obligatoires non renseignés!!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         //technicien(s) affecté(s)
         SelectedUsersAdapter adapter = (SelectedUsersAdapter) tech_list.getAdapter();
         List<User> technicians = adapter.getItems();
@@ -244,7 +249,7 @@ public class PlaceholderFragment extends Fragment {
                 MyTools.getCurrentDateCode(),
                 codeClient.getText().toString(),
                 desc.getText().toString(), dateDebut.getText().toString(), dateFin.getText().toString(),
-                comment.getText().toString(),
+                consignes.getText().toString(),
                 materielNecessaire.getText().toString(),
                 serviceCible.getText().toString(),
                 MyTools.GetUserInSession().getCode(),
@@ -258,7 +263,6 @@ public class PlaceholderFragment extends Fragment {
 
             mainViewModel.setNum(0);
         });
-
         resetFields(root); //reinitialiser form planfication!
     }
 
@@ -291,7 +295,7 @@ public class PlaceholderFragment extends Fragment {
         dateDebut.getText().clear();
         dateFin.getText().clear();
         serviceCible.getText().clear();
-        comment.getText().clear();
+        consignes.getText().clear();
         materielNecessaire.getText().clear();
 
         ((SelectedUsersAdapter)tech_list.getAdapter()).getItems().clear();

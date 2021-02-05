@@ -60,7 +60,7 @@ public class CompteActivity extends AppCompatActivity {
         infosCompte =  findViewById(R.id.txtInfosCompte);
 
         codeCompte.setText( "Code : "+compte.getCode());
-        nomCompte.setText( "Nom : "+compte.getLastname()+" "+compte.getLastname());
+        nomCompte.setText( "Nom : "+compte.getFirstname()+" "+compte.getLastname());
 
         String profil="";
         switch(compte.getProfilId()){

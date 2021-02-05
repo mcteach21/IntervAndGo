@@ -160,6 +160,7 @@ public class TechnicianFragments extends Fragment {
     TextView txtClient, txtDescription, txtConsignes, txtDatePrevue,  dateDebutR, heureDebutR, dateFinR, heureFinR;
     Spinner statutChoice;
     int statut;
+    AppCompatImageView btnNow1,btnNow2;
 
     private void initCurrentIntervention(View root) {
         codeIntervention = root.findViewById(R.id.edtCodeInterv);
@@ -170,11 +171,29 @@ public class TechnicianFragments extends Fragment {
 
         dateDebutR = root.findViewById(R.id.edtDateDebutReel);
         dateFinR = root.findViewById(R.id.edtDateFinReel);
+
         heureDebutR = root.findViewById(R.id.edtHeureDebutReel);
         heureFinR = root.findViewById(R.id.edtHeureFinReel);
 
+        btnNow1 = root.findViewById(R.id.btn_img_now1);
+        btnNow2 = root.findViewById(R.id.btn_img_now2);
+
+        View.OnClickListener listener = view -> {
+            if(view==btnNow1){
+                dateDebutR.setText(MyTools.getCurrentDateShort());
+                heureDebutR.setText(MyTools.getCurrentTime());
+            }else{
+                dateFinR.setText(MyTools.getCurrentDateShort());
+                heureFinR.setText(MyTools.getCurrentTime());
+            }
+        };
+        btnNow1.setOnClickListener(listener);
+        btnNow2.setOnClickListener(listener);
+
         statutChoice = root.findViewById(R.id.statutChoice);
         observations = root.findViewById(R.id.edtObservations);
+
+
 
 
         if(TechnicianFragments.intervention!=null){

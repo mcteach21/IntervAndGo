@@ -142,6 +142,11 @@ public class MyTools {
         Date today = Calendar.getInstance().getTime();
         return dateFormat.format(today);
     }
+    public static String getCurrentDateShort() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR_SHORT);
+        Date today = Calendar.getInstance().getTime();
+        return dateFormat.format(today);
+    }
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_FR);
         Date today = Calendar.getInstance().getTime();
