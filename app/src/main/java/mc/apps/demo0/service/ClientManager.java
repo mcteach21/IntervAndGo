@@ -54,6 +54,8 @@ public class ClientManager {
     }
 
     public void prepareAddClient(View root, Class<?> backActivity) {
+        getForm(root);
+
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
                 if(addClient(root)) {

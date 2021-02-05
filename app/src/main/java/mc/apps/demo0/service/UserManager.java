@@ -56,6 +56,8 @@ public class UserManager {
                 || password.getText().toString().isEmpty());
     }
     public void prepareAddUser(View root, Class<?> backActivity) {
+        getForm(root);
+
         Button btnadd = root.findViewById(R.id.btn_add);
         btnadd.setOnClickListener(view -> {
                 if(addUser(root)) {

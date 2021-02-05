@@ -9,10 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.TechnicianActivity;
+import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.GpsDao;
 import mc.apps.demo0.libs.GPSTracker;
+import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.model.GpsPosition;
+import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class TechnicianFragment extends Fragment {
@@ -50,12 +58,36 @@ public class TechnicianFragment extends Fragment {
             double longitude = gps.getLongitude();
 
             //TODO : save position + notification..
-
             ((TextView)root.findViewById(R.id.textLocation)).setText(latitude+"x"+longitude);
+
+            saveGps(latitude, longitude);
             //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         } else {
             gps.showSettingsAlert();
         }
+    }
+
+    GpsPosition gp;
+    private void saveGps(double latitude, double longitude) {
+        GpsDao dao = new GpsDao();
+        User user = MyTools.GetUserInSession();
+
+        dao.find(user.getCode(), (items, message) -> {
+            List<GpsPosition> positions_ = dao.Deserialize(items, GpsPosition.class);
+            if(positions_.size()>0){
+                gp = positions_.get(0);
+                gp.setLatitude(latitude);
+                gp.setLongitude(longitude);
+                dao.update(gp, (items_, message_) -> {
+                    Toast.makeText(getActivity(), "gps updated", Toast.LENGTH_SHORT).show();
+                });
+            }else{
+                gp =  new GpsPosition(0,latitude, longitude, user.getCode());
+                dao.add(gp, (items_, message_) -> {
+                    Toast.makeText(getActivity(), "gps added", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
 }

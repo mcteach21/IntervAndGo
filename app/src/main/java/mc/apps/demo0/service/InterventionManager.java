@@ -73,6 +73,7 @@ public class InterventionManager {
 
 
     public void prepareAddIntervention(View root, Class<?> backActivity) {
+        getForm(root);
 
         btnadd = root.findViewById(R.id.btn_add);
         mainViewModel.getClient().observe((LifecycleOwner) activity, selected -> {
