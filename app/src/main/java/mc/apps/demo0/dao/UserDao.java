@@ -17,6 +17,11 @@ public class UserDao extends Dao<User> {
     public void login(String login, String password, OnSuccess onSuccess){
         find("login=" + login + "&password=" + password, onSuccess);
     }
+    public void findByCode(String code, OnSuccess onSuccess){
+        try {
+            find("code='" + URLEncoder.encode(code, "utf-8")+"'", onSuccess);
+        } catch (UnsupportedEncodingException e) {}
+    }
     public void findByLogin(String login, OnSuccess onSuccess){
         try {
             find("email='" + URLEncoder.encode(login, "utf-8")+"'", onSuccess);

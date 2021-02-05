@@ -46,8 +46,7 @@ public class InterventionDao extends Dao<Intervention>{
                     +"&service_equip_cible="+ URLEncoder.encode(u.getServiceEquipCible(), "utf-8")
                     +"&materiel_necessaire="+ URLEncoder.encode(u.getMaterielNecessaire(), "utf-8")
                     +"&superviseurId="+ URLEncoder.encode(u.getSuperviseurId(), "utf-8")
-
-                    +"&comment="+URLEncoder.encode(u.getCommentaire(), "utf-8")
+                    +"&consignes="+URLEncoder.encode(u.getConsignes(), "utf-8")
                     +"&datedebut="+URLEncoder.encode(u.getDateDebutPrevue(), "utf-8")
                     +"&datefin="+URLEncoder.encode(u.getDateFinPrevue(), "utf-8")
                     +"&datedebutR=null"
@@ -76,15 +75,18 @@ public class InterventionDao extends Dao<Intervention>{
                     +"&datedebut="+URLEncoder.encode(u.getDateDebutPrevue()==null?"":u.getDateDebutPrevue(), "utf-8")
                     +"&datefin="+URLEncoder.encode(u.getDateFinPrevue()==null?"":u.getDateFinPrevue(), "utf-8")
 
-                    +"&comment="+URLEncoder.encode(u.getCommentaire(), "utf-8")
+                    +"&consignes="+URLEncoder.encode(u.getConsignes(), "utf-8")
+                    +"&observations="+URLEncoder.encode(u.getObservations(), "utf-8")
+                    
                     +"&datedebutR="+URLEncoder.encode(u.getDateDebutReelle()==null?"":u.getDateDebutReelle(), "utf-8")
                     +"&datefinR="+URLEncoder.encode(u.getDateFinReelle()==null?"":u.getDateFinReelle(), "utf-8")
                     +"&statut="+u.getStatutId();
 
-            /*Log.i(TAG, "addIntervention: **********************************************");
+            Log.i(TAG, "addIntervention: **********************************************");
             Log.i(TAG,  updateClause);
             Log.i(TAG, "addIntervention: **********************************************");
-*/
+
+
             super.update(updateClause, onSuccess);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

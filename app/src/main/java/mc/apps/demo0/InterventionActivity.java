@@ -1,9 +1,9 @@
 package mc.apps.demo0;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +21,10 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -36,12 +34,10 @@ import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
-import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Adress;
-import mc.apps.demo0.model.Affectation;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
@@ -50,7 +46,7 @@ public class InterventionActivity extends AppCompatActivity {
 
     private static final String TAG = "tests";
     Intervention intervention;
-    TextView codeClient, desc, dateDebut, dateFin, dateDebutR, dateFinR, serviceCible, materielNecessaire, comment;
+    TextView codeClient, desc, supervisor, dateDebut, dateFin, dateDebutR, dateFinR, serviceCible, materielNecessaire, comment;
     private boolean isOpen;
     private ConstraintLayout clientDetails;
     private AppCompatImageView btn, btn_maps;
@@ -63,11 +59,10 @@ public class InterventionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intervention);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Intervention (Détails)");
+        setTitle("Intervention");
 
         Intent intent = getIntent();
         intervention = (Intervention) intent.getSerializableExtra("intervention");
-
 
         if(intervention==null){
             finish();
@@ -94,13 +89,14 @@ public class InterventionActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id==android.R.id.home)
             finish();
-        
-        if (id==R.id.item_menu_rapport){
+
+        //MASQUE!
+        /*if (id==R.id.item_menu_rapport){
             Intent data =  new Intent();
             data.putExtra("interv", intervention);
             setResult(RESULT_OK, data);
             finish();
-        }
+        }*/
 
         return false;
     }
@@ -110,7 +106,8 @@ public class InterventionActivity extends AppCompatActivity {
 
         codeClient = findViewById(R.id.txtCodeClient);
         desc = findViewById(R.id.txtDescription);
-        dateDebut = findViewById(R.id.txtDateDebutPrevue);
+        supervisor = findViewById(R.id.txtSupervisor);
+        dateDebut = findViewById(R.id.txtDatePrevue);
         dateDebutR = findViewById(R.id.txtDateDebutReel);
 
         serviceCible = findViewById(R.id.txtServiceCible);
@@ -131,6 +128,13 @@ public class InterventionActivity extends AppCompatActivity {
         codeClient.setText( "Client : "+intervention.getClientId());
         desc.setText("Description Intervention : \n"+intervention.getDescription());
 
+        UserDao udao = new UserDao();
+        udao.findByCode(intervention.getSuperviseurId(), (items_, mess_)->{
+            List<User> users = udao.Deserialize(items_, User.class);
+            if(!users.isEmpty())
+                supervisor.setText("Superviseur : \n"+users.get(0).getFirstname()+" "+users.get(0).getLastname());
+        });
+
         String prevue = "Date Intervention Prévue \n"+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
         String reelle = "Date Intervention Réelle \n";
 
@@ -143,7 +147,7 @@ public class InterventionActivity extends AppCompatActivity {
         dateDebutR.setText(reelle);
 
         serviceCible.setText("Service/Equipement ciblé : \n"+intervention.getServiceEquipCible());
-        comment.setText("Observations : \n"+intervention.getCommentaire());
+        comment.setText("Consignes : \n"+intervention.getConsignes()+"\n\n"+"Observations : \n"+intervention.getObservations());
         materielNecessaire.setText("Matériel nécessaire : \n"+intervention.getMaterielNecessaire());
 
         InitAffectations();
@@ -197,18 +201,47 @@ public class InterventionActivity extends AppCompatActivity {
 
     private void updateIntervention(boolean start) {
         String now =  MyTools.getCurrentDate();
-        if(start)
+        if(start) {
             intervention.setDateDebutReelle(now);
-        else
-            intervention.setDateFinReelle(now);
 
-        intervention.setStatutId(start?2:5);
+            intervention.setStatutId(2);
+            updateAndExit(start);
+        }else {
+            showObservationsDialog();
+        }
+
+    }
+
+    private void updateAndExit(boolean start) {
         InterventionDao dao = new InterventionDao();
         dao.update(intervention, (items, mess)->{
             Toast.makeText(this, "Intervention "+(start?"Commencée!":"Terminée!"), Toast.LENGTH_SHORT).show();
             setResult(RESULT_OK, null);
             finish();
         });
+    }
+
+    public void showObservationsDialog() {
+        String now =  MyTools.getCurrentDate();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("Observations");
+
+        final View customLayout = getLayoutInflater().inflate(R.layout.rapport_input_layout, null);
+        builder.setView(customLayout);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            EditText editText = customLayout.findViewById(R.id.edtIntervRapport);
+            String observations = editText.getText().toString();
+
+            intervention.setStatutId(5);
+            intervention.setDateFinReelle(now);
+            intervention.setObservations(observations);
+
+            updateAndExit(false);
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void setClientAdress(TextView txtAdress, Client client) {

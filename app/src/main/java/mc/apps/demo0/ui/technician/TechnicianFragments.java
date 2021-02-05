@@ -1,24 +1,28 @@
 package mc.apps.demo0.ui.technician;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -36,12 +40,8 @@ import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ImagesAdapter;
 import mc.apps.demo0.adapters.InterventionsAdapter;
-import mc.apps.demo0.dao.AffectationDao;
-import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.libs.MyTools;
-import mc.apps.demo0.model.Affectation;
-import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
@@ -56,9 +56,9 @@ public class TechnicianFragments extends Fragment {
             R.layout.technician_intervs_fragment   //R.layout.technician_histo_fragment
     };
     private String[] fragments_titles = {
-           "Interventions du Jour",
-           "Intervention", //Saisir Rapport
-           "Historique Interventions/Rapports"
+           "Mes Interventions",
+           "Saisir Rapport Intervention", //
+           "Historique Interventions"
     };
 
     private static Intervention intervention=null;
@@ -110,57 +110,101 @@ public class TechnicianFragments extends Fragment {
             //Ajouter Rapport
             initCurrentIntervention(root); //AutoCompletion sur Champ CodeClient!
             initListPhotos(root);   //liste photos / Rapport
+
+
+            isOpen=false;
+            ConstraintLayout interventionDetails = root.findViewById(R.id.interventionDetails);
+            interventionDetails.getLayoutParams().height = 0;
+
+            AppCompatImageButton btnShow = root.findViewById(R.id.btn_interv_details);
+            btnShow.setOnClickListener(
+                    v-> onSlideDetails(interventionDetails)
+            );
+
             Button btnadd = root.findViewById(R.id.btn_add);
             btnadd.setOnClickListener(view -> {
                 addRapport(root);
             });
         }
     }
+    private boolean isOpen;
+    private void onSlideDetails(View view){
+        int currentHeight = isOpen?1200:0;
+        int newHeight = isOpen?0:1200;
 
+        //Log.i(TAG, "Pixel to DP: "+MyTools.pxToDp(1200));
+
+        ValueAnimator slideAnimator = new ValueAnimator()
+                .ofInt(currentHeight, newHeight)
+                .setDuration(500);
+
+        slideAnimator.addUpdateListener( v-> {
+            int value = (int) v.getAnimatedValue();
+            view.getLayoutParams().height = value;
+            view.requestLayout();
+        });
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(slideAnimator);
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.start();
+
+        isOpen = !isOpen;
+    }
 
 
     /**
      * Saisie Rapport / Technicien
      */
-    EditText codeClient, codeIntervention, descIntervention, comment, dateDebut, dateFin, dateDebutR, dateFinR;
+    EditText codeIntervention, observations;
+    TextView txtClient, txtDescription, txtConsignes, txtDatePrevue,  dateDebutR, heureDebutR, dateFinR, heureFinR;
     Spinner statutChoice;
     int statut;
 
     private void initCurrentIntervention(View root) {
         codeIntervention = root.findViewById(R.id.edtCodeInterv);
-        descIntervention = root.findViewById(R.id.edtDescInterv);
-        codeClient = root.findViewById(R.id.txtCodeClient);
-        dateDebut = root.findViewById(R.id.edtDateDebutPrev);
-        dateFin = root.findViewById(R.id.edtDateFinPrev);
+        txtClient = root.findViewById(R.id.txtClient);
+        txtDescription = root.findViewById(R.id.txtDescription);
+        txtConsignes = root.findViewById(R.id.txtConsignes);
+        txtDatePrevue = root.findViewById(R.id.txtDatePrevue);
+
         dateDebutR = root.findViewById(R.id.edtDateDebutReel);
         dateFinR = root.findViewById(R.id.edtDateFinReel);
+        heureDebutR = root.findViewById(R.id.edtHeureDebutReel);
+        heureFinR = root.findViewById(R.id.edtHeureFinReel);
 
-        comment = root.findViewById(R.id.edtComment);
         statutChoice = root.findViewById(R.id.statutChoice);
+        observations = root.findViewById(R.id.edtObservations);
+
 
         if(TechnicianFragments.intervention!=null){
             codeIntervention.setText(TechnicianFragments.intervention.getCode());
-            descIntervention.setText(TechnicianFragments.intervention.getDescription());
-            codeClient.setText(TechnicianFragments.intervention.getClientId());
+            txtClient.setText("Client : "+intervention.getClientId()); //TODO nom..
+            txtDescription.setText("Description Intervention : \n"+intervention.getDescription());
+            txtConsignes.setText("Consignes : \n"+intervention.getConsignes());
+            String prevue = "Date Intervention Prévue \n"+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
+            txtDatePrevue.setText(prevue);
 
-            dateDebut.setText(TechnicianFragments.intervention.getDateDebutPrevue());
-            dateFin.setText(TechnicianFragments.intervention.getDateFinPrevue());
-
-            comment.setText(TechnicianFragments.intervention.getCommentaire());
-            statutChoice.setSelection(TechnicianFragments.intervention.getStatutId()-1);
+           /* UserDao udao = new UserDao();
+            udao.findByCode(intervention.getSuperviseurId(), (items_, mess_)->{
+                List<User> users = udao.Deserialize(items_, User.class);
+                if(!users.isEmpty())
+                    supervisor.setText("Superviseur : \n"+users.get(0).getFirstname()+" "+users.get(0).getLastname());
+            });*/
         }
         mainViewModel.getIntervention().observe(
                 getViewLifecycleOwner(),
                 intervention -> {
                     if (intervention != null){
                         TechnicianFragments.intervention = intervention;
-
                         codeIntervention.setText(intervention.getCode());
-                        descIntervention.setText(intervention.getDescription());
-                        codeClient.setText(intervention.getClientId());
-                        dateDebut.setText(intervention.getDateDebutPrevue());
-                        dateFin.setText(intervention.getDateFinPrevue());
-                        comment.setText(intervention.getCommentaire());
+
+                        txtClient.setText("Client : "+intervention.getClientId());
+                        txtDescription.setText("Description Intervention : \n"+intervention.getDescription());
+                        txtConsignes.setText("Consignes : \n"+intervention.getConsignes());
+                        String prevue = "Date Intervention Prévue \n"+MyTools.formatDateFr(intervention.getDateDebutPrevue())+" - "+MyTools.formatDateFr(intervention.getDateFinPrevue());
+                        txtDatePrevue.setText(prevue);
+
                         statutChoice.setSelection(intervention.getStatutId()-1);
                     }
                 }
@@ -171,13 +215,13 @@ public class TechnicianFragments extends Fragment {
         if(TechnicianFragments.intervention==null)
             return;
 
-        dateDebutR = root.findViewById(R.id.edtDateDebutPrev);
-        dateFinR = root.findViewById(R.id.edtDateFinPrev);
-        comment = root.findViewById(R.id.edtComment);
+        TechnicianFragments.intervention.setObservations(observations.getText().toString());
 
-        TechnicianFragments.intervention.setCommentaire(comment.getText().toString());
-        TechnicianFragments.intervention.setDateDebutReelle(dateDebutR.getText().toString());
-        TechnicianFragments.intervention.setDateFinReelle(dateFinR.getText().toString());
+        String debut = dateDebutR.getText().toString()+" "+heureDebutR.getText().toString();
+        String fin = dateFinR.getText().toString()+" "+heureFinR.getText().toString();
+
+        TechnicianFragments.intervention.setDateDebutReelle(debut.trim());
+        TechnicianFragments.intervention.setDateFinReelle(fin.trim());
 
         statut = (int) (statutChoice.getSelectedItemId()+1);
         TechnicianFragments.intervention.setStatutId(statut);
@@ -210,18 +254,21 @@ public class TechnicianFragments extends Fragment {
 
     private void resetFields() {
         codeIntervention.getText().clear();
-        descIntervention.getText().clear();
-        codeClient.getText().clear();
-        dateDebut.getText().clear();
-        dateFin.getText().clear();
+
+        txtDescription.setText("");
+        txtClient.setText("");
+        txtDatePrevue.setText("");
+
         statutChoice.setSelection(0);
-        dateDebutR.getText().clear();
-        dateFinR.getText().clear();
-        comment.getText().clear();
+
+       /* dateDebutR.getText().clear();
+        dateFinR.getText().clear();*/
+
+        observations.getText().clear();
     }
 
     /**
-     * Gestion liste Interventions jour / Technicien
+     * Gestion liste Interventions / Technicien
      */
     List<Intervention> items = new ArrayList<Intervention>();
     SwipeRefreshLayout swipeContainer;
@@ -231,6 +278,9 @@ public class TechnicianFragments extends Fragment {
     TextView noResult;
     private void loadList(){
         recyclerView = root.findViewById(R.id.list);
+        if(recyclerView==null)
+            return;
+
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(root.getContext());
@@ -288,7 +338,9 @@ public class TechnicianFragments extends Fragment {
                 if(num==0) {
                     items = items.stream()
                             .sorted((o1, o2) -> o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
-                            .filter(i -> getDate(i.getDateDebutPrevue()).equals(getCurrentDate()) && i.getStatutId() != 5)
+                            //TODO : filtre sur date jour ?
+                            //.filter(i -> getDate(i.getDateDebutPrevue()).equals(getCurrentDate()) && i.getStatutId() != 5)
+                            .filter(i -> i.getStatutId() != 5)
                             .collect(Collectors.toList());
                 }else{
                     items = items.stream()
@@ -298,7 +350,9 @@ public class TechnicianFragments extends Fragment {
                 }
             }
 
-            noResult.setVisibility(items.size()>0?View.GONE:View.VISIBLE);
+            if(noResult!=null)
+                noResult.setVisibility(items.size()>0?View.GONE:View.VISIBLE);
+
             loadList();
             swipeContainer.setRefreshing(false);
         });

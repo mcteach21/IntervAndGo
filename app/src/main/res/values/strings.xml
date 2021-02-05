@@ -54,10 +54,15 @@
 
     <string name="hint_title_date_debut_prev">Date Début Prévue</string>
     <string name="hint_title_date_fin_prev">Date Fin Prévue</string>
-    <string name="hint_title_date_debut_reel">Date Début Réelle</string>
-    <string name="hint_title_date_fin_reel">Date Fin Réelle</string>
 
-    <string name="hint_title_comment">Commentaires</string>
+    <string name="hint_title_date_debut_reel">Date Début</string>
+    <string name="hint_title_heure_debut_reel">..Heure</string>
+
+    <string name="hint_title_date_fin_reel">Date Fin</string>
+
+    <string name="hint_title_comment">Consignes (intervention)</string>
+    <string name="hint_title_obs">Observations (rapport)</string>
+
     <string name="btn_planif_txt">Planifier Intervention</string>
     <string name="search_txt">Search..</string>
     <string name="no_results_interv">Aucune Intervention</string>
@@ -130,5 +135,6 @@
     <string name="fingerprint_use_text">Utiliser empreinte digitale</string>
     <string name="fingerprint_config_text">Configurer empreinte digitale</string>
     <string name="hint_contrat_client">Contrat Client</string>
+    <string name="hint_rapport_obs">Observations fin intervention</string>
 
 </resources>

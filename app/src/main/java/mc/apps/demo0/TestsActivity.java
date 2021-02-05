@@ -1,41 +1,14 @@
 package mc.apps.demo0;
 
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
-import android.content.Context;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-public class TestsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class TestsActivity extends AppCompatActivity {
     private static final String TAG = "tests";
 
     //@RequiresApi(api = Build.VERSION_CODES.P)
@@ -44,10 +17,30 @@ public class TestsActivity extends FragmentActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
 
-        findViewById(R.id.btn_route_calcul).setOnClickListener(view -> calcRoute());
+        findViewById(R.id.btn_route_calcul).setOnClickListener(view -> showAlertDialogButtonClicked());
+    }
+    public void showAlertDialogButtonClicked() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("Observations");
+
+        final View customLayout = getLayoutInflater().inflate(R.layout.rapport_input_layout, null);
+        builder.setView(customLayout);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            EditText editText = customLayout.findViewById(R.id.edtIntervRapport);
+            sendDialogDataToActivity(editText.getText().toString());
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-    private void calcRoute() {
+    private void sendDialogDataToActivity(String data) {
+        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+    }
+
+/*    private void calcRoute() {
         //gMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -176,9 +169,9 @@ public class TestsActivity extends FragmentActivity implements OnMapReadyCallbac
             }
         }
 
-        /**
+        *//**
          * {@inheritDoc}
-         */
+         *//*
         @Override
         protected void onPostExecute(final Boolean result) {
             if (!result) {
@@ -210,5 +203,5 @@ public class TestsActivity extends FragmentActivity implements OnMapReadyCallbac
                 gMap.addMarker(markerB);
             }
         }
-    }
+    }*/
 }

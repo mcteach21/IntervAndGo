@@ -237,8 +237,6 @@ public class StartActivity extends AppCompatActivity {
         logo = findViewById(R.id.logo);
         root = findViewById(R.id.root);
         login_root = findViewById(R.id.login_root);
-
-       /* btn1 = findViewById(R.id.btnGoogle);*/
         login_root.setAlpha(0f);
 
         AnimatorSet animatorSet = new AnimatorSet();

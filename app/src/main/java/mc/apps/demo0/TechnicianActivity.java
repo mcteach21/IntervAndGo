@@ -192,11 +192,22 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
      */
     EditText edtDateTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
+
+
+    public void selectCalendarDate(View view) {
+        this.fulldate=false;
+        SelectDate(view);
+    }
     public void selectCalendarDateTime(View view) {
+        this.fulldate=true;
+        SelectDate(view);
+    }
 
-        edtDateTime = (EditText) view;
-
+    private boolean fulldate=false;
+    private void SelectDate(View view) {
+        edtDateTime =  (EditText) view;;
         final Calendar c = Calendar.getInstance();
+
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -204,6 +215,22 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, this, mYear, mMonth, mDay);
         datePickerDialog.show();
     }
+
+    int lastSelectedHour=0, lastSelectedMinute=0;
+    boolean is24HView = true;
+    public void selectCalendarTime(View view) {
+        edtDateTime =  (EditText) view;;
+        TimePickerDialog.OnTimeSetListener timeSetListener = (view1, hourOfDay, minute) -> {
+            edtDateTime.setText(hourOfDay + ":" + minute );
+            lastSelectedHour = hourOfDay;
+            lastSelectedMinute = minute;
+        };
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, timeSetListener, lastSelectedHour, lastSelectedMinute, is24HView);
+        timePickerDialog.show();
+    }
+
+
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -214,8 +241,12 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         mHour = c.get(Calendar.HOUR);
         mMinute = c.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, this, mHour, mMinute, true);
-        timePickerDialog.show();
+        if(fulldate) {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, this, mHour, mMinute, true);
+            timePickerDialog.show();
+        }else{
+            edtDateTime.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
+        }
     }
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

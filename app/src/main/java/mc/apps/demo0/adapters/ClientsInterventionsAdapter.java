@@ -99,7 +99,7 @@ public class ClientsInterventionsAdapter extends RecyclerView.Adapter<ClientsInt
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 interventions = interventions.stream()
                         .filter(i->i.getClientId().equals(client.getCode()))
-                        .filter(i->i.getStatutId()==1)
+                        .filter(i->i.getStatutId()!=5)
                         .sorted((o1, o2)->o1.getDateDebutPrevue().compareTo(o2.getDateDebutPrevue()))
                         .collect(Collectors.toList());
             }

@@ -10,5 +10,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/appSignOut"
-        android:title="@string/action_sign_out" />
+        android:icon="@drawable/ic_account_logout"
+        android:title="@string/action_sign_out"
+        app:showAsAction="ifRoom|withText" />
 </menu>

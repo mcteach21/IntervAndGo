@@ -15,115 +15,40 @@
         android:id="@+id/form_planif">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout6"
+            android:id="@+id/textInputLayout11"
             style="@style/inputstyle"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout06"
+            android:hint="@string/hint_title_desc"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/interventionDetails">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtDateDebutReel"
+                android:id="@+id/edtDescInterv"
                 style="@style/input_style_default"
                 android:clickable="true"
                 android:focusable="false"
-                android:gravity="center_horizontal"
-                android:hint="@string/hint_title_date_debut_reel"
-                android:inputType="datetime"
-                android:onClick="selectCalendarDate"
+                android:inputType="text"
+                android:minLines="2"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout06"
-            style="@style/inputstyle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout6"
-            app:layout_constraintTop_toBottomOf="@+id/interventionDetails">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtHeureDebutReel"
-                style="@style/input_style_default"
-                android:clickable="true"
-                android:focusable="false"
-                android:gravity="center_horizontal"
-                android:hint="@string/hint_title_heure_debut_reel"
-                android:inputType="datetime"
-                android:onClick="selectCalendarTime"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout7"
-            style="@style/inputstyle"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtDateFinReel"
-                style="@style/input_style_default"
-                android:clickable="true"
-                android:focusable="false"
-                android:gravity="center_horizontal"
-                android:hint="@string/hint_title_date_fin_reel"
-                android:inputType="datetime"
-                android:onClick="selectCalendarDate"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout8"
-            style="@style/inputstyle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout7"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout06">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtHeureFinReel"
-                style="@style/input_style_default"
-                android:clickable="true"
-                android:focusable="false"
-                android:gravity="center_horizontal"
-                android:hint="@string/hint_title_heure_debut_reel"
-                android:inputType="datetime"
-                android:onClick="selectCalendarTime"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
 
         <ImageButton
             android:id="@+id/btn_interv_client_filter"
             style="@style/menu_button_style"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="1dp"
             android:onClick="ClientIntervFilter"
-            app:layout_constraintEnd_toStartOf="@+id/btn_interv_details"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_title"
-            app:srcCompat="@drawable/ic_search" />
-
-        <ImageButton
-            android:id="@+id/btn_interv_details"
-            style="@style/menu_button_style"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:onClick="ClientIntervFilter"
+            app:layout_constraintBottom_toTopOf="@+id/textInputLayout0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_title"
-            app:srcCompat="@drawable/ic_info" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_menu_filter" />
 
         <ImageView
             android:id="@+id/btn_images_pick"
@@ -173,9 +98,73 @@
             android:text="@string/app_name"
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_interv_client_filter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fragment_title_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="casual"
+            android:text="@string/saisie_rapport_title"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout11" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout6"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title_2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDateDebutReel"
+                style="@style/input_style_default"
+                android:clickable="true"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="@string/hint_title_date_debut_reel"
+                android:inputType="datetime"
+                android:onClick="selectCalendarDate"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout7"
+            style="@style/inputstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textInputLayout6"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_title_2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDateFinReel"
+                style="@style/input_style_default"
+                android:clickable="true"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="@string/hint_title_date_fin_reel"
+                android:inputType="datetime"
+                android:onClick="selectCalendarTime"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout1"
@@ -183,10 +172,9 @@
             android:layout_width="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:hint="@string/hint_title_interv"
-            android:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/btn_interv_client_filter"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title">
 
@@ -197,77 +185,8 @@
                 android:focusable="false"
                 android:gravity="center_horizontal"
                 android:inputType="text"
-                android:textSize="16sp"
-                android:visibility="visible" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout11"
-            style="@style/inputstyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/hint_title_desc"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtDescInterv"
-                style="@style/input_style_default"
-                android:clickable="true"
-                android:focusable="false"
-                android:inputType="text"
-                android:minLines="2"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout04"
-            style="@style/inputstyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout11">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtComment"
-                style="@style/input_style_default"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_title_comment"
-                android:lines="3" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!--<com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout7"
-            style="@style/inputstyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="576dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtDateFinReel"
-                style="@style/input_style_default"
-                android:clickable="true"
-                android:focusable="false"
-                android:gravity="center_horizontal"
-                android:hint="@string/hint_title_date_fin_reel"
-                android:inputType="datetime"
-                android:onClick="selectCalendarDateTime"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>-->
-
         <!--<AutoCompleteTextView
             android:id="@+id/edtCodeInterv"
             style="@style/input_style_default"
@@ -318,7 +237,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
             android:hint="@string/hint_title_client"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout1"
             app:layout_constraintTop_toBottomOf="@+id/fragment_title">
@@ -339,7 +257,6 @@
             style="@style/inputstyle"
             android:layout_width="0dp"
             android:layout_marginTop="8dp"
-            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
@@ -362,7 +279,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout0">
@@ -395,26 +311,27 @@
             android:spinnerMode="dialog"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
+            app:layout_constraintStart_toEndOf="@+id/textView7"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout4"
             style="@style/inputstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/statutChoice">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtObservations"
+                android:id="@+id/edtComment"
                 style="@style/input_style_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_title_obs"
-                android:lines="2" />
+                android:hint="@string/hint_title_comment"
+                android:lines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -435,111 +352,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/photos_list" />
 
-        <ImageView
-            android:id="@+id/btn_img_now1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout06"
-            app:layout_constraintTop_toBottomOf="@+id/interventionDetails"
-            app:srcCompat="@drawable/ic_date_now" />
-
-        <ImageView
-            android:id="@+id/btn_img_now2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout8"
-            app:layout_constraintTop_toBottomOf="@+id/btn_img_now1"
-            app:srcCompat="@drawable/ic_date_now" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/interventionDetails"
+        <TextView
+            android:id="@+id/textView7"
             style="@style/input_style_default"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            android:padding="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/interv_status_title"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toStartOf="@+id/statutChoice"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
-
-            <TextView
-                android:id="@+id/txtClient"
-                style="@style/textview_style_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_conversion_absoluteHeight="64dp"
-                tools:layout_conversion_absoluteWidth="378dp" />
-
-            <TextView
-                android:id="@+id/txtDescription"
-                style="@style/textview_style_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:textColor="@color/colorPrimaryText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtClient"
-                tools:layout_conversion_absoluteHeight="86dp"
-                tools:layout_conversion_absoluteWidth="378dp" />
-
-            <TextView
-                android:id="@+id/txtConsignes"
-                style="@style/textview_style_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtDescription"
-                tools:layout_conversion_absoluteHeight="64dp"
-                tools:layout_conversion_absoluteWidth="378dp" />
-
-            <TextView
-                android:id="@+id/txtDatePrevue"
-                style="@style/textview_style_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtConsignes" />
-
-
-            <!--<ImageView
-                android:id="@+id/btn_maps"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtNomClient"
-                app:srcCompat="@drawable/ic_google_maps"
-                tools:layout_conversion_absoluteHeight="43dp"
-                tools:layout_conversion_absoluteWidth="386dp" />-->
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

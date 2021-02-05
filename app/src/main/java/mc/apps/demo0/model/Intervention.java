@@ -9,7 +9,7 @@ public class Intervention implements Serializable {
 	private String code;
 	@SerializedName("client_id")
 	private String clientId;
-	private String commentaire;
+
 	@SerializedName("date_debut_prevue")
 	private String dateDebutPrevue;
 	@SerializedName("date_debut_reelle")
@@ -34,14 +34,18 @@ public class Intervention implements Serializable {
 	@SerializedName("date_creation")
 	private String dateCreation;
 
+	private String consignes; 		//intervention
+	private String observations;	//rapport
+
 	private List<User> technicians;
 	private List<Affectation> affectations;
 	private Statut statut;
 	private User user;
 
-	public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue,
-						String commentaire, String materielNecessaire, String serviceEquipCible,
-						String superviseurId) {
+	public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue, String consignes, String materielNecessaire, String serviceEquipCible, String superviseurId) {
+		this(code,  clientId,  description,  dateDebutPrevue,  dateFinPrevue, consignes,  materielNecessaire,  serviceEquipCible, superviseurId, "");
+	}
+	public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue, String consignes, String materielNecessaire, String serviceEquipCible, String superviseurId, String observations) {
 		this.code = code;
 		this.clientId = clientId;
 		this.superviseurId = superviseurId;
@@ -52,15 +56,18 @@ public class Intervention implements Serializable {
 
 		this.materielNecessaire = materielNecessaire;
 		this.serviceEquipCible = serviceEquipCible;
-		this.commentaire = commentaire;
+		this.consignes = consignes;
+		this.observations = observations;
 	}
-	public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue,
-						String commentaire, String materielNecessaire, String serviceEquipCible,
+    public Intervention(String code, String clientId, String description, String dateDebutPrevue, String dateFinPrevue,
+						String consignes, String materielNecessaire, String serviceEquipCible,
 						String superviseurId, List<User> technicians) {
 
 		this(code, clientId, description, dateDebutPrevue, dateFinPrevue,
-				commentaire, materielNecessaire, serviceEquipCible,
+				consignes, materielNecessaire, serviceEquipCible,
 				superviseurId);
+
+		this.observations="";
 
 		this.technicians = technicians;
 		this.affectations = new ArrayList<>();
@@ -68,10 +75,10 @@ public class Intervention implements Serializable {
 			affectations.add(new Affectation(0, this.code, tech.getCode()));
 	}
 
-	public Intervention(String code, String clientId, String commentaire, String dateDebutPrevue, String dateDebutReelle, String dateFinPrevue, String dateFinReelle, String description, String materielNecessaire, String serviceEquipCible, int statutId, String superviseurId) {
+/*    public Intervention(String code, String clientId, String consignes, String dateDebutPrevue, String dateDebutReelle, String dateFinPrevue, String dateFinReelle, String description, String materielNecessaire, String serviceEquipCible, int statutId, String superviseurId) {
 		this.code = code;
 		this.clientId = clientId;
-		this.commentaire = commentaire;
+		this.consignes = consignes;
 		this.dateDebutPrevue = dateDebutPrevue;
 		this.dateDebutReelle = dateDebutReelle;
 		this.dateFinPrevue = dateFinPrevue;
@@ -81,7 +88,7 @@ public class Intervention implements Serializable {
 		this.serviceEquipCible = serviceEquipCible;
 		this.statutId = statutId;
 		this.superviseurId = superviseurId;
-	}
+	}*/
 
 	public String getCode() {
 		return code;
@@ -97,14 +104,6 @@ public class Intervention implements Serializable {
 
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
-	}
-
-	public String getCommentaire() {
-		return commentaire;
-	}
-
-	public void setCommentaire(String commentaire) {
-		this.commentaire = commentaire;
 	}
 
 	public String getDateDebutPrevue() {
@@ -207,8 +206,20 @@ public class Intervention implements Serializable {
 		return dateCreation;
 	}
 
-	public void setDateCreation(String dateCreation) {
-		this.dateCreation = dateCreation;
+	public String getConsignes() {
+		return consignes;
+	}
+
+	public void setConsignes(String consignes) {
+		this.consignes = consignes;
+	}
+
+	public String getObservations() {
+		return observations;
+	}
+
+	public void setObservations(String observations) {
+		this.observations = observations;
 	}
 
 	@Override
