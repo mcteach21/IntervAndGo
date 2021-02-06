@@ -25,12 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import mc.apps.demo0.ChartActivity;
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.InterventionActivity;
-import mc.apps.demo0.MapsActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.ShowInMapActivity;
-import mc.apps.demo0.TechnicianActivity;
 import mc.apps.demo0.TechniciansActivity;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
@@ -57,7 +56,7 @@ public class PlaceholderFragment extends Fragment {
 
     private EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, consignes;
     private RecyclerView tech_list;
-    private Button btnadd, btnlist, btngps;
+    private Button btnadd, btnlist, btngps, btnstats;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -168,10 +167,12 @@ public class PlaceholderFragment extends Fragment {
 
             initListTech(root);
         }else{
-            //Techniciens!!
+            //Suivi!!
 
             btnlist = root.findViewById(R.id.tech_btn_list);
             btngps = root.findViewById(R.id.tech_btn_gps);
+            btnstats = root.findViewById(R.id.tech_btn_stats);
+
             btnlist.setOnClickListener(view -> {
                 startActivity(new Intent(getActivity(), TechniciansActivity.class));
             });
@@ -179,6 +180,9 @@ public class PlaceholderFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ShowInMapActivity.class);
                 intent.putExtra("supervisor_filter", MyTools.GetUserInSession().getCode());
                 startActivity(intent);
+            });
+            btnstats.setOnClickListener(view -> {
+                startActivity(new Intent(getActivity(), ChartActivity.class));
             });
         }
     }

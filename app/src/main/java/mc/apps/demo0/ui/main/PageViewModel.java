@@ -9,7 +9,7 @@ public class PageViewModel extends ViewModel {
 
     private MutableLiveData<Integer> mIndex = new MutableLiveData<>();
 
-    String[] titles = {"Interventions", "Planifier Intervention", "Techniciens"};
+    String[] titles = {"Interventions", "Planifier Intervention", "Infos & Statistiques"};
     private LiveData<String> mText = Transformations.map(mIndex, input -> titles[input-1]);
 
     public void setIndex(int index) {

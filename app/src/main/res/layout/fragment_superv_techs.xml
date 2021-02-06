@@ -64,6 +64,12 @@
             android:drawableLeft="@drawable/ic_google_maps"
             android:text="@string/tech_gps" />
 
+        <Button
+            android:id="@+id/tech_btn_stats"
+            style="@style/menu_button_style"
+            android:drawableLeft="@drawable/ic_stats"
+            android:text="@string/stats_txt" />
+
     </LinearLayout>
 
 

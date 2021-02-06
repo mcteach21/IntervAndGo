@@ -137,8 +137,10 @@
     <string name="hint_contrat_client">Contrat Client</string>
     <string name="hint_rapport_obs">Observations fin intervention</string>
     <string name="title_activity_show_in_map">Map</string>
-    <string name="tab_text_3">Techniciens</string>
+    <string name="tab_text_3">Suivi &amp; Infos</string>
     <string name="tech_list_txt">Techniciens</string>
     <string name="tech_gps">Positions (gps)</string>
+    <string name="tab_text_4">Statistiques</string>
+    <string name="stats_txt">Statistiques</string>
 
 </resources>
