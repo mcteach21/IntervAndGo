@@ -136,5 +136,6 @@
     <string name="fingerprint_config_text">Configurer empreinte digitale</string>
     <string name="hint_contrat_client">Contrat Client</string>
     <string name="hint_rapport_obs">Observations fin intervention</string>
+    <string name="title_activity_show_in_map">Map</string>
 
 </resources>

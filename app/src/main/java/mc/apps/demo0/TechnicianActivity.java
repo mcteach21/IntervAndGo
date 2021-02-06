@@ -12,9 +12,15 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import android.app.DatePickerDialog;
+import android.app.Service;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,6 +29,9 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -37,10 +46,14 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import mc.apps.demo0.dao.GpsDao;
 import mc.apps.demo0.libs.GPSTracker;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.ClientIntervention;
+import mc.apps.demo0.model.GpsPosition;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.technician.TechnicianFragment;
@@ -53,6 +66,7 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     private static final int TECH_INTERV_CODE = 1000;
     private static final String TAG = "tests";
     private static final int CLIENT_INTERV_CODE = 2000;
+    private static final long GPS_REFRESH_MILLIS = 20000 ; // 20 sec.
     private MainViewModel mainViewModel;
 
     @Override
@@ -77,6 +91,8 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
 
         checkPermissions();
         //getCurrentLocation();
+
+        doPeriodicWork();
     }
 
     private void checkPermissions() {
@@ -92,14 +108,13 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         MyTools.CheckThenAskPermissions(TechnicianActivity.this, requestPermissionLauncher);
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
         User user = MyTools.GetUserInSession();
         ((TextView)findViewById(R.id.title)).setText(""+user);
     }
+
 
     private void defineFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -253,5 +268,64 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         mHour = hourOfDay;
         mMinute = minute;
         edtDateTime.setText(mDay + "-" + (mMonth + 1) + "-" + mYear+" "+mHour+":"+mMinute);
+    }
+
+    /**
+     * GPS Location Save
+     */
+    private void doPeriodicWork() {
+        handler = new Handler();
+        handler.post(runnableCode);
+    }
+    Handler handler;
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            Log.d(TAG, "Get Current Location..");
+            getCurrentLocation();
+            handler.postDelayed(runnableCode, GPS_REFRESH_MILLIS);
+        }
+    };
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacks(runnableCode);
+        Log.d(TAG, "Get Current Location END!");
+        super.onDestroy();
+    }
+    GPSTracker gps;
+    private void getCurrentLocation() {
+        gps = new GPSTracker(this);
+        if(gps.canGetLocation()) {
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            //((TextView)root.findViewById(R.id.textLocation)).setText(latitude+"x"+longitude);
+            saveGps(latitude, longitude);
+        } else {
+            gps.showSettingsAlert();
+        }
+    }
+    GpsPosition gp;
+    private void saveGps(double latitude, double longitude) {
+        GpsDao dao = new GpsDao();
+        User user = MyTools.GetUserInSession();
+
+        dao.find(user.getCode(), (items, message) -> {
+            List<GpsPosition> positions_ = dao.Deserialize(items, GpsPosition.class);
+            if(positions_.size()>0){
+                gp = positions_.get(0);
+                gp.setLatitude(latitude);
+                gp.setLongitude(longitude);
+
+                dao.update(gp, (items_, message_) -> {
+                    Log.i(TAG, "gps updated : "+user.getCode()+" => "+latitude+"x"+longitude);
+                });
+            }else{
+                gp =  new GpsPosition(0,latitude, longitude, user.getCode());
+                dao.add(gp, (items_, message_) -> {
+                    Log.i(TAG, "gps added : "+user.getCode()+" => "+latitude+"x"+longitude);
+                });
+            }
+        });
     }
 }

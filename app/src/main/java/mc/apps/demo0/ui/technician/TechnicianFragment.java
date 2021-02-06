@@ -1,10 +1,20 @@
 package mc.apps.demo0.ui.technician;
 
 import androidx.lifecycle.ViewModelProvider;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.work.ListenableWorker;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.TechnicianActivity;
@@ -24,6 +35,7 @@ import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class TechnicianFragment extends Fragment {
+    private static final String TAG = "tests";
     private MainViewModel mainViewModel;
 
     public static TechnicianFragment newInstance() {
@@ -48,25 +60,22 @@ public class TechnicianFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        getCurrentLocation();
+        //getCurrentLocation();
     }
-    GPSTracker gps;
+   /* GPSTracker gps;
     private void getCurrentLocation() {
         gps = new GPSTracker(getActivity());
         if(gps.canGetLocation()) {
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
 
-            //TODO : save position + notification..
             ((TextView)root.findViewById(R.id.textLocation)).setText(latitude+"x"+longitude);
-
             saveGps(latitude, longitude);
             //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         } else {
             gps.showSettingsAlert();
         }
     }
-
     GpsPosition gp;
     private void saveGps(double latitude, double longitude) {
         GpsDao dao = new GpsDao();
@@ -88,6 +97,6 @@ public class TechnicianFragment extends Fragment {
                 });
             }
         });
-    }
+    }*/
 
 }
