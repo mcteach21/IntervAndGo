@@ -66,7 +66,7 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     private static final int TECH_INTERV_CODE = 1000;
     private static final String TAG = "tests";
     private static final int CLIENT_INTERV_CODE = 2000;
-    private static final long GPS_REFRESH_MILLIS = 20000 ; // 20 sec.
+    private static final long GPS_REFRESH_MILLIS = 600000 ; // 10 min.
     private MainViewModel mainViewModel;
 
     @Override
@@ -114,8 +114,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         User user = MyTools.GetUserInSession();
         ((TextView)findViewById(R.id.title)).setText(""+user);
     }
-
-
     private void defineFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
@@ -126,7 +124,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     public void onBackPressed() {
         defineFragment(TechnicianFragment.newInstance());
     }
-
     public void setContent(View view){
       int id= view.getId();
         switch(id){
@@ -146,7 +143,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -290,8 +286,16 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     protected void onDestroy() {
         handler.removeCallbacks(runnableCode);
         Log.d(TAG, "Get Current Location END!");
+
+        deleteLocation();
         super.onDestroy();
     }
+
+    private void deleteLocation() {
+        GpsDao dao = new GpsDao();
+        dao.delete(MyTools.GetUserInSession().getCode(), (i,m)->{});
+    }
+
     GPSTracker gps;
     private void getCurrentLocation() {
         gps = new GPSTracker(this);

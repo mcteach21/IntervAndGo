@@ -36,11 +36,10 @@
         <activity
             android:name=".ShowInMapActivity"
             android:label="@string/title_activity_show_in_map">
-            <intent-filter>
+<!--            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".TestsActivity"
@@ -65,6 +64,7 @@
         <activity android:name=".UsersActivity" />
         <activity android:name=".InterventionActivity" />
         <activity android:name=".TechnicianActivity" />
+        <activity android:name=".TechniciansActivity" />
         <activity android:name=".SelectActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".ClientActivity" />

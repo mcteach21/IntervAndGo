@@ -81,6 +81,13 @@ public class UsersFragment extends Fragment {
                    refreshListAsync();
                 }
         );
+        mainViewModel.getSupervisor().observe(
+                getViewLifecycleOwner(),
+                supervisor_code -> {
+                    supervisor_filtre = supervisor_code;
+                    refreshListAsync();
+                }
+        );
     }
 
     /**
@@ -90,27 +97,23 @@ public class UsersFragment extends Fragment {
     List<User> selected = new ArrayList<User>();
     SwipeRefreshLayout swipeContainer;
     RecyclerView recyclerView, recyclerView_selected;
-
     UsersAdapter adapter;
+
     int profil_filtre = 0;
+    String supervisor_filtre="";
+
     View root;
+
     private void loadList(){
         recyclerView = root.findViewById(R.id.list);
-        //recyclerView_selected = root.findViewById(R.id.selected_items);
         recyclerView.setHasFixedSize(true);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(root.getContext());
         GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 2);
-
         recyclerView.setLayoutManager(layoutManager);
-
-        //recyclerView_selected.setLayoutManager(layoutManager2);
-
         adapter = new UsersAdapter(
                 items,
                 (position, item) -> {
                     mainViewModel.setUser((User) item);
-                    //Toast.makeText(root.getContext(), "Selected : "+item.toString(), Toast.LENGTH_SHORT).show();
                 }
         );
         recyclerView.setAdapter(adapter);
@@ -141,6 +144,9 @@ public class UsersFragment extends Fragment {
 
             if(profil_filtre!=0)
                 items = items.stream().filter(u->u.getProfilId()==profil_filtre).collect(Collectors.toList());
+
+            if(!supervisor_filtre.isEmpty())
+                items = items.stream().filter(u->u.getSupervisorId().equals(supervisor_filtre)).collect(Collectors.toList());
 
             loadList();
             swipeContainer.setRefreshing(false);

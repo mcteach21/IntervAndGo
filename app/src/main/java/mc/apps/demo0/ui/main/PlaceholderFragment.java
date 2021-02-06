@@ -27,7 +27,11 @@ import java.util.stream.Collectors;
 
 import mc.apps.demo0.ClientsActivity;
 import mc.apps.demo0.InterventionActivity;
+import mc.apps.demo0.MapsActivity;
 import mc.apps.demo0.R;
+import mc.apps.demo0.ShowInMapActivity;
+import mc.apps.demo0.TechnicianActivity;
+import mc.apps.demo0.TechniciansActivity;
 import mc.apps.demo0.adapters.InterventionsAdapter;
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.AffectationDao;
@@ -53,7 +57,7 @@ public class PlaceholderFragment extends Fragment {
 
     private EditText codeClient, codeSupervisor, desc, dateDebut, dateFin, serviceCible, materielNecessaire, consignes;
     private RecyclerView tech_list;
-    private Button btnadd;
+    private Button btnadd, btnlist, btngps;
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -78,12 +82,16 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        int layout = (index==1)?R.layout.fragment_superv_intervs:R.layout.fragment_superv_planif;
+        int[] fragments_layouts = {
+                R.layout.fragment_superv_intervs,
+                R.layout.fragment_superv_planif,
+                R.layout.fragment_superv_techs
+        };
+        int layout = fragments_layouts[index-1];
         root = inflater.inflate(layout, container, false);
         final TextView textView = root.findViewById(R.id.fragment_title);
 
         pageViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
-
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         return root;
     }
@@ -117,7 +125,7 @@ public class PlaceholderFragment extends Fragment {
                     }
             );
         }
-        if (index==2){ //Planifier Intervention
+        else if (index==2){ //Planifier Intervention
 
             codeClient = root.findViewById(R.id.txtCodeClient);
             codeSupervisor = root.findViewById(R.id.edtSupervisor);
@@ -159,6 +167,19 @@ public class PlaceholderFragment extends Fragment {
             });
 
             initListTech(root);
+        }else{
+            //Techniciens!!
+
+            btnlist = root.findViewById(R.id.tech_btn_list);
+            btngps = root.findViewById(R.id.tech_btn_gps);
+            btnlist.setOnClickListener(view -> {
+                startActivity(new Intent(getActivity(), TechniciansActivity.class));
+            });
+            btngps.setOnClickListener(view -> {
+                Intent intent = new Intent(getActivity(), ShowInMapActivity.class);
+                intent.putExtra("supervisor_filter", MyTools.GetUserInSession().getCode());
+                startActivity(intent);
+            });
         }
     }
 

@@ -27,6 +27,11 @@ public class UserDao extends Dao<User> {
             find("email='" + URLEncoder.encode(login, "utf-8")+"'", onSuccess);
         } catch (UnsupportedEncodingException e) {}
     }
+    public void findBySupervisor(String supervisor_id, OnSuccess onSuccess){
+        try {
+            find("supervisor_id='" + URLEncoder.encode(supervisor_id, "utf-8")+"'", onSuccess);
+        } catch (UnsupportedEncodingException e) {}
+    }
     private void action(User u, String action, OnSuccess onSuccess){
 
         try {

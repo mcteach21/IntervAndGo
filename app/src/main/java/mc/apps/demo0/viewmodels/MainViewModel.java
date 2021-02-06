@@ -83,6 +83,11 @@ public class MainViewModel  extends ViewModel {
     public MutableLiveData<User> getUser() { return user; }
     public void setUser(User value) {  user.setValue(value);  }
 
+    //current supervisor code
+    private MutableLiveData<String> supervisor = new MutableLiveData<>();
+    public MutableLiveData<String> getSupervisor() { return supervisor; }
+    public void setSupervisor(String value) {  supervisor.setValue(value);  }
+
     private MutableLiveData<Integer> profil = new MutableLiveData<>();
     public MutableLiveData<Integer> getProfil() { return profil; }
     public void setProfil(int value) {  profil.setValue(value);  }

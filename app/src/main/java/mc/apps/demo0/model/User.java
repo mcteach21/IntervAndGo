@@ -18,6 +18,11 @@ public class User implements Serializable {
 	@SerializedName("profil_id")
 	private byte profilId;
 
+	@SerializedName("supervisor_id")
+	private String supervisorId;
+
+
+
 	private List<Affectation> affectations;
 	private List<Intervention> interventions;
 
@@ -132,6 +137,12 @@ public class User implements Serializable {
 		this.activated = activated;
 	}
 
+	public String getSupervisorId() {
+		return supervisorId;
+	}
+	public void setSupervisorId(String supervisorId) {
+		this.supervisorId = supervisorId;
+	}
 	@Override
 	public String toString() {
 		return firstname + ' ' +  lastname;
