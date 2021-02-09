@@ -147,7 +147,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             EditText edtMsg = customLayout.findViewById(R.id.edtMessage);
             String message = edtMsg.getText().toString();
 
-            Message msg = new Message(0, MyTools.GetUserInSession().getCode(), user.getCode(), (byte) 0);
+            Message msg = new Message(0, message, MyTools.GetUserInSession().getCode(), user.getCode(), (byte) 0);
             MessageDao dao = new MessageDao();
             dao.add(msg, (items, mess)->{
                 Toast.makeText(context, "Message envoyé à "+user.getFirstname(), Toast.LENGTH_SHORT).show();

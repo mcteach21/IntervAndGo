@@ -27,8 +27,9 @@ public class Message implements Serializable {
         this.dateCreation = dateCreation;
     }
 
-    public Message(int id, String fromUser, String toUser, byte seen) {
+    public Message(int id, String message, String fromUser, String toUser, byte seen) {
         this.id = id;
+        this.message = message;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.seen = seen;
