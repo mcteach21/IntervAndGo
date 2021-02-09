@@ -73,9 +73,9 @@ public class MyTools {
 
     public static User CurrentUser = null ;
 
-    public static void InitSession(Context context) {
+  /*  public static void InitSession(Context context) {
         //sharedPreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-    }
+    }*/
 
     public static void SetUserInSession(User user){
        /* SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -84,15 +84,18 @@ public class MyTools {
         editor.commit();*/
         CurrentUser = user;
     }
-    public static void ClearSession(){
-       /* SharedPreferences.Editor editor = sharedPreferences.edit();
+/*    public static void ClearSession(){
+       *//* SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-        editor.commit();*/
+        editor.commit();*//*
         CurrentUser = null;
-    }
+    }*/
     public static User GetUserInSession(){
         //return sharedPreferences.getString(CURRENT_USER_NAME,"");
         return CurrentUser;
+    }
+    public static int GetCurrentProfil(){
+        return CurrentUser.getProfilId();
     }
 
     /**

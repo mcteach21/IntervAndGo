@@ -8,6 +8,12 @@
         android:title="@string/search_txt"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always" />-->
+
+    <item
+        android:id="@+id/appMsg"
+        android:icon="@drawable/ic_send_msg"
+        android:title="@string/action_show_msg"
+        app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/appSignOut"
         android:icon="@drawable/ic_account_logout"

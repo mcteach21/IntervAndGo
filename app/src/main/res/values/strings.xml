@@ -142,5 +142,8 @@
     <string name="tech_gps">Positions (gps)</string>
     <string name="tab_text_4">Statistiques</string>
     <string name="stats_txt">Statistiques</string>
+    <string name="hint_msg">Message à envoyer..</string>
+    <string name="msg_title">Mes Messages</string>
+    <string name="action_show_msg">Message(s)</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -27,9 +28,11 @@ import java.util.List;
 
 import mc.apps.demo0.R;
 import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.MessageDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.Message;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
@@ -106,7 +109,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-
             if(select) {
                 itemView.findViewById(R.id.item_select).setOnClickListener(
                         v-> {
@@ -116,22 +118,53 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                         }
                 );
             }else{
-                itemView.findViewById(R.id.item_btn_delete).setOnClickListener(
-                        v-> ConfirmDelete(itemView.getContext(), getAdapterPosition())
-                );
+                itemView.findViewById(R.id.item_btn_delete).setVisibility(View.GONE);
+                itemView.findViewById(R.id.item_btn_msg).setVisibility(View.GONE);
+
+                if(MyTools.GetCurrentProfil()==1) { //admin
+                    itemView.findViewById(R.id.item_btn_delete).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.item_btn_delete).setOnClickListener(
+                            v -> ConfirmDelete(itemView.getContext(), getAdapterPosition())
+                    );
+                }else if(MyTools.GetCurrentProfil()==2){ //superv
+                    itemView.findViewById(R.id.item_btn_msg).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.item_btn_msg).setOnClickListener(
+                            v -> SendMessage(itemView.getContext(), getAdapterPosition())
+                    );
+                }
             }
         }
+    }
+    private void SendMessage(Context context, final int position) {
+        User user = items.get(position);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Message pour : "+user.getFirstname()+" "+user.getLastname()+"\n");
 
+        final View customLayout = LayoutInflater.from(context).inflate(R.layout.message_input_layout, null);
+        builder.setView(customLayout);
 
+        builder.setPositiveButton("Envoyer", (dialog, which) -> {
+            EditText edtMsg = customLayout.findViewById(R.id.edtMessage);
+            String message = edtMsg.getText().toString();
+
+            Message msg = new Message(0, MyTools.GetUserInSession().getCode(), user.getCode(), (byte) 0);
+            MessageDao dao = new MessageDao();
+            dao.add(msg, (items, mess)->{
+                Toast.makeText(context, "Message envoyé à "+user.getFirstname(), Toast.LENGTH_SHORT).show();
+            });
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
     private void ConfirmDelete(Context context, final int position) {
         AlertDialog.Builder dlg = new AlertDialog.Builder(context);
         dlg.setMessage("Vous allez supprimer ce compte définitivement..")
                 .setPositiveButton("Supprimer", (dialog, which) -> {
-                    Toast.makeText(context, "delete.."+position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "delete.."+position, Toast.LENGTH_SHORT).show();
+
+                    //TODO : si user utilisé!!
 
                     User user = items.get(position);
-
                     UserDao dao = new UserDao();
                     dao.delete(user.getCode(),
                             (items, message) -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

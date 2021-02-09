@@ -3,58 +3,52 @@ package mc.apps.demo0;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 import android.app.DatePickerDialog;
-import android.app.Service;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mc.apps.demo0.dao.GpsDao;
+import mc.apps.demo0.dao.MessageDao;
 import mc.apps.demo0.libs.GPSTracker;
 import mc.apps.demo0.libs.MyTools;
-import mc.apps.demo0.model.ClientIntervention;
 import mc.apps.demo0.model.GpsPosition;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.Message;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.ui.technician.TechnicianFragment;
 import mc.apps.demo0.ui.technician.TechnicianFragments;
@@ -67,6 +61,7 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     private static final String TAG = "tests";
     private static final int CLIENT_INTERV_CODE = 2000;
     private static final long GPS_REFRESH_MILLIS = 600000 ; // 10 min.
+    private static final long MSG_REFRESH_MILLIS = 300000 ; // 5 min.
     private MainViewModel mainViewModel;
 
     @Override
@@ -90,7 +85,9 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         );
 
         checkPermissions();
-        //getCurrentLocation();
+
+        createNotificationChannel();
+        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
 
         doPeriodicWork();
     }
@@ -169,9 +166,8 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_simple, menu);
-        MenuItem mSearch = menu.findItem(R.id.appSearchBar);
-
-/*        SearchView mSearchView = (SearchView) mSearch.getActionView();
+      /*  MenuItem mSearch = menu.findItem(R.id.appSearchBar);
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
         mSearchView.setQueryHint("Search");
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -190,6 +186,9 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.appSignOut){
             MyTools.confirmLogout(this);
+        }
+        if(item.getItemId()==R.id.appMsg){
+            startActivity(new Intent(this, MessagesActivity.class));
         }
         return true;
     }
@@ -241,8 +240,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         timePickerDialog.show();
     }
 
-
-
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         mYear = year;
@@ -268,34 +265,78 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
 
     /**
      * GPS Location Save
+     * Read Messages
      */
     private void doPeriodicWork() {
-        handler = new Handler();
-        handler.post(runnableCode);
+        handler1 = new Handler();
+        handler1.post(gpsRunnableCode);
+
+        getMessagesTask();
     }
-    Handler handler;
-    private Runnable runnableCode = new Runnable() {
+
+    Handler handler1;
+    private Runnable gpsRunnableCode = new Runnable() {
         @Override
         public void run() {
             Log.d(TAG, "Get Current Location..");
             getCurrentLocation();
-            handler.postDelayed(runnableCode, GPS_REFRESH_MILLIS);
+            handler1.postDelayed(gpsRunnableCode, GPS_REFRESH_MILLIS);
         }
     };
+
+    Timer msgTimer;
+    private void getMessagesTask(){
+        msgTimer = new Timer();
+        msgTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Log.i(TAG, "run: time task.."+MyTools.getCurrentTime());
+                getUnseenMessages();
+            }
+
+        },  0, MSG_REFRESH_MILLIS);
+
+    }
+    private void getUnseenMessages() {
+        MessageDao dao = new MessageDao();
+        dao.find(MyTools.GetUserInSession().getCode(), (items, message)->{
+            Log.i(TAG, "getUnseenMessages: "+items.size());
+            if(items.size()>0) {
+                List<Message> messages = dao.Deserialize(items, Message.class);
+                sendNotification(messages);
+            }
+        });
+    }
+   /* private void addNotification(List<Message> msgs) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_send_msg)
+                        .setContentTitle("Message!")
+                        .setContentText("Vous avez "+msgs.size()+" message"+(msgs.size()>1?"s":"")+"!");
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
+    }
+*/
     @Override
     protected void onDestroy() {
-        handler.removeCallbacks(runnableCode);
-        Log.d(TAG, "Get Current Location END!");
+        handler1.removeCallbacks(gpsRunnableCode);
+        Log.i(TAG, "Gps Tracker: Stop");
+        msgTimer.cancel();
+        Log.i(TAG, "MessageTimer: Cancel");
 
         deleteLocation();
         super.onDestroy();
     }
-
     private void deleteLocation() {
         GpsDao dao = new GpsDao();
         dao.delete(MyTools.GetUserInSession().getCode(), (i,m)->{});
     }
-
     GPSTracker gps;
     private void getCurrentLocation() {
         gps = new GPSTracker(this);
@@ -332,4 +373,87 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
             }
         });
     }
+
+
+    /**
+     * Notifications!
+     */
+
+    private static final String ACTION_UPDATE_NOTIFICATION = "mc.apps.demo0.ACTION_UPDATE_NOTIFICATION";
+    private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
+    private static final int NOTIFICATION_ID = 0;
+
+    private NotificationManager mNotifyManager;
+    private NotificationReceiver mReceiver = new NotificationReceiver();
+
+    public void sendNotification(List<Message> messages) {
+/*
+        Intent updateIntent = new Intent(ACTION_UPDATE_NOTIFICATION);
+        PendingIntent updatePendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, updateIntent, PendingIntent.FLAG_ONE_SHOT);
+*/
+
+        StringBuilder sb=  new StringBuilder();
+        for (Message message : messages){
+            sb.append(message.getFromUser()+" : "+message.getMessage()+"\n");
+        }
+        Log.i(TAG, "sendNotification: "+sb.toString());
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder("Nouveau(x) Message(s)", sb.toString());
+        //notifyBuilder.addAction(R.drawable.ic_send_msg, "Read", updatePendingIntent);
+
+        mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+    }
+
+    public void updateNotification() {
+/*        Bitmap androidImage = BitmapFactory.decodeResource(getResources(), R.drawable.ic_app_logo_red);
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder("Message(s)!","lorem ipsum bla bla!!");
+
+        notifyBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+                .bigPicture(androidImage)
+                .setBigContentTitle("updated.."));
+
+        mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());*/
+
+        // Disable the update button, leaving only the cancel button enabled.
+        // setNotificationButtonState(false, false, true);
+    }
+    private NotificationCompat.Builder getNotificationBuilder(String title, String notification_text) {
+        Intent notificationIntent = new Intent(this, MessagesActivity.class);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder notifyBuilder = new NotificationCompat
+                .Builder(this, PRIMARY_CHANNEL_ID)
+                .setContentTitle(title)
+                .setContentText(notification_text)
+                .setSmallIcon(R.drawable.ic_send_msg)
+                .setAutoCancel(true)
+                .setContentIntent(notificationPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL);
+        return notifyBuilder;
+    }
+    public void createNotificationChannel() {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    PRIMARY_CHANNEL_ID,
+                    "notification_channel_name",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(false);
+            notificationChannel.setDescription("notification_channel_description");
+            mNotifyManager.createNotificationChannel(notificationChannel);
+        }
+    }
+    public class NotificationReceiver extends BroadcastReceiver {
+        public NotificationReceiver() {
+        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateNotification();
+        }
+    }
+
 }

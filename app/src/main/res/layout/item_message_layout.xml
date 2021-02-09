@@ -10,10 +10,9 @@
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/button_radius"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/back_no_border"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +26,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_intervention" />
+            app:srcCompat="@drawable/ic_send_msg" />
 
         <TextView
             android:id="@+id/item_title"
@@ -35,14 +34,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:breakStrategy="high_quality"
             android:fontFamily="casual"
-            android:text="title.."
             android:textColor="@android:color/white"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/item_state"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/item_img"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,51 +49,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="casual"
-            android:text="subtitle.."
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_btn_delete"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/item_img"
             app:layout_constraintTop_toBottomOf="@+id/item_title" />
 
-        <ImageButton
-            android:id="@+id/item_btn_delete"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/icon_button_selector"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_btn_msg"
-            app:layout_constraintTop_toBottomOf="@+id/item_title"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
-
-        <ImageButton
-            android:id="@+id/item_btn_msg"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/icon_button_selector"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_title"
-            app:srcCompat="@drawable/ic_send_msg" />
-
         <TextView
-            android:id="@+id/item_state"
-            android:layout_width="wrap_content"
+            android:id="@+id/item_details_more"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:fontFamily="casual"
-            android:textAlignment="textEnd"
             android:textColor="@color/colorAccent"
-            android:textSize="12sp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/item_img"
+            app:layout_constraintTop_toBottomOf="@+id/item_details" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

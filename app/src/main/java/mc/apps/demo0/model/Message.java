@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+import mc.apps.demo0.libs.MyTools;
+
 public class Message implements Serializable {
     private int id;
 
@@ -15,11 +17,22 @@ public class Message implements Serializable {
     private String toUser;
     private byte seen;
 
+    @SerializedName("date_creation")
+    private String dateCreation;
+
+    public String getDateCreation() {
+        return dateCreation;
+    }
+    public void setDateCreation(String dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
     public Message(int id, String fromUser, String toUser, byte seen) {
         this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.seen = seen;
+        this.dateCreation = MyTools.getCurrentDate();
     }
 
     public int getId() {

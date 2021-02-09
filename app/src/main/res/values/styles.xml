@@ -108,6 +108,7 @@
         <item name="android:layout_marginEnd">8dp</item>
         <item name="android:background">@drawable/styled_button_selector</item>
         <item name="android:fontFamily">casual</item>
+
         <item name="android:textColor">@android:color/holo_orange_dark</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
