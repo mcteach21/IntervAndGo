@@ -25,8 +25,18 @@
         android:roundIcon="@mipmap/ic_launcher_blue_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MessagesActivity"></activity>
-        <activity android:name=".ChartActivity"></activity>
+        <activity android:name=".ItemActivity"
+            android:icon="@drawable/ic_images_pick">
+          <!--  <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".MessagesActivity" />
+        <activity android:name=".ChartActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

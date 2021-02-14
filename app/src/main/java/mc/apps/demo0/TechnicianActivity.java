@@ -187,8 +187,10 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         if(item.getItemId()==R.id.appSignOut){
             MyTools.confirmLogout(this);
         }
-        if(item.getItemId()==R.id.appMsg){
+        else if(item.getItemId()==R.id.appMsg){
             startActivity(new Intent(this, MessagesActivity.class));
+        }else if(item.getItemId()==R.id.appSettings){
+            startActivity(new Intent(this, SettingsActivity.class));
         }
         return true;
     }

@@ -67,7 +67,6 @@ public class ClientActivity extends AppCompatActivity {
                 showAdressInMaps(adressClient.getText().toString());
         });
 
-
         codeClient.setText( "Code : "+client.getCode());
         nomClient.setText( "Nom : "+client.getNom());
 

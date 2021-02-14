@@ -1,13 +1,11 @@
 package mc.apps.demo0;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -19,25 +17,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
-
-import mc.apps.demo0.dao.AffectationDao;
-import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
-import mc.apps.demo0.model.Affectation;
-import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 
 public class StartActivity extends AppCompatActivity {
@@ -49,8 +39,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
 
+        setContentView(R.layout.activity_start);
         //masquer barre d'actions/menus
         getSupportActionBar().hide();
 

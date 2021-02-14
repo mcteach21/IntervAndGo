@@ -122,10 +122,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                 itemView.findViewById(R.id.item_btn_msg).setVisibility(View.GONE);
 
                 if(MyTools.GetCurrentProfil()==1) { //admin
-                    itemView.findViewById(R.id.item_btn_delete).setVisibility(View.VISIBLE);
+                   /* itemView.findViewById(R.id.item_btn_delete).setVisibility(View.VISIBLE);
                     itemView.findViewById(R.id.item_btn_delete).setOnClickListener(
                             v -> ConfirmDelete(itemView.getContext(), getAdapterPosition())
-                    );
+                    );*/
                 }else if(MyTools.GetCurrentProfil()==2){ //superv
                     itemView.findViewById(R.id.item_btn_msg).setVisibility(View.VISIBLE);
                     itemView.findViewById(R.id.item_btn_msg).setOnClickListener(

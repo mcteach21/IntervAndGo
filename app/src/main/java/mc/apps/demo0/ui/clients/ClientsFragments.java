@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import mc.apps.demo0.ClientActivity;
 import mc.apps.demo0.InterventionActivity;
+import mc.apps.demo0.ItemActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ClientsAdapter;
 import mc.apps.demo0.dao.AdressDao;
@@ -29,6 +30,7 @@ import mc.apps.demo0.dao.Dao;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class ClientsFragments extends Fragment {
@@ -92,8 +94,13 @@ public class ClientsFragments extends Fragment {
                     //Toast.makeText(root.getContext(), "Selected : "+item.toString(), Toast.LENGTH_SHORT).show();
                     mainViewModel.setClient((Client) item);
 
-                    Intent intent = new Intent(root.getContext(), ClientActivity.class);
+                   /* Intent intent = new Intent(root.getContext(), ClientActivity.class);
                     intent.putExtra("client", (Client)item);
+                    startActivity(intent);*/
+
+                    Intent intent = new Intent(root.getContext(), ItemActivity.class);
+                    intent.putExtra("item", (Client) item);
+                    intent.putExtra("num", 1);
                     startActivity(intent);
                 }
         );

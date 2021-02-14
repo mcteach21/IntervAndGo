@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -18,9 +19,10 @@ import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.User;
 
 public class MainViewModel  extends ViewModel {
-/*    private MutableLiveData<String> demo = new MutableLiveData<>();
-    public MutableLiveData<String> getDemo() { return demo; }
-    public void setDemo(String value) { demo.setValue(value); }*/
+
+    private MutableLiveData<Serializable> item = new MutableLiveData<>();
+    public MutableLiveData<Serializable> getItem() { return item; }
+    public void setItem(Serializable value) { item.setValue(value); }
 
     private MutableLiveData<String> search = new MutableLiveData<>();
     private MutableLiveData<List<User>> selected = new MutableLiveData<>();

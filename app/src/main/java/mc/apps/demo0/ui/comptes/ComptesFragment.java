@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import mc.apps.demo0.CompteActivity;
+import mc.apps.demo0.ItemActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.UsersAdapter;
 import mc.apps.demo0.dao.UserDao;
@@ -85,8 +86,9 @@ public class ComptesFragment extends Fragment {
         adapter = new UsersAdapter(
                 items,
                 (position, item) -> {
-                    Intent intent = new Intent(root.getContext(), CompteActivity.class);
-                    intent.putExtra("compte", (User)item);
+                    Intent intent = new Intent(root.getContext(), ItemActivity.class); //CompteActivity.class
+                    intent.putExtra("item", (User)item);
+                    intent.putExtra("num", 0);
                     startActivity(intent);
                 }
         );
