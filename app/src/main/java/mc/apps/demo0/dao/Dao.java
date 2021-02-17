@@ -26,6 +26,12 @@ public class Dao<T> {
 
     protected void query(String named_query, String id, OnSuccess onSuccess) {
         String url = DB_API_URL+"named="+named_query+"&id="+id;
+        Log.i(TAG, "query: "+url);
+        new Http2AsyncTask(onSuccess).execute(url);
+    }
+    protected void query2(String named_query, String id, OnSuccess onSuccess) {
+        String url = DB_API_URL+"named="+named_query+"&id="+id+"&id2";
+        Log.i(TAG, "query: "+url);
         new Http2AsyncTask(onSuccess).execute(url);
     }
 

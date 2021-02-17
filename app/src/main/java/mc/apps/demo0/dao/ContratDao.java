@@ -18,15 +18,27 @@ public class ContratDao extends Dao<Contrat> {
         super.find(whereClause, onSuccess);
     }
     public void add(Contrat u, OnSuccess onSuccess){
+        action(u, onSuccess,"add");
+
+    }
+    public void update(Contrat u, OnSuccess onSuccess){
+        action(u, onSuccess,"add");
+
+    }
+
+    private void action(Contrat u, OnSuccess onSuccess, String action) {
         try {
-            String addClause="action=add&"
+            String addClause="action="+action+"&"
                     +"id="+ URLEncoder.encode(u.getCode(), "utf-8")
                     +"&nom="+ URLEncoder.encode(u.getNom(), "utf-8")
                     +"&client_id="+ URLEncoder.encode(u.getClientId(), "utf-8");
-            super.add(addClause, onSuccess);
+
+            if(action.equals("add"))
+                super.add(addClause, onSuccess);
+            else
+                super.update(addClause, onSuccess);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
     }
 }

@@ -20,18 +20,27 @@ public class AdressDao extends Dao<Adress> {
         super.find(whereClause, onSuccess);
     }
     public void add(Adress u, OnSuccess onSuccess){
+        action(u, onSuccess, "add");
+    }
+    public void update(Adress u, OnSuccess onSuccess){
+        action(u, onSuccess, "add");
+    }
+    private void action(Adress u, OnSuccess onSuccess,String action) {
         try {
-            String addClause="action=add&"
+            String addClause="action="+action+"&"
                     +"id="+ URLEncoder.encode("0", "utf-8")
                     +"&nom="+ URLEncoder.encode(u.getNom(), "utf-8")
                     +"&voie="+ URLEncoder.encode(u.getVoie(), "utf-8")
                     +"&cp="+ URLEncoder.encode(u.getVoie(), "utf-8")
                     +"&ville="+ URLEncoder.encode(u.getVille(), "utf-8")
                     +"&client_id="+ URLEncoder.encode(u.getClientId(), "utf-8");
-            super.add(addClause, onSuccess);
+
+            if(action.equals("add"))
+                super.add(addClause, onSuccess);
+            else
+                super.update(addClause, onSuccess);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
     }
 }

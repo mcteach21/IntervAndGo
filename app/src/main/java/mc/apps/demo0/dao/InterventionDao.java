@@ -2,32 +2,15 @@ package mc.apps.demo0.dao;
 
 
 import android.util.Log;
-
-import com.google.gson.annotations.SerializedName;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
-
 import mc.apps.demo0.model.Intervention;
 
 public class InterventionDao extends Dao<Intervention>{
-
     private static final String TAG = "tests";
-
     public InterventionDao() {
         super("interventions");
     }
-
-/*    public void InterventionsOfTech(String tech_code, OnSuccess onSuccess) {
-       *//* try {
-            String whereClause = "interventions.code=affectations.intervention_id&technicien_id=" + tech_code;
-            super.list("interventions,affectations",whereClause, onSuccess);
-        }catch(Exception e){}*//*
-        super.list((items,message)->{
-
-        });
-    }*/
 
     public void find(String code, OnSuccess onSuccess){
         find("code=" + code, onSuccess);
@@ -35,7 +18,12 @@ public class InterventionDao extends Dao<Intervention>{
     public void findByTech(String tech_code, OnSuccess onSuccess){
         super.query("intervs_tech", tech_code, onSuccess);
     }
-
+    public void findByClient(String client_code, OnSuccess onSuccess){
+        super.query("intervs_client", client_code, onSuccess);
+    }
+    public void findByTechSuperv(String code, OnSuccess onSuccess){
+        super.query2("intervs_compte", code, onSuccess);
+    }
     public void add(Intervention u, OnSuccess onSuccess){
         try {
             String addClause="action=add&"

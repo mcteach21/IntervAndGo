@@ -62,7 +62,7 @@
             style="@style/inputstyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCodeUser">
+            app:layout_constraintTop_toBottomOf="@+id/spinnerProfil">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtFirstname"

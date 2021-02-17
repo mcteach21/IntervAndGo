@@ -12,6 +12,9 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import java.util.List;
+
+import mc.apps.demo0.AdminActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.ClientDao;
@@ -44,6 +47,29 @@ public class ClientManager {
         cp = root.findViewById(R.id.edtCpClient);
         ville = root.findViewById(R.id.edtVilleClient);
     }
+    private void setCurrentClient(Client client) {
+        code.setText(client.getCode());
+        nom.setText(client.getNom());
+        contact.setText(client.getContact());
+        email.setText(client.getEmail());
+        tel.setText(client.getTelephone());
+
+        AdressDao dao1 = new AdressDao();
+        dao1.ofClient(client.getCode(), (items, message) -> {
+            List<Adress> adresses = dao1.Deserialize(items, Adress.class);
+            if(adresses.size()>0){
+                voie.setText(adresses.get(0).getVoie());
+                cp.setText(adresses.get(0).getCp());
+                ville.setText(adresses.get(0).getVille());
+            }
+        });
+        ContratDao dao2 = new ContratDao();
+        dao2.ofClient(client.getCode(), (items, message) -> {
+            List<Contrat> contrats = dao2.Deserialize(items, Contrat.class);
+            if(contrats.size()>0)
+                contrat.setText(contrats.get(0).getCode());
+        });
+    }
 
     private boolean checkForm(View root) {
         getForm(root);
@@ -68,9 +94,34 @@ public class ClientManager {
             });
     }
 
+    public void prepareUpdateClient(Client client, View root, Class<?> backActivity) {
+        getForm(root);
+        code.setVisibility(View.GONE);
+        setCurrentClient(client);
+
+        Button btnadd = root.findViewById(R.id.btn_add);
+        btnadd.setOnClickListener(view -> {
+            if(updateClient(root)) {
+                Intent intent = new Intent(root.getContext(), backActivity);
+                intent.putExtra("num",3);
+                root.getContext().startActivity(intent);
+            }else{
+                Toast.makeText(activity, "Tous les champs sont obligatoires!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private boolean updateClient(View root) {
+        return actionOnClient(root,"update");
+    }
+
     EditText code, nom, contrat, contact, email, tel, voie, cp, ville;
 
     private boolean addClient(View root) {
+        return actionOnClient(root,"add");
+    }
+
+    private boolean actionOnClient(View root, String action) {
         boolean ok = checkForm(root);
         if(!ok)
             return false;
@@ -86,29 +137,50 @@ public class ClientManager {
                 ville.getText().toString(),
                 contrat.getText().toString()
         );
-        Adress adress = new Adress(0, "principale" ,
-                voie.getText().toString() , cp.getText().toString(),
-                ville.getText().toString(), code.getText().toString());
 
-        //TODO : code contrat..
-        Contrat contrat_client = new Contrat("C"+code.getText().toString(), contrat.getText().toString(), code.getText().toString());
 
 
         ClientDao dao = new ClientDao();
-        dao.add(client, (items, message) -> {
-            Log.i(TAG, "onCreate: "+message);
-            Toast.makeText(root.getContext(), "Client ajouté avec succès!", Toast.LENGTH_LONG).show();
+        if(action.equals("add")) {
 
-            AdressDao dao2 = new AdressDao();
-            dao2.add(adress, (items2, message2) -> {
-                Log.i(TAG, "onCreate: "+message2);
-            });
+            Adress adress = new Adress(0, "principale" ,
+                    voie.getText().toString() , cp.getText().toString(),
+                    ville.getText().toString(), code.getText().toString());
 
-            ContratDao dao3 = new ContratDao();
-            dao3.add(contrat_client, (items3, message3) -> {
-                Log.i(TAG, "onCreate: "+message3);
+            //TODO : code contrat..
+            Contrat contrat_client = new Contrat("C"+code.getText().toString(), contrat.getText().toString(), code.getText().toString());
+
+            dao.add(client, (items, message) -> {
+                Log.i(TAG, "onCreate: " + message);
+                Toast.makeText(root.getContext(), "Client ajouté avec succès!", Toast.LENGTH_LONG).show();
+
+                AdressDao dao2 = new AdressDao();
+                dao2.add(adress, (items2, message2) -> {
+                    Log.i(TAG, "onCreate: " + message2);
+                });
+
+                ContratDao dao3 = new ContratDao();
+                dao3.add(contrat_client, (items3, message3) -> {
+                    Log.i(TAG, "onCreate: " + message3);
+                });
             });
-        });
+        }else{
+            dao.update(client, (items, message) -> {
+                Log.i(TAG, "onCreate: " + message);
+                Toast.makeText(root.getContext(), "Client modifié avec succès!", Toast.LENGTH_LONG).show();
+
+                //TODO : contrat..adress..
+               /* AdressDao dao2 = new AdressDao();
+                dao2.update(adress, (items2, message2) -> {
+                    Log.i(TAG, "onCreate: " + message2);
+                });
+
+                ContratDao dao3 = new ContratDao();
+                dao3.update(contrat_client, (items3, message3) -> {
+                    Log.i(TAG, "onCreate: " + message3);
+                });*/
+            });
+        }
 
         resetFields(root);
         return true;
@@ -124,4 +196,6 @@ public class ClientManager {
         cp.getText().clear();
         ville.getText().clear();
     }
+
+
 }

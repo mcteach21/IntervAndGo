@@ -164,5 +164,9 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="btn_delete_txt">Suppression</string>
     <string name="btn_update_txt">Modification</string>
+    <string name="btn_update_ok_txt">Valider</string>
+    <string name="btn_update_cancel_txt">Annuler</string>
+    <string name="btn_update_user">Modifier Compte</string>
+    <string name="btn_update_client">Modifier Client</string>
 
 </resources>

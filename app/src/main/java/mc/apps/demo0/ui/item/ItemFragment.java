@@ -3,6 +3,10 @@ package mc.apps.demo0.ui.item;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,11 +34,14 @@ import mc.apps.demo0.R;
 import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.ContratDao;
+import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Contrat;
 import mc.apps.demo0.model.User;
+import mc.apps.demo0.ui.additem.AddItemFragment;
+import mc.apps.demo0.ui.updateitem.UpdateItemFragment;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class ItemFragment extends Fragment implements View.OnClickListener {
@@ -41,8 +49,10 @@ public class ItemFragment extends Fragment implements View.OnClickListener {
     private MainViewModel mainViewModel;
     private View root;
     private TextView title, infos, adress;
-    private Button btnDelete, btnUpdate;
+    private Button btnDelete, btnUpdate, btnUpdateOk, btnUpdateCancel;
     private ImageView btnMaps;
+    private View updateLayout, fragmentLayout;
+    boolean isOpen=false;
 
     private Serializable currentItem;
 
@@ -69,7 +79,6 @@ public class ItemFragment extends Fragment implements View.OnClickListener {
     }
 
     private void handleItem() {
-
         title = root.findViewById(R.id.item_title);
         infos = root.findViewById(R.id.item_infos);
         adress = root.findViewById(R.id.item_adress);
@@ -111,7 +120,6 @@ public class ItemFragment extends Fragment implements View.OnClickListener {
         info +="\nEmail : "+compte.getEmail()+"\nProfil : "+profil;
         infos.setText(info);
     }
-
     private void setClient() {
         Client client = (Client)currentItem;
 
@@ -159,32 +167,105 @@ public class ItemFragment extends Fragment implements View.OnClickListener {
         }
     }
     private void deleteItem() {
-
         AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
         dlg.setMessage("Vous allez supprimer ce "+currentItem.getClass().getSimpleName()+" définitivement! Etes-vous sûr?")
                 .setPositiveButton("Supprimer", (dialog, which) -> {
-
-                    //TODO : si item utilisé!!
-
                     if(currentItem.getClass().getSimpleName().equals("User")) {
                         UserDao dao = new UserDao();
                         User compte = (User)currentItem;
-                        dao.delete(compte.getCode(),
-                                (items, message) -> getActivity().finish()
-                        );
+
+                        InterventionDao idao = new InterventionDao();
+                        idao.findByTechSuperv(compte.getCode(),
+                                (items, message) -> {
+                                    if(items.size()==0) {
+                                        dao.delete(compte.getCode(),
+                                                (items_, message_) -> getActivity().finish()
+                                        );
+                                    }else{
+                                        Toast.makeText(getActivity(), "Suppression impossible : ce compte intervient dans une ou plusieurs interventions!", Toast.LENGTH_LONG).show();
+                                        getActivity().finish();
+                                    }
+                                });
+
+
                     }else if(currentItem.getClass().getSimpleName().equals("Client")) {
                         ClientDao dao = new ClientDao();
                         Client compte = (Client)currentItem;
-                        dao.delete(compte.getCode(),
-                                (items, message) -> getActivity().finish()
-                        );
-                    }else{
 
+                        InterventionDao idao = new InterventionDao();
+                        idao.findByClient(compte.getCode(),
+                                (items, message) -> {
+                                    if(items.size()==0) {
+                                        dao.delete(compte.getCode(),
+                                                (items_, message_) -> getActivity().finish()
+                                        );
+                                    }else{
+                                        Toast.makeText(getActivity(), "Suppression impossible : ce client intervient dans une ou plusieurs interventions!", Toast.LENGTH_LONG).show();
+                                        getActivity().finish();
+                                    }
+                                });
+                    }else{
+                        //TODO : intervention..
                     }
-                })
-                .setNegativeButton("Annuler", null).show();
+                }).setNegativeButton("Annuler", null).show();
     }
     private void updateItem() {
+
+        updateLayout = root.findViewById(R.id.updateLayout);
+
+        fragmentLayout = updateLayout.findViewById(R.id.container);
+        btnUpdateOk = updateLayout.findViewById(R.id.item_btn_update_ok);
+        btnUpdateCancel = updateLayout.findViewById(R.id.item_btn_update_cancel);
+
+        btnUpdateOk.setOnClickListener((v)-> Toast.makeText(getActivity(), "Update ok..", Toast.LENGTH_SHORT).show());
+        btnUpdateCancel.setOnClickListener((v)->getActivity().finish());
+
+        defineFragment(currentItem.getClass().getSimpleName().equals("User")?2:3);
+        onSlideDetails();
+    }
+    private void defineFragment(int num) {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, UpdateItemFragment.newInstance(num))
+                .commitNow();
+
+        if(num==1){
+            mainViewModel.setUser((User) currentItem);
+        }
+    }
+
+    private void onSlideDetails(){
+        int currentHeight = isOpen?600:0;
+        int newHeight = isOpen?0:600;
+
+        title.setVisibility(isOpen?View.VISIBLE:View.GONE);
+        infos.setVisibility(isOpen?View.VISIBLE:View.GONE);
+        adress.setVisibility(isOpen?View.VISIBLE:View.GONE);
+        btnDelete.setVisibility(isOpen?View.VISIBLE:View.GONE);
+        btnUpdate.setVisibility(isOpen?View.VISIBLE:View.GONE);
+        btnMaps.setVisibility(isOpen?View.VISIBLE:View.GONE);
+
+        updateLayout.setVisibility(isOpen?View.INVISIBLE:View.VISIBLE);
+
+        ValueAnimator slideAnimator = new ValueAnimator().ofInt(currentHeight, newHeight).setDuration(2000);
+        slideAnimator.addUpdateListener( v-> {
+            int value = (int) v.getAnimatedValue();
+            updateLayout.getLayoutParams().height = value;
+            updateLayout.requestLayout();
+        });
+
+      /*  ValueAnimator slide2Animator = new ValueAnimator().ofInt(currentHeight, newHeight-100).setDuration(800);
+        slideAnimator.addUpdateListener( v-> {
+            int value = (int) v.getAnimatedValue();
+            fragmentLayout.getLayoutParams().height = value;
+            fragmentLayout.requestLayout();
+        });*/
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(slideAnimator);
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.start();
+
+        isOpen = !isOpen;
     }
 
 

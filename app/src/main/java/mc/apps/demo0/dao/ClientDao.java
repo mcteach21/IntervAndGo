@@ -33,5 +33,19 @@ public class ClientDao extends Dao<Client> {
         }
 
     }
+    public void update(Client u, OnSuccess onSuccess){
+        try {
+            String addClause="action=update&"
+                    +"id="+ URLEncoder.encode(u.getCode(), "utf-8")
+                    +"&nom="+ URLEncoder.encode(u.getNom(), "utf-8")
+                    +"&contact="+ URLEncoder.encode(u.getContact(), "utf-8")
+                    +"&email="+ URLEncoder.encode(u.getEmail(), "utf-8")
+                    +"&tel="+ URLEncoder.encode(u.getTelephone(), "utf-8");
+            super.update(addClause, onSuccess);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
