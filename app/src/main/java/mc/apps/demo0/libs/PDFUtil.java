@@ -44,7 +44,7 @@ import mc.apps.demo0.R;
 public class PDFUtil {
     private static final String TAG = "tests";
     public static final double PDF_PAGE_WIDTH = 8.3 * 72 * 1.2;
-    public static final double PDF_PAGE_HEIGHT = 11.7 * 72 * 1.5;
+    public static final double PDF_PAGE_HEIGHT = 11.7 * 72 * 2;
     private static final String PDFS_DIRECTORY_NAME = "pdfs";
 
     // public static final double PDF_PAGE_WIDTH_INCH = 8.3;
@@ -345,14 +345,25 @@ public class PDFUtil {
 
             Paint paint = new Paint();
             paint.setTextSize(30);
-            int n=0;
+            int n=0, left, top;
+            //float textHeight;
             for (String content: contents) {
                 paint.setColor(Color.BLACK);
                 String[] parts = content.split("\n");
 
+                int MAX_WIDTH = (int) PDF_PAGE_WIDTH-100;
+                left=50;
                 for (String part: parts) {
-                    if(!part.trim().equals(""))
-                        canvas.drawText(part, 50, 200+50*n++, paint);
+                    if(!part.trim().equals("")) {
+                        top=200 + 50 * n++;
+                        if(part.length() > 100){
+                            paint.setSubpixelText(true);
+                            //textHeight = paint.descent() - paint.ascent();
+                            n += drawTextAndBreakLine(canvas, paint, left, top, MAX_WIDTH , part) - 2;
+                        }else {
+                            canvas.drawText(part, left, top, paint);
+                        }
+                    }
                 }
 
                 paint.setColor(Color.BLUE);
@@ -367,6 +378,30 @@ public class PDFUtil {
         } catch (IOException e) {
             Log.i("error", e.getLocalizedMessage());
         }
+    }
+    public static int drawTextAndBreakLine(final Canvas canvas, final Paint paint, final float x, final float y, final float maxWidth, final String text) {
+        String textToDisplay = text;
+        String tempText = "";
+        char[] chars;
+        float textHeight = paint.descent() - paint.ascent();
+        float lastY = y;
+        int nextPos = 0;
+        int lengthBeforeBreak = textToDisplay.length();
+
+        int line=0;
+        do {
+            lengthBeforeBreak = textToDisplay.length();
+            chars = textToDisplay.toCharArray();
+            nextPos = paint.breakText(chars, 0, chars.length, maxWidth, null);
+            tempText = textToDisplay.substring(0, nextPos);
+            textToDisplay = textToDisplay.substring(nextPos, textToDisplay.length());
+            canvas.drawText(tempText, x, lastY, paint);
+            lastY += textHeight;
+
+            line++;
+        } while(nextPos < lengthBeforeBreak);
+
+       return line;
     }
 }
 
