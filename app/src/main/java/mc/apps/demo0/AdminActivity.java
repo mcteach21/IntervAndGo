@@ -113,9 +113,10 @@ public class AdminActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.appSignOut){
             MyTools.confirmLogout(this);
-        }else if(item.getItemId()==R.id.appSettings){
-            startActivity(new Intent(this, SettingsActivity.class));
         }
+/*        else if(item.getItemId()==R.id.appSettings){
+            startActivity(new Intent(this, SettingsActivity.class));
+        }*/
         return true;
     }
 

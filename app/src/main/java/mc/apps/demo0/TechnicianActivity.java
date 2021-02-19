@@ -166,20 +166,6 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_simple, menu);
-      /*  MenuItem mSearch = menu.findItem(R.id.appSearchBar);
-        SearchView mSearchView = (SearchView) mSearch.getActionView();
-        mSearchView.setQueryHint("Search");
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //mainViewModel.setSearch(newText);
-                return true;
-            }
-        });*/
         return super.onCreateOptionsMenu(menu);
     }
     @Override
@@ -189,9 +175,10 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         }
         else if(item.getItemId()==R.id.appMsg){
             startActivity(new Intent(this, MessagesActivity.class));
-        }else if(item.getItemId()==R.id.appSettings){
-            startActivity(new Intent(this, SettingsActivity.class));
         }
+/*        else if(item.getItemId()==R.id.appSettings){
+            startActivity(new Intent(this, SettingsActivity.class));
+        }*/
         return true;
     }
     public void ClientIntervFilter(View view){

@@ -2,13 +2,21 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
+
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionButtonStyle">@style/myActionButtonStyle</item>
         <item name="actionButtonStyle">@style/myActionButtonStyle</item>
         <item name="actionBarSize">72dip</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+
+
     </style>
+
+   <!-- <style name="ActionButton" parent="@android:style/Widget.ActionButton">
+        <item name="android:drawablePadding">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+    </style>-->
 
 <!--    <style name="AppThemeDark" parent="">
         <item name="colorPrimary">@color/colorPrimary00</item>
@@ -23,35 +31,30 @@
     </style>
 
     <style name="myActionButtonStyle" parent="Widget.AppCompat.ActionButton">
-        <item name="android:minWidth">80dp</item>
+       <!-- <item name="android:minWidth">80dp</item>
         <item name="android:maxWidth">100dp</item>
-        <item name="android:width">80dp</item>
+        <item name="android:width">80dp</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
     </style>
 
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="fab_button_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginBottom">84dp</item>
     </style>
-
     <style name="bloc_bordered_style">
         <item name="android:background">@drawable/input_bordered</item>
         <item name="android:padding">5dp</item>
     </style>
-
     <style name="input_style_default">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

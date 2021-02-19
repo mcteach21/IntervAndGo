@@ -13,7 +13,10 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.text.LineBreaker;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,10 +28,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import mc.apps.demo0.adapters.SelectedUsersAdapter;
 import mc.apps.demo0.dao.AdressDao;
@@ -50,7 +57,7 @@ public class InterventionActivity extends AppCompatActivity {
     private boolean isOpen;
     private ConstraintLayout clientDetails;
     private AppCompatImageView btn, btn_maps;
-    private boolean goto_rapport;
+    private boolean goto_rapport, intervention_finished;
     private Button btn_start, btn_finish;
 
     @Override
@@ -69,6 +76,8 @@ public class InterventionActivity extends AppCompatActivity {
         }
 
         goto_rapport = intent.getBooleanExtra("rapport", false);
+
+        intervention_finished= intervention.getStatutId()==5;
         Init();
     }
 
@@ -79,8 +88,9 @@ public class InterventionActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(goto_rapport)
+        if(intervention_finished)
             getMenuInflater().inflate(R.menu.menu_interv, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -89,16 +99,22 @@ public class InterventionActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id==android.R.id.home)
             finish();
+        if (id==R.id.item_menu_pdf)
+            generatePDF();
 
-        //MASQUE!
         /*if (id==R.id.item_menu_rapport){
             Intent data =  new Intent();
             data.putExtra("interv", intervention);
             setResult(RESULT_OK, data);
             finish();
         }*/
-
         return false;
+    }
+
+    private void generatePDF() {
+        Intent intent = new Intent(this, RapportActivity.class);
+        intent.putExtra("intervention", intervention);
+        startActivity(intent);
     }
 
     @SuppressLint("WrongViewCast")

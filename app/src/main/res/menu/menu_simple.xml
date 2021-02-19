@@ -18,10 +18,11 @@
         android:id="@+id/appSignOut"
         android:icon="@drawable/ic_account_logout"
         android:title="@string/action_sign_out"
-        app:showAsAction="ifRoom|withText" />
-    <item
+        app:showAsAction="ifRoom|withText"
+        />
+<!--    <item
         android:id="@+id/appSettings"
-        android:title="@string/title_activity_settings" />
+        android:title="@string/title_activity_settings" />-->
 
 
 </menu>

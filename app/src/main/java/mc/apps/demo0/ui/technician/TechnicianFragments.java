@@ -193,9 +193,6 @@ public class TechnicianFragments extends Fragment {
         statutChoice = root.findViewById(R.id.statutChoice);
         observations = root.findViewById(R.id.edtObservations);
 
-
-
-
         if(TechnicianFragments.intervention!=null){
             codeIntervention.setText(TechnicianFragments.intervention.getCode());
             txtClient.setText("Client : "+intervention.getClientId()); //TODO nom..

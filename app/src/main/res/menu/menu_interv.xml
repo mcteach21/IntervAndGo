@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_rapport_white"
         android:title="@string/search_txt"
         app:showAsAction="always" />-->
+
+   <item
+       android:id="@+id/item_menu_pdf"
+       android:icon="@drawable/ic_pdf"
+       android:title="@string/pdf_generate"
+       app:showAsAction="always" />
 </menu>
