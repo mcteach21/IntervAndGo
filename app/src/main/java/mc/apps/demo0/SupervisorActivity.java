@@ -164,12 +164,15 @@ public class SupervisorActivity extends AppCompatActivity implements DatePickerD
                 String dateDebutReel = data.getStringExtra("dateDebutReel");
                 int status = data.getIntExtra("status", 0);
 
+                List<String> codesTechnicians =  data.getStringArrayListExtra("codesTechnicians");
+
                 Hashtable<String, Object> filter = new Hashtable();
                 filter.put("codeClient", codeClient);
                 filter.put("codeSupervisor", codeSupervisor);
                 filter.put("dateDebutPrev", dateDebutPrev);
                 filter.put("dateDebutReel", dateDebutReel);
                 filter.put("status", status);
+                filter.put("codesTechnicians", codesTechnicians);
 
                 mainViewModel.setFilter(filter);
             }else{

@@ -39,7 +39,7 @@ import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.User;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
-public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "tests";
     private static final int REQUEST_FILTRE_CODE = 1603;
     private static final int SELECT_REQUEST_CODE = 2608 ;
@@ -101,6 +101,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         intent.putExtra("dateDebutReel", dateDebutReel);
         intent.putExtra("status", status);
 
+        List<User> technicians = ((SelectedUsersAdapter)search_tech_list.getAdapter()).getItems();
+        ArrayList<String> codesTechnicians = new ArrayList<String>();
+        if(technicians.size()>0){
+            for (User tech: technicians )
+                codesTechnicians.add(tech.getCode());
+            intent.putStringArrayListExtra("codesTechnicians", codesTechnicians);
+        }
+
         setResult(REQUEST_FILTRE_CODE, intent);
         finish();
     }
@@ -133,15 +141,17 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         mHour = c.get(Calendar.HOUR);
         mMinute = c.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, this, mHour, mMinute, true);
-        timePickerDialog.show();
+        edtDateTime.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
+
+       /* TimePickerDialog timePickerDialog = new TimePickerDialog(this, this, mHour, mMinute, true);
+        timePickerDialog.show();*/
     }
-    @Override
+    /*@Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         mHour = hourOfDay;
         mMinute = minute;
         edtDateTime.setText(mDay + "-" + (mMonth + 1) + "-" + mYear+" "+mHour+":"+mMinute);
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

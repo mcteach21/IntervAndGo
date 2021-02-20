@@ -55,6 +55,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         this.mainViewModel = mainViewModel;
     }
 
+    public List<User> getItems() {
+        return items;
+    }
+
     //Drawable item_logo;
     @NonNull
     @Override

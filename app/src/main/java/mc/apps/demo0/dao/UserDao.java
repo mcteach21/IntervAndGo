@@ -17,6 +17,10 @@ public class UserDao extends Dao<User> {
     public void login(String login, String password, OnSuccess onSuccess){
         find("login=" + login + "&password=" + password, onSuccess);
     }
+
+    public void findTechsByInterv(String interv_code, OnSuccess onSuccess){
+        super.query("techs_interv", interv_code, onSuccess);
+    }
     public void findByCode(String code, OnSuccess onSuccess){
         try {
             find("code='" + URLEncoder.encode(code, "utf-8")+"'", onSuccess);

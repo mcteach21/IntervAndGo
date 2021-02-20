@@ -4,6 +4,8 @@ package mc.apps.demo0.dao;
 import android.util.Log;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
+
 import mc.apps.demo0.model.Intervention;
 
 public class InterventionDao extends Dao<Intervention>{
@@ -18,12 +20,18 @@ public class InterventionDao extends Dao<Intervention>{
     public void findByTech(String tech_code, OnSuccess onSuccess){
         super.query("intervs_tech", tech_code, onSuccess);
     }
+
+    public void findByTechs(List<String> techs_codes, OnSuccess onSuccess){
+        super.queryCustom(techs_codes, onSuccess);
+    }
+
     public void findByClient(String client_code, OnSuccess onSuccess){
         super.query("intervs_client", client_code, onSuccess);
     }
     public void findByTechSuperv(String code, OnSuccess onSuccess){
         super.query2("intervs_compte", code, onSuccess);
     }
+
     public void add(Intervention u, OnSuccess onSuccess){
         try {
             String addClause="action=add&"

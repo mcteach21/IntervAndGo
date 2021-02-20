@@ -28,6 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.User;
@@ -161,6 +162,7 @@ public class AdminActivity extends AppCompatActivity {
                 String dateDebutPrev = data.getStringExtra("dateDebutPrev");
                 String dateDebutReel = data.getStringExtra("dateDebutReel");
                 int status = data.getIntExtra("status",0);
+                List<String> codesTechnicians =  data.getStringArrayListExtra("codesTechnicians");
 
                 Log.i(TAG, "onActivityResult: "+codeClient+" "+dateDebutPrev+" "+status);
 
@@ -170,6 +172,8 @@ public class AdminActivity extends AppCompatActivity {
                 filter.put("dateDebutPrev", dateDebutPrev);
                 filter.put("dateDebutReel", dateDebutReel);
                 filter.put("status", status);
+
+                filter.put("codesTechnicians", codesTechnicians);
 
                 mainViewModel.setFilter(filter);
             }catch(Exception e){

@@ -1,7 +1,11 @@
 package mc.apps.demo0.dao;
 
 import android.os.AsyncTask;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,6 +35,15 @@ public class Dao<T> {
     }
     protected void query2(String named_query, String id, OnSuccess onSuccess) {
         String url = DB_API_URL+"named="+named_query+"&id="+id+"&id2";
+        Log.i(TAG, "query: "+url);
+        new Http2AsyncTask(onSuccess).execute(url);
+    }
+
+
+    protected void queryCustom(List<String> techs_codes, OnSuccess onSuccess) {
+        String ids = TextUtils.join("|", techs_codes);
+        String url = DB_API_URL+"nameds&ids="+ids;
+
         Log.i(TAG, "query: "+url);
         new Http2AsyncTask(onSuccess).execute(url);
     }

@@ -30,10 +30,14 @@ import java.util.stream.Collectors;
 import mc.apps.demo0.MapsActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.dao.AdressDao;
+import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.InterventionDao;
+import mc.apps.demo0.dao.UserDao;
 import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.User;
 
 public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdapter.ViewHolder> implements Filterable {
     private static final String TAG ="tests" ;
@@ -174,8 +178,54 @@ public class InterventionsAdapter extends RecyclerView.Adapter<InterventionsAdap
                 items = items.stream().filter( i-> i.getDateDebutReelle()!=null && i.getDateFinReelle()==null).collect(Collectors.toList());
             else if(status==5) //terminée
                 items = items.stream().filter( i-> i.getDateDebutReelle()!=null && i.getDateFinReelle()!=null).collect(Collectors.toList());
+
+
+            List<String> codes_techniciens = (List<String>) filter.get("codesTechnicians");
+            if(!codes_techniciens.isEmpty()) {
+                Log.i(TAG, "setFilter: codes techniciens = " + codes_techniciens);
+
+                InterventionDao idao =  new InterventionDao();
+                idao.findByTechs(codes_techniciens, (data, mess)-> {
+                    if(!data.isEmpty()) {
+                        List<Intervention> filter_intervs = idao.Deserialize(data, Intervention.class);
+                        items = filter_intervs;
+                        notifyDataSetChanged();
+                    }
+                });
+
+
+               /* List<Intervention> items_to_filter = items;
+                List<Intervention> items_filtred = new ArrayList<Intervention>();
+                UserDao udao= new UserDao();
+                for (Intervention interv: items_to_filter) {
+                    udao.findTechsByInterv(interv.getCode(), (data,mess)->{
+                        if(!data.isEmpty()){
+                            List<User> techs = udao.Deserialize(data, User.class);
+
+                            Log.i(TAG, "setFilter: "+interv.getCode()+" found techniciens = " + techs);
+                            for (User tech: techs) {
+                                if(codes_techniciens.contains(tech.getCode())){
+                                    items_filtred.add(interv);
+                                    break;
+                                }
+                            }
+
+                            Log.i(TAG, "setFilter: items.size() = "+items.size());
+                            Log.i(TAG, "setFilter: items_filtred.size() = "+items_filtred.size());
+                            items = items_filtred;
+                            notifyDataSetChanged();
+                        }
+                    });
+                }*/
+                //items = items.stream().filter( i-> isAffectedTo(i.getCode(), codes_techniciens)).collect(Collectors.toList());
+            }
+
         }
         notifyDataSetChanged();
+    }
+
+    private boolean isAffectedTo(String code, List<String> codes_techniciens) {
+        return true;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
