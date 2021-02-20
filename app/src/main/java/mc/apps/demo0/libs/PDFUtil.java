@@ -10,7 +10,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
 import android.graphics.pdf.PdfRenderer;
@@ -44,7 +46,7 @@ import mc.apps.demo0.R;
 public class PDFUtil {
     private static final String TAG = "tests";
     public static final double PDF_PAGE_WIDTH = 8.3 * 72 * 1.2;
-    public static final double PDF_PAGE_HEIGHT = 11.7 * 72 * 2;
+    public static final double PDF_PAGE_HEIGHT = 11.7 * 72 * 2.5;
     private static final String PDFS_DIRECTORY_NAME = "pdfs";
 
     // public static final double PDF_PAGE_WIDTH_INCH = 8.3;
@@ -298,7 +300,7 @@ public class PDFUtil {
     /**
      * v2
      */
-    public static void createPdfFromContent(Activity context, String[] contents, String fileName) {
+    public static void createPdfFromContent(Activity context, String[] contents, List<Bitmap> signatures, List<Bitmap> photos, String fileName) {
         File files_directory = context.getExternalFilesDir(PDFS_DIRECTORY_NAME);
         File pdfFile = new File(files_directory, "/" + fileName + ".pdf");
 
@@ -333,7 +335,7 @@ public class PDFUtil {
            /* int measureWidth = View.MeasureSpec.makeMeasureSpec(pageWidth, View.MeasureSpec.EXACTLY);
             int measuredHeight = View.MeasureSpec.makeMeasureSpec(pageHeight, View.MeasureSpec.EXACTLY);*/
 
-            Drawable drawable = ContextCompat.getDrawable(context,R.drawable.ic_intervention);
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_intervention);
             drawable.setBounds(0, 0, 150, 150);
             drawable.draw(canvas);
 
@@ -356,10 +358,9 @@ public class PDFUtil {
                 for (String part: parts) {
                     if(!part.trim().equals("")) {
                         top=200 + 50 * n++;
-                        if(part.length() > 100){
+                        if(part.length() > 50){
                             paint.setSubpixelText(true);
-                            //textHeight = paint.descent() - paint.ascent();
-                            n += drawTextAndBreakLine(canvas, paint, left, top, MAX_WIDTH , part) - 2;
+                            n += drawTextAndBreakLine(canvas, paint, left, top, MAX_WIDTH , part) - 1;
                         }else {
                             canvas.drawText(part, left, top, paint);
                         }
@@ -368,6 +369,50 @@ public class PDFUtil {
 
                 paint.setColor(Color.BLUE);
                 canvas.drawLine(50,200+50*n,(int) PDF_PAGE_WIDTH-50,200+50*n++, paint);
+            }
+
+
+            /*paint.setColor(Color.RED);
+            paint.setStrokeWidth(20);
+            canvas.drawRect(50, 200+50*n, 250, 300+50*n++, paint);
+*/
+            int start;
+            int i=0;
+            Rect rectangle;
+
+            start = 200 + 50 * n;
+            for (Bitmap bitmap: signatures) {
+
+                if(i%2==0)
+                    rectangle = new Rect(50, start, 300, start + 250);
+                else
+                    rectangle = new Rect(350, start, 600, start + 250);
+                canvas.drawBitmap(bitmap, null, rectangle, null);
+
+                if(i%2!=0)
+                    start = start + 250;
+
+                Log.i(TAG, "createPdfFromContent: i => start = "+i+" => " + start);
+                i++;
+            }
+
+            paint.setColor(Color.RED);
+            canvas.drawLine(50,start,(int) PDF_PAGE_WIDTH-50,start, paint);
+
+            i=0;
+            start = start + 50;
+            for (Bitmap bitmap: photos) {
+                if(i%2==0)
+                    rectangle = new Rect(50, start, 300, start + 250);
+                else
+                    rectangle = new Rect(350, start, 600, start + 250);
+                canvas.drawBitmap(bitmap, null, rectangle, null);
+
+                if(i%2!=0)
+                    start = start + 250;
+
+                Log.i(TAG, "createPdfFromContent: i => start = "+i+" => " + start);
+                i++;
             }
 
             document.finishPage(page);

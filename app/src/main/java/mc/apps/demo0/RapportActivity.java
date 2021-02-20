@@ -5,15 +5,20 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +29,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,12 +44,15 @@ import mc.apps.demo0.dao.AdressDao;
 import mc.apps.demo0.dao.AffectationDao;
 import mc.apps.demo0.dao.ClientDao;
 import mc.apps.demo0.dao.ContratDao;
+import mc.apps.demo0.dao.FileDao;
 import mc.apps.demo0.dao.UserDao;
+import mc.apps.demo0.libs.MyTools;
 import mc.apps.demo0.libs.PDFUtil;
 import mc.apps.demo0.model.Adress;
 import mc.apps.demo0.model.Client;
 import mc.apps.demo0.model.Contrat;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.InterventionFile;
 import mc.apps.demo0.model.User;
 
 
@@ -64,6 +75,9 @@ public class RapportActivity extends AppCompatActivity {
         if(intervention==null){
             finish();
         }
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         Init();
     }
@@ -104,28 +118,12 @@ public class RapportActivity extends AppCompatActivity {
         String fileName = "rapport_"+ currentDate;
 
         String[] contents = { (String) txtRapport1.getText(), (String) txtRapport2.getText(), (String) txtRapport3.getText(), (String) txtRapport4.getText()};
-        PDFUtil.createPdfFromContent(RapportActivity.this, contents, fileName);
-
-        /*PDFUtil pdf = PDFUtil.getInstance();
-
-        View view = getLayoutInflater().inflate(R.layout.activity_rapport, null);
-        List<View> views = new ArrayList<View>();
-        views.add(view);
-
-        pdf.generatePDF(getApplicationContext(), views, fileName, new PDFUtil.PDFUtilListener() {
-            @Override
-            public void pdfGenerationSuccess(File savedPDFFile) {
-                Toast.makeText(RapportActivity.this, "pdf Generation Success!", Toast.LENGTH_SHORT).show();
-                PDFUtil.OpenPDF(getApplicationContext(), savedPDFFile);
-            }
-            @Override
-            public void pdfGenerationFailure(Exception exception) {
-                Toast.makeText(RapportActivity.this, "pdf Generation Failure : "+exception, Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        PDFUtil.createPdfFromContent(RapportActivity.this, contents, signatures, photos, fileName);
     }
 
 
+    List<Bitmap> signatures = new ArrayList();
+    List<Bitmap> photos = new ArrayList();
 
     @Override
     public void onBackPressed() {
@@ -146,8 +144,36 @@ public class RapportActivity extends AppCompatActivity {
         txtRapport2  = findViewById(R.id.txtRapport2);
         txtRapport3 =  findViewById(R.id.txtRapport3);
         txtRapport4 =  findViewById(R.id.txtRapport4);
-
         txtRapport1.setText( "Client : "+intervention.getClientId());
+
+        FileDao fdao = new FileDao();
+        fdao.find(intervention.getCode(), (data,m)->{
+            List<InterventionFile> items = fdao.Deserialize(data, InterventionFile.class);
+            String filename;
+            URL url;
+            Bitmap bmp;
+            if(items.size()>0){
+                for (InterventionFile item:items ) {
+                    filename = item.getFilename();
+                    try {
+                        url = new URL("https://mc69website.000webhostapp.com/uploads/"+filename);
+                        bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        //imageView.setImageBitmap(bmp);
+
+                        Log.i(TAG, "Init: bitmap = "+bmp);
+                        if(item.getPhoto()==0)
+                            signatures.add(bmp);
+                        else
+                            photos.add(bmp);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                createImagesGrid();
+            }
+        });
 
 
         ClientDao dao = new ClientDao();
@@ -160,7 +186,7 @@ public class RapportActivity extends AppCompatActivity {
             }
         });
 
-        txtRapport2.setText(intervention.getDateDebutReelle()+" - "+intervention.getDateFinReelle()+"\n"+intervention.getDescription());
+        txtRapport2.setText(MyTools.formatDateFr(intervention.getDateDebutReelle())+" - "+MyTools.formatDateFr(intervention.getDateFinReelle())+"\n"+intervention.getDescription());
         txtRapport3.setText(intervention.getConsignes()+"\n\n"+intervention.getObservations());
 
         txtRapport4.setText("Technicien(s) :");
@@ -171,11 +197,43 @@ public class RapportActivity extends AppCompatActivity {
                 txtRapport4.setText(txtRapport4.getText()+"\n- "+user.getFirstname()+" "+user.getLastname());
         });
     }
-    /*private void showAdressInMaps(String adress) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra("adress", adress);
-        startActivity(intent);
-    }*/
+
+    private void createImagesGrid() {
+        int total = signatures.size()+photos.size();
+        Log.i(TAG, "createImagesGrid: total = "+total);
+
+        ImageView imageView;
+        int i=0;
+        int margin = 6;
+        androidx.gridlayout.widget.GridLayout grid = findViewById(R.id.grid_images);
+        Button btn;
+        final float scale =  getResources().getDisplayMetrics().density;
+        for (Bitmap bmp: signatures) {
+            imageView = new ImageView(getApplicationContext());
+            imageView.setImageBitmap(bmp);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    (int) (120 * scale + 0.5f), (int) (120 * scale + 0.5f)
+            );
+            params.setMargins(margin, margin, margin, margin);
+            imageView.setLayoutParams(params);
+
+            grid.addView(imageView);
+        }
+        for (Bitmap bmp: photos) {
+            imageView = new ImageView(getApplicationContext());
+            imageView.setImageBitmap(bmp);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    (int) (100 * scale + 0.5f), (int) (100 * scale + 0.5f)
+            );
+            params.setMargins(margin, margin, margin, margin);
+            imageView.setLayoutParams(params);
+
+            grid.addView(imageView);
+        }
+        grid.setUseDefaultMargins(true);
+
+    }
 
     private void setClientAdress(TextView txtClient, Client client) {
         AdressDao dao = new AdressDao();

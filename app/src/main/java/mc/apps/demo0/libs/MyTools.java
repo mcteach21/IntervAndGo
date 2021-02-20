@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.content.ContextCompat;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,6 +28,18 @@ import mc.apps.demo0.model.User;
 
 public class MyTools {
     private static final String TAG = "demo";
+    private static final String SIGNATURES_DIRECTORY_NAME = "signatures";
+    private static final String PHOTOS_DIRECTORY_NAME = "photos";
+
+    /**
+     * Files (upload)
+     */
+    public static File SIGNATURES_DIRECTORY(Context context){
+        return context.getExternalFilesDir(SIGNATURES_DIRECTORY_NAME);
+    }
+    public static File PHOTOS_DIRECTORY(Context context){
+        return context.getExternalFilesDir(PHOTOS_DIRECTORY_NAME);
+    }
 
     /**
      * Password Generator + Sens Mail

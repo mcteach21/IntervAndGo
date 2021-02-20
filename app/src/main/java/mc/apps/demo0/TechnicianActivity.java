@@ -46,6 +46,7 @@ import mc.apps.demo0.dao.GpsDao;
 import mc.apps.demo0.dao.MessageDao;
 import mc.apps.demo0.libs.GPSTracker;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.libs.UploadFileAsync;
 import mc.apps.demo0.model.GpsPosition;
 import mc.apps.demo0.model.Intervention;
 import mc.apps.demo0.model.Message;
@@ -58,10 +59,14 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
 
     private static final int RESULT_LOAD_IMAGE = 2608 ;
     private static final int TECH_INTERV_CODE = 1000;
-    private static final String TAG = "tests";
     private static final int CLIENT_INTERV_CODE = 2000;
+    private static final int RESULT_LOAD_SIGNATURE = 3000;
+
+    private static final String TAG = "tests";
+
     private static final long GPS_REFRESH_MILLIS = 600000 ; // 10 min.
     private static final long MSG_REFRESH_MILLIS = 300000 ; // 5 min.
+
     private MainViewModel mainViewModel;
 
     @Override
@@ -140,12 +145,19 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
+    public void signature_view(View view){
+        Intent intent = new Intent(this, SignatureActivity.class);
+        startActivityForResult(intent, RESULT_LOAD_SIGNATURE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             mainViewModel.addImage(selectedImage);
+
+            //new UploadFileAsync().execute(selectedImage.toString());
         }
 
         if (requestCode == TECH_INTERV_CODE && resultCode == RESULT_OK) {
@@ -157,6 +169,18 @@ public class TechnicianActivity extends AppCompatActivity implements DatePickerD
         if (requestCode == CLIENT_INTERV_CODE && resultCode == RESULT_OK && null != data) {
             Intervention item = (Intervention) data.getSerializableExtra("item_filter");
             mainViewModel.setIntervention(item);
+        }
+        if (requestCode == RESULT_LOAD_SIGNATURE && resultCode == RESULT_OK && null != data) {
+            //Toast.makeText(this, "Result.. : "+data.getStringExtra("file"), Toast.LENGTH_SHORT).show();
+
+            Log.i(TAG, "onActivityResult   mainViewModel.addSignatureImage(signatureImage) =>"+data.getStringExtra("file"));
+
+            try {
+                Uri signatureImage = Uri.parse(data.getStringExtra("file"));
+                mainViewModel.addSignatureImage(signatureImage);
+            }catch(Exception e){}
+
+            //new UploadFileAsync().execute(signatureImage.toString());
         }
     }
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mc.apps.demo0.R;
@@ -30,7 +31,16 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
         this.items = items;
         this.listener = listener;
     }
-/*    private MainViewModel mainViewModel;
+
+    public List<Uri> getItems() {
+        return items;
+    }
+    public void clearItems() {
+        items = new ArrayList();
+        notifyDataSetChanged();
+    }
+
+    /*    private MainViewModel mainViewModel;
     public ImagesAdapter(List<String> items, OnItemClickListener listener, MainViewModel mainViewModel) {
         this(items, listener);
         this.select = select;
@@ -50,7 +60,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     public void onBindViewHolder(@NonNull  ViewHolder holder, int position) {
         Uri image = items.get(position);
         holder.img.setImageURI(image);
-        holder.img.setRotation(90);
+        //holder.img.setRotation(90);
         if (listener != null)
             holder.itemView.setOnClickListener(
                     view -> listener.onItemClick(position, items.get(position))

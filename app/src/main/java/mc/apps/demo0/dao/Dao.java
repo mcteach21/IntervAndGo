@@ -17,7 +17,7 @@ import okhttp3.Response;
 
 public class Dao<T> {
     private static final String TAG = "tests" ;
-    private static final String DB_API_URL = "https://mc69.go.yj.fr/db-request.php?" ;
+    public static final String DB_API_URL = "https://mc69.go.yj.fr/db-request.php?" ;
 
     private String table;
     public Dao(String table) {

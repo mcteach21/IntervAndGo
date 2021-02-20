@@ -3,8 +3,11 @@ package mc.apps.demo0.ui.technician;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +28,17 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,9 +49,13 @@ import mc.apps.demo0.InterventionActivity;
 import mc.apps.demo0.R;
 import mc.apps.demo0.adapters.ImagesAdapter;
 import mc.apps.demo0.adapters.InterventionsAdapter;
+import mc.apps.demo0.dao.Dao;
+import mc.apps.demo0.dao.FileDao;
 import mc.apps.demo0.dao.InterventionDao;
 import mc.apps.demo0.libs.MyTools;
+import mc.apps.demo0.libs.UploadFileAsync;
 import mc.apps.demo0.model.Intervention;
+import mc.apps.demo0.model.InterventionFile;
 import mc.apps.demo0.viewmodels.MainViewModel;
 
 public class TechnicianFragments extends Fragment {
@@ -109,7 +122,9 @@ public class TechnicianFragments extends Fragment {
         }else if(num==1){
             //Ajouter Rapport
             initCurrentIntervention(root); //AutoCompletion sur Champ CodeClient!
+
             initListPhotos(root);   //liste photos / Rapport
+            initSignaturesImages(root); // liste signatures / Rapport
 
 
             isOpen=false;
@@ -242,6 +257,52 @@ public class TechnicianFragments extends Fragment {
         statut = (int) (statutChoice.getSelectedItemId()+1);
         TechnicianFragments.intervention.setStatutId(statut);
 
+        /**
+         * TODO
+         * Photos + Signatures
+         */
+
+        String INTERV_CODE = TechnicianFragments.intervention.getCode();
+        Log.i(TAG, "addRapport: INTERV_CODE="+INTERV_CODE);
+
+        ImagesAdapter adapter2 = (ImagesAdapter)signatures_list.getAdapter();
+        List<Uri> signatures = adapter2.getItems();
+        //UploadFileAsync upload = new UploadFileAsync();
+
+        Log.i(TAG, "***********************************************");
+
+        String filename, filename_short;
+        FileDao fdao = new FileDao();
+        for (Uri signature: signatures) {
+            filename = signature.toString();
+            Log.i(TAG, "addRapport: signature = "+filename);
+
+            filename_short = filename.replace(MyTools.SIGNATURES_DIRECTORY(getContext()).getAbsolutePath()+"/","");
+            Log.i(TAG, "addRapport: signature = "+filename_short);
+
+            fdao.add(new InterventionFile(0, INTERV_CODE, filename_short, 0), (i,m)->{
+                Log.i(TAG, "addRapport: add signature!");
+            });
+            new UploadFileAsync().execute(signature.toString());
+        }
+        adapter2 = (ImagesAdapter)photos_list.getAdapter();
+        List<Uri> photos = adapter2.getItems();
+        for (Uri photo: photos) {
+
+            filename = getRealPathFromURI(photo);
+            Log.i(TAG, "addRapport: photo = "+filename);
+
+            String[] parts = filename.split("/");
+            filename_short = parts[parts.length-1];
+
+            fdao.add(new InterventionFile(0, INTERV_CODE, filename_short, 1), (i,m)->{
+                Log.i(TAG, "addRapport: add photo!");
+            });
+
+            new UploadFileAsync().execute(filename);
+        }
+        Log.i(TAG, "***********************************************");
+
         InterventionDao dao = new InterventionDao();
         dao.update(TechnicianFragments.intervention, (items, message)->{
             Toast.makeText(root.getContext(), "Rapport ajouté avec succès!", Toast.LENGTH_SHORT).show();
@@ -267,6 +328,22 @@ public class TechnicianFragments extends Fragment {
             adapter.refresh(images);
         });
     }
+    List<Uri> images_signatures = new ArrayList();
+    RecyclerView signatures_list;
+    private void initSignaturesImages(View root){
+        signatures_list = root.findViewById(R.id.signatures_list);
+        signatures_list.setHasFixedSize(true);
+        GridLayoutManager layoutManager2 = new GridLayoutManager(root.getContext(), 3);
+        signatures_list.setLayoutManager(layoutManager2);
+        ImagesAdapter adapter = new ImagesAdapter(
+                images_signatures,
+                null
+        );
+        signatures_list.setAdapter(adapter);
+        mainViewModel.getSignaturesImages().observe(getActivity(), images -> {
+            adapter.refresh(images);
+        });
+    }
 
     private void resetFields() {
         codeIntervention.getText().clear();
@@ -281,6 +358,12 @@ public class TechnicianFragments extends Fragment {
         dateFinR.getText().clear();*/
 
         observations.getText().clear();
+
+        try {
+            ((ImagesAdapter)photos_list.getAdapter()).clearItems();
+            ((ImagesAdapter)signatures_list.getAdapter()).clearItems();
+        }catch (Exception e){}
+
     }
 
     /**
@@ -333,6 +416,7 @@ public class TechnicianFragments extends Fragment {
         );
     }
 
+/*
     String pattern = "yyyy-MM-dd";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     private String getDate(String dateString){
@@ -341,6 +425,7 @@ public class TechnicianFragments extends Fragment {
     private String getCurrentDate(){
         return simpleDateFormat.format(new Date());
     }
+*/
 
     private void refreshListAsync() {
         noResult = root.findViewById(R.id.noResult);
@@ -374,4 +459,14 @@ public class TechnicianFragments extends Fragment {
         });
     }
 
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(getContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
 }

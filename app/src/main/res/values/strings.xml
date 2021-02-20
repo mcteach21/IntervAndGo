@@ -170,5 +170,8 @@
     <string name="btn_update_client">Modifier Client</string>
     <string name="pdf_generate">Générer PDF</string>
     <string name="pdf_generate_txt">Générer PDF</string>
+    <string name="btn_reset_txt">Effacer</string>
+    <string name="btn_save_txt">Sauvegarder</string>
+    <string name="signatures_txt">Signature(s)</string>
 
 </resources>

@@ -69,6 +69,21 @@ public class MainViewModel  extends ViewModel {
         images.setValue(values);
     }
 
+    private MutableLiveData<List<Uri>> signatures_images = new MutableLiveData<>();
+    public MutableLiveData<List<Uri>> getSignaturesImages() {
+        return signatures_images;
+    }
+    public void addSignatureImage(Uri image) {
+        List<Uri> values = signatures_images.getValue();
+        if(values==null)
+            values = new ArrayList();
+        values.add(image);
+        signatures_images.setValue(values);
+    }
+    public void resetSignaturesImages() {
+        signatures_images.setValue(new ArrayList());
+    }
+
     private MutableLiveData<Hashtable<String, Object>> filter = new MutableLiveData<>();
     public MutableLiveData<Hashtable<String, Object>> getFilter() {
         return filter;
