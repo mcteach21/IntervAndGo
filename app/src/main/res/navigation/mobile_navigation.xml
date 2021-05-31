@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/navigation_comptes"
-        android:name="mc.apps.demo0.ui.comptes.ComptesFragment"
+        android:name="mc.apps.interv.ui.comptes.ComptesFragment"
         android:label="@string/title_comptes"
         tools:layout="@layout/fragment_comptes" />
 
     <fragment
         android:id="@+id/navigation_clients"
-        android:name="mc.apps.demo0.ui.clients.ClientsFragments"
+        android:name="mc.apps.interv.ui.clients.ClientsFragments"
         android:label="@string/title_clients"
         tools:layout="@layout/fragment_clients" />
 
     <fragment
         android:id="@+id/navigation_interventions"
-        android:name="mc.apps.demo0.ui.interventions.InterventionsFragment"
+        android:name="mc.apps.interv.ui.interventions.InterventionsFragment"
         android:label="@string/title_interventions"
         tools:layout="@layout/fragment_interventions" />
 
     <fragment
         android:id="@+id/navigation_rapports"
-        android:name="mc.apps.demo0.ui.rapports.RapportsFragment"
+        android:name="mc.apps.interv.ui.rapports.RapportsFragment"
         android:label="@string/title_rapports"
         tools:layout="@layout/fragment_rapports" />
 </navigation>

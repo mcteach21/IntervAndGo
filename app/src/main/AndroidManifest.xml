@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mc.apps.demo0">
+    package="mc.apps.interv">
 
     <permission
-        android:name="mc.apps.demo0.permission.MAPS_RECEIVE"
+        android:name="mc.apps.interv.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="mc.apps.demo0.permission.MAPS_RECEIVE" />
@@ -60,24 +60,10 @@
         <activity
             android:name=".ShowInMapActivity"
             android:label="@string/title_activity_show_in_map">
-
-            <!--
-                <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".TestsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".MapsActivity"
@@ -104,9 +90,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AdminActivity"
-            android:label="@string/title_activity_admin" />
+        <activity android:name=".AdminActivity" android:label="@string/title_activity_admin" />
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
